@@ -72,7 +72,7 @@ async function syncLineUserToShopify(profile: LineProfile): Promise<ShopifySyncR
   const nameParts = profile.displayName.trim().split(' ');
   const firstName = nameParts[0] || profile.displayName;
   const lastName = nameParts.slice(1).join(' ') || firstName;
-  const email = profile.email || `line_${profile.userId}@line-user.biteme.co.jp`;
+  const email = profile.email || `line_${profile.userId}@line-user.biteme.one`;
   const password = generatePassword(profile.userId);
 
   // 1. Try to create customer
@@ -118,14 +118,14 @@ async function syncLineUserToShopify(profile: LineProfile): Promise<ShopifySyncR
 }
 
 const ALLOWED_ORIGINS = [
-  'https://biteme.co.jp',
-  'https://www.biteme.co.jp',
+  'https://biteme.one',
+  'https://www.biteme.one',
   'http://localhost:5173',
 ];
 
 const ALLOWED_REDIRECT_URIS = [
-  'https://biteme.co.jp/auth/line/callback',
-  'https://www.biteme.co.jp/auth/line/callback',
+  'https://biteme.one/auth/line/callback',
+  'https://www.biteme.one/auth/line/callback',
   'http://localhost:5173/auth/line/callback',
 ];
 

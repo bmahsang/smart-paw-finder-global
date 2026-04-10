@@ -160,7 +160,7 @@ export default function TermsOfUse() {
             <p>本規約に関するお問い合わせは、以下までご連絡ください。</p>
             <div className="mt-2 p-4 bg-secondary rounded-lg">
               <p className="font-medium text-foreground">BITE ME JAPAN</p>
-              <p>メール：support@biteme-jp.com</p>
+              <p>メール：support@biteme.one</p>
             </div>
           </section>
         </div>

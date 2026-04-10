@@ -39,8 +39,8 @@ async function getAccessToken(): Promise<string> {
 }
 
 const ALLOWED_ORIGINS = [
-  'https://biteme.co.jp',
-  'https://www.biteme.co.jp',
+  'https://biteme.one',
+  'https://www.biteme.one',
   'http://localhost:5173',
 ];
 
@@ -72,7 +72,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const token = await getAccessToken();
-    const shop = process.env.VITE_SHOPIFY_STORE_DOMAIN || 'biteme-jp.myshopify.com';
+    const shop = process.env.VITE_SHOPIFY_STORE_DOMAIN || 'lovable-project-lbgum.myshopify.com';
     const apiVersion = '2025-07';
 
     const shopifyResponse = await fetch(

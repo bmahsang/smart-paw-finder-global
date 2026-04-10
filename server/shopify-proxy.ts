@@ -10,7 +10,7 @@ async function getAccessToken(): Promise<string> {
     return cachedToken;
   }
 
-  const shop = process.env.VITE_SHOPIFY_STORE_DOMAIN || 'biteme-jp.myshopify.com';
+  const shop = process.env.VITE_SHOPIFY_STORE_DOMAIN || 'lovable-project-lbgum.myshopify.com';
   const clientId = process.env.VITE_SHOPIFY_CLIENT_ID || '';
   const clientSecret = process.env.SHOPIFY_CLIENT_SECRET || '';
 
@@ -54,7 +54,7 @@ export function shopifyProxyMiddleware(): Connect.NextHandleFunction {
       // Get access token
       const token = await getAccessToken();
 
-      const shop = process.env.VITE_SHOPIFY_STORE_DOMAIN || 'biteme-jp.myshopify.com';
+      const shop = process.env.VITE_SHOPIFY_STORE_DOMAIN || 'lovable-project-lbgum.myshopify.com';
       const apiVersion = '2025-07';
 
       // Forward to Shopify Storefront API

@@ -5,8 +5,8 @@ const METAFIELD_NAMESPACE = 'custom';
 const METAFIELD_KEY = 'wishlist';
 
 const ALLOWED_ORIGINS = [
-  'https://biteme.co.jp',
-  'https://www.biteme.co.jp',
+  'https://biteme.one',
+  'https://www.biteme.one',
   'http://localhost:5173',
 ];
 
@@ -37,7 +37,7 @@ async function adminQuery(query: string, variables: Record<string, unknown>) {
 }
 
 async function findCustomer(lineUserId: string) {
-  const email = `line_${lineUserId}@line-user.biteme.co.jp`;
+  const email = `line_${lineUserId}@line-user.biteme.one`;
   const data = await adminQuery(
     `query getCustomer($query: String!) {
       customers(first: 1, query: $query) {

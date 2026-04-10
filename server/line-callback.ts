@@ -55,7 +55,7 @@ async function syncLineUserToShopify(profile: LineProfile): Promise<void> {
   const nameParts = profile.displayName.trim().split(' ');
   const firstName = nameParts[0] || profile.displayName;
   const lastName = nameParts.slice(1).join(' ') || firstName;
-  const email = profile.email || `line_${profile.userId}@line-user.biteme.co.jp`;
+  const email = profile.email || `line_${profile.userId}@line-user.biteme.one`;
 
   // Generate a random password for the Shopify account
   const password = Array.from(crypto.getRandomValues(new Uint8Array(16)))
@@ -101,8 +101,8 @@ async function syncLineUserToShopify(profile: LineProfile): Promise<void> {
 }
 
 const ALLOWED_REDIRECT_URIS = [
-  'https://biteme.co.jp/auth/line/callback',
-  'https://www.biteme.co.jp/auth/line/callback',
+  'https://biteme.one/auth/line/callback',
+  'https://www.biteme.one/auth/line/callback',
   'http://localhost:5173/auth/line/callback',
 ];
 
