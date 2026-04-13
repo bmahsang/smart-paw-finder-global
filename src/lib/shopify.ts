@@ -427,7 +427,7 @@ export interface ShopifyBanner {
 
 const GET_BANNERS_QUERY = `
   query GetBanners($first: Int!) {
-    metaobjects(type: "2603", first: $first) {
+    metaobjects(type: "main_banner", first: $first) {
       edges {
         node {
           id

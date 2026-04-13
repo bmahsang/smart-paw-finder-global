@@ -95,24 +95,15 @@ export function Header({ onSearch, onCollectionSelect }: HeaderProps) {
   const { user, isLoggedIn, logout } = useAuthStore();
 
   useEffect(() => {
-    // Fetch the category menu from Shopify theme (customer-account-main-menu has 2-depth categories)
-    fetchMenu("customer-account-main-menu")
+    fetchMenu("category")
       .then((menuData) => {
         if (menuData && menuData.items.length > 0) {
           setMenu(menuData);
         } else {
-          // Fallback: try main-menu, then collections
-          return fetchMenu("main-menu").then((fallback) => {
-            if (fallback && fallback.items.length > 0) {
-              setMenu(fallback);
-            } else {
-              fetchCollections(20).then(setCollections).catch(console.error);
-            }
-          });
+          fetchCollections(20).then(setCollections).catch(console.error);
         }
       })
       .catch(() => {
-        // Fallback to collections
         fetchCollections(20).then(setCollections).catch(console.error);
       });
   }, []);
@@ -202,7 +193,7 @@ export function Header({ onSearch, onCollectionSelect }: HeaderProps) {
                 >
                   <div className="flex items-center gap-3">
                     <Package className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">すべての商品</span>
+                    <span className="font-medium">All Products</span>
                   </div>
                   <ChevronRight className="h-4 w-4 text-muted-foreground" />
                 </button>
@@ -212,7 +203,7 @@ export function Header({ onSearch, onCollectionSelect }: HeaderProps) {
               {hasMenu && (
                 <div className="border-b border-border/50">
                   <p className="px-4 pt-3 pb-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    カテゴリー
+                    Categories
                   </p>
                   {menu.items.map((item) => (
                     <MenuItemComponent
@@ -229,7 +220,7 @@ export function Header({ onSearch, onCollectionSelect }: HeaderProps) {
               {!hasMenu && menuCollections.length > 0 && (
                 <div className="border-b border-border/50">
                   <p className="px-4 pt-3 pb-1 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    カテゴリー
+                    Categories
                   </p>
                   {menuCollections.map((collection) => (
                     <button
@@ -269,7 +260,7 @@ export function Header({ onSearch, onCollectionSelect }: HeaderProps) {
                   className="w-full flex items-center gap-3 px-4 py-3 hover:bg-secondary/50 transition-colors"
                 >
                   <Phone className="h-4 w-4 text-muted-foreground" />
-                  <span className="font-medium text-sm">お問い合わせ</span>
+                  <span className="font-medium text-sm">Contact Us</span>
                 </button>
               </div>
 
