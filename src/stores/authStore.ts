@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-export interface LineUserProfile {
+export interface UserProfile {
   userId: string;
   displayName: string;
   pictureUrl?: string;
@@ -11,11 +11,9 @@ export interface LineUserProfile {
 }
 
 interface AuthStore {
-  user: LineUserProfile | null;
+  user: UserProfile | null;
   isLoggedIn: boolean;
-
-  // Actions
-  login: (user: LineUserProfile) => void;
+  login: (user: UserProfile) => void;
   logout: () => void;
 }
 
@@ -24,12 +22,11 @@ export const useAuthStore = create<AuthStore>()(
     (set) => ({
       user: null,
       isLoggedIn: false,
-
       login: (user) => set({ user, isLoggedIn: true }),
       logout: () => set({ user: null, isLoggedIn: false }),
     }),
     {
-      name: 'line-auth',
+      name: 'auth',
       storage: createJSONStorage(() => localStorage),
     }
   )

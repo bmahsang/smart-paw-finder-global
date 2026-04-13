@@ -12,11 +12,9 @@ import ContactUs from "./pages/ContactUs";
 import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
-import LineCallback from "./pages/LineCallback";
 import MyPage from "./pages/MyPage";
 import WishlistPage from "./pages/WishlistPage";
 import Checkout from "./pages/Checkout";
-import { LineFloatingButton } from "./components/layout/LineFloatingButton";
 
 const queryClient = new QueryClient();
 
@@ -43,12 +41,10 @@ const App = () => (
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfUse />} />
-          <Route path="/auth/line/callback" element={<LineCallback />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <LineFloatingButton />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

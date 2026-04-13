@@ -8,11 +8,8 @@ import {
   LogOut, User, ShoppingBag, Heart, HelpCircle, ChevronRight,
   Package, Truck, ExternalLink, MapPin, Calendar, CreditCard,
 } from 'lucide-react';
-import { LineLoginButton } from '@/components/auth/LineLoginButton';
 import { fetchCustomerData, fetchProductByHandle, ShopifyCustomerProfile, ShopifyOrder, formatPrice } from '@/lib/shopify';
 import { useFavoritesStore } from '@/stores/favoritesStore';
-
-// --- Sub-components ---
 
 function MenuLink({ icon: Icon, label, badge, onClick }: {
   icon: typeof ShoppingBag; label: string; badge?: string | number; onClick?: () => void;
@@ -35,24 +32,24 @@ function MenuLink({ icon: Icon, label, badge, onClick }: {
 
 function StatusBadge({ status, type }: { status: string; type: 'financial' | 'fulfillment' }) {
   const map: Record<string, { label: string; cls: string }> = type === 'financial' ? {
-    PAID: { label: '支払済', cls: 'bg-green-100 text-green-700' },
-    PENDING: { label: '処理中', cls: 'bg-yellow-100 text-yellow-700' },
-    REFUNDED: { label: '返金済', cls: 'bg-gray-100 text-gray-600' },
-    PARTIALLY_REFUNDED: { label: '一部返金', cls: 'bg-gray-100 text-gray-600' },
-    AUTHORIZED: { label: '承認済', cls: 'bg-blue-100 text-blue-700' },
-    VOIDED: { label: '無効', cls: 'bg-red-100 text-red-600' },
+    PAID: { label: 'Paid', cls: 'bg-green-100 text-green-700' },
+    PENDING: { label: 'Pending', cls: 'bg-yellow-100 text-yellow-700' },
+    REFUNDED: { label: 'Refunded', cls: 'bg-gray-100 text-gray-600' },
+    PARTIALLY_REFUNDED: { label: 'Partial Refund', cls: 'bg-gray-100 text-gray-600' },
+    AUTHORIZED: { label: 'Authorized', cls: 'bg-blue-100 text-blue-700' },
+    VOIDED: { label: 'Voided', cls: 'bg-red-100 text-red-600' },
   } : {
-    FULFILLED: { label: '発送済', cls: 'bg-green-100 text-green-700' },
-    UNFULFILLED: { label: '未発送', cls: 'bg-orange-100 text-orange-700' },
-    PARTIALLY_FULFILLED: { label: '一部発送', cls: 'bg-yellow-100 text-yellow-700' },
+    FULFILLED: { label: 'Shipped', cls: 'bg-green-100 text-green-700' },
+    UNFULFILLED: { label: 'Pending', cls: 'bg-orange-100 text-orange-700' },
+    PARTIALLY_FULFILLED: { label: 'Partial', cls: 'bg-yellow-100 text-yellow-700' },
   };
-  const info = map[status] || { label: status || '未発送', cls: 'bg-orange-100 text-orange-700' };
+  const info = map[status] || { label: status || 'Pending', cls: 'bg-orange-100 text-orange-700' };
   return <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${info.cls}`}>{info.label}</span>;
 }
 
 function OrderCard({ order }: { order: ShopifyOrder }) {
   const [expanded, setExpanded] = useState(false);
-  const date = new Date(order.processedAt).toLocaleDateString('ja-JP', { year: 'numeric', month: 'short', day: 'numeric' });
+  const date = new Date(order.processedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 
   return (
     <div className="bg-card rounded-xl border border-border overflow-hidden">
@@ -66,14 +63,13 @@ function OrderCard({ order }: { order: ShopifyOrder }) {
           <span className="text-xs text-muted-foreground flex-shrink-0">{date}</span>
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">{order.lineItems.length} 点</span>
+          <span className="text-xs text-muted-foreground">{order.lineItems.length} items</span>
           <span className="text-sm font-bold" translate="no">{formatPrice(order.totalPrice.amount, order.totalPrice.currencyCode)}</span>
         </div>
       </button>
 
       {expanded && (
         <div className="px-4 pb-4 space-y-3 border-t border-border pt-3">
-          {/* Line items */}
           {order.lineItems.map((item, i) => (
             <div key={i} className="flex items-center gap-3">
               {item.variant?.image?.url ? (
@@ -90,7 +86,6 @@ function OrderCard({ order }: { order: ShopifyOrder }) {
             </div>
           ))}
 
-          {/* Tracking info */}
           {order.fulfillments.length > 0 && order.fulfillments[0].trackingUrl && (
             <a
               href={order.fulfillments[0].trackingUrl}
@@ -99,7 +94,7 @@ function OrderCard({ order }: { order: ShopifyOrder }) {
               className="flex items-center gap-2 text-sm text-primary hover:underline"
             >
               <Truck className="h-4 w-4" />
-              配送状況を確認
+              Track Shipment
               {order.fulfillments[0].trackingCompany && (
                 <span className="text-xs text-muted-foreground">({order.fulfillments[0].trackingCompany})</span>
               )}
@@ -107,7 +102,6 @@ function OrderCard({ order }: { order: ShopifyOrder }) {
             </a>
           )}
 
-          {/* Order status page */}
           {order.statusUrl && (
             <a
               href={order.statusUrl}
@@ -116,7 +110,7 @@ function OrderCard({ order }: { order: ShopifyOrder }) {
               className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
             >
               <CreditCard className="h-4 w-4" />
-              注文詳細ページ
+              Order Details
               <ExternalLink className="h-3 w-3" />
             </a>
           )}
@@ -125,8 +119,6 @@ function OrderCard({ order }: { order: ShopifyOrder }) {
     </div>
   );
 }
-
-// --- Main Component ---
 
 export default function MyPage() {
   const navigate = useNavigate();
@@ -138,7 +130,6 @@ export default function MyPage() {
   const [favoritesLoading, setFavoritesLoading] = useState(false);
   const { getFavorites, removeFavorite } = useFavoritesStore();
 
-  // Fetch customer data from Shopify
   useEffect(() => {
     if (isLoggedIn && user?.shopifyCustomerToken) {
       setLoading(true);
@@ -151,7 +142,6 @@ export default function MyPage() {
     }
   }, [isLoggedIn, user?.shopifyCustomerToken]);
 
-  // Load favorite products
   useEffect(() => {
     if (!user?.userId || activeTab !== 'favorites') return;
     const handles = getFavorites(user.userId);
@@ -174,7 +164,6 @@ export default function MyPage() {
 
   const handleLogout = () => { logout(); navigate('/'); };
 
-  // --- Not logged in ---
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-background">
@@ -183,13 +172,12 @@ export default function MyPage() {
           <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mb-6">
             <User className="h-10 w-10 text-muted-foreground" />
           </div>
-          <h1 className="text-xl font-bold mb-2">ログインしてください</h1>
+          <h1 className="text-xl font-bold mb-2">My Page</h1>
           <p className="text-sm text-muted-foreground mb-8">
-            マイページを利用するには<br />LINEアカウントでのログインが必要です。
+            Login feature coming soon.
           </p>
-          <div className="w-full"><LineLoginButton /></div>
           <button onClick={() => navigate('/')} className="mt-4 text-sm text-muted-foreground underline underline-offset-4">
-            ショッピングを続ける
+            Continue Shopping
           </button>
         </main>
       </div>
@@ -199,16 +187,14 @@ export default function MyPage() {
   const orders = customerData?.orders || [];
   const favCount = user?.userId ? getFavorites(user.userId).length : 0;
   const memberSince = customerData?.createdAt
-    ? new Date(customerData.createdAt).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long' })
+    ? new Date(customerData.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
     : null;
 
-  // --- Logged in ---
   return (
     <div className="min-h-screen bg-background">
       <Header />
       <main className="max-w-md mx-auto px-4 py-6 space-y-4 pb-24">
 
-        {/* Profile Card */}
         <div className="bg-card rounded-xl border border-border p-5">
           <div className="flex items-center gap-4">
             {user.pictureUrl ? (
@@ -224,19 +210,18 @@ export default function MyPage() {
               <div className="flex items-center gap-3 mt-1.5">
                 {memberSince && (
                   <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />{memberSince}〜
+                    <Calendar className="h-3 w-3" />Since {memberSince}
                   </span>
                 )}
                 {customerData && (
                   <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-                    <ShoppingBag className="h-3 w-3" />{customerData.numberOfOrders}回注文
+                    <ShoppingBag className="h-3 w-3" />{customerData.numberOfOrders} orders
                   </span>
                 )}
               </div>
             </div>
           </div>
 
-          {/* Default address */}
           {customerData?.defaultAddress && (
             <div className="mt-3 pt-3 border-t border-border flex items-start gap-2">
               <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
@@ -248,27 +233,25 @@ export default function MyPage() {
           )}
         </div>
 
-        {/* Menu */}
         <div className="bg-card rounded-xl border border-border divide-y divide-border px-4">
           <MenuLink
             icon={ShoppingBag}
-            label="注文履歴・配送状況"
+            label="Order History"
             badge={orders.length > 0 ? orders.length : undefined}
             onClick={() => setActiveTab(activeTab === 'orders' ? null : 'orders')}
           />
           <MenuLink
             icon={Heart}
-            label="お気に入り"
+            label="Favorites"
             badge={favCount > 0 ? favCount : undefined}
             onClick={() => setActiveTab(activeTab === 'favorites' ? null : 'favorites')}
           />
-          <MenuLink icon={HelpCircle} label="お問い合わせ" onClick={() => navigate('/contact')} />
+          <MenuLink icon={HelpCircle} label="Contact Us" onClick={() => navigate('/contact')} />
         </div>
 
-        {/* Orders */}
         {activeTab === 'orders' && (
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-muted-foreground px-1">注文履歴・配送状況</h3>
+            <h3 className="text-sm font-semibold text-muted-foreground px-1">Order History</h3>
             {loading ? (
               <div className="space-y-3">
                 <Skeleton className="h-24 w-full rounded-xl" />
@@ -277,7 +260,7 @@ export default function MyPage() {
             ) : orders.length === 0 ? (
               <div className="bg-card rounded-xl border border-border p-8 text-center">
                 <ShoppingBag className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
-                <p className="text-sm text-muted-foreground">注文履歴はまだありません</p>
+                <p className="text-sm text-muted-foreground">No orders yet</p>
               </div>
             ) : (
               orders.map((order) => <OrderCard key={order.id} order={order} />)
@@ -285,10 +268,9 @@ export default function MyPage() {
           </div>
         )}
 
-        {/* Favorites */}
         {activeTab === 'favorites' && (
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-muted-foreground px-1">お気に入り</h3>
+            <h3 className="text-sm font-semibold text-muted-foreground px-1">Favorites</h3>
             {favoritesLoading ? (
               <div className="space-y-3">
                 <Skeleton className="h-20 w-full rounded-xl" />
@@ -297,8 +279,8 @@ export default function MyPage() {
             ) : favoriteProducts.length === 0 ? (
               <div className="bg-card rounded-xl border border-border p-8 text-center">
                 <Heart className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
-                <p className="text-sm text-muted-foreground">お気に入りはまだありません</p>
-                <p className="text-xs text-muted-foreground mt-1">商品のハートをタップして追加</p>
+                <p className="text-sm text-muted-foreground">No favorites yet</p>
+                <p className="text-xs text-muted-foreground mt-1">Tap the heart on a product to save it</p>
               </div>
             ) : (
               favoriteProducts.map((product) => (
@@ -338,10 +320,9 @@ export default function MyPage() {
           </div>
         )}
 
-        {/* Logout */}
         <Button variant="outline" onClick={handleLogout} className="w-full h-12">
           <LogOut className="h-4 w-4 mr-2" />
-          ログアウト
+          Logout
         </Button>
       </main>
     </div>

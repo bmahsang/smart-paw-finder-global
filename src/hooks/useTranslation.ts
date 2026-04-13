@@ -2,8 +2,8 @@ import { useCallback } from 'react';
 import { Language, t as translate } from '@/lib/i18n';
 
 export function useTranslation() {
-  const language: Language = 'ja';
-  const locale = 'ja-JP';
+  const language: Language = 'en';
+  const locale = 'en-US';
 
   const t = useCallback((path: string): string => {
     return translate(path);

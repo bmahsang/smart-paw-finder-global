@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Menu, Phone, ChevronRight, ChevronDown, Package, User, LogOut } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
-import { LineLoginButton } from "@/components/auth/LineLoginButton";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { CartDrawer } from "@/components/cart/CartDrawer";
@@ -90,7 +89,6 @@ function MenuItemComponent({
 
 export function Header({ onSearch, onCollectionSelect }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoginSheetOpen, setIsLoginSheetOpen] = useState(false);
   const [menu, setMenu] = useState<ShopifyMenu | null>(null);
   const [collections, setCollections] = useState<ShopifyCollection[]>([]);
   const navigate = useNavigate();
@@ -301,11 +299,17 @@ export function Header({ onSearch, onCollectionSelect }: HeaderProps) {
                       className="w-full flex items-center gap-3 px-0 py-1 text-muted-foreground hover:text-foreground transition-colors"
                     >
                       <LogOut className="h-4 w-4" />
-                      <span className="text-sm">ログアウト</span>
+                      <span className="text-sm">Logout</span>
                     </button>
                   </div>
                 ) : (
-                  <LineLoginButton />
+                  <button
+                    onClick={() => { navigate("/mypage"); setIsMenuOpen(false); }}
+                    className="w-full flex items-center gap-3 px-0 py-1 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <User className="h-4 w-4" />
+                    <span className="text-sm font-medium">My Page</span>
+                  </button>
                 )}
               </div>
             </SheetContent>
@@ -328,55 +332,23 @@ export function Header({ onSearch, onCollectionSelect }: HeaderProps) {
 
         {/* Right: Icons */}
         <div className="flex items-center gap-1">
-          {/* MyPage / Login icon */}
-          {isLoggedIn && user ? (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-foreground"
-              onClick={() => navigate("/mypage")}
-            >
-              {user.pictureUrl ? (
-                <img
-                  src={user.pictureUrl}
-                  alt={user.displayName}
-                  className="w-7 h-7 rounded-full object-cover"
-                />
-              ) : (
-                <User className="h-6 w-6" />
-              )}
-            </Button>
-          ) : (
-            <Sheet open={isLoginSheetOpen} onOpenChange={setIsLoginSheetOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-foreground">
-                  <User className="h-6 w-6" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="bottom" className="rounded-t-2xl px-6 pb-10 pt-6">
-                <div className="flex flex-col items-center text-center gap-4">
-                  <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center">
-                    <User className="h-8 w-8 text-muted-foreground" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold">ログインしてください</h2>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      マイページ・注文履歴・お気に入りなど<br />会員限定の機能が使えます。
-                    </p>
-                  </div>
-                  <div className="w-full">
-                    <LineLoginButton />
-                  </div>
-                  <button
-                    onClick={() => setIsLoginSheetOpen(false)}
-                    className="text-sm text-muted-foreground underline underline-offset-4"
-                  >
-                    ショッピングを続ける
-                  </button>
-                </div>
-              </SheetContent>
-            </Sheet>
-          )}
+          {/* MyPage icon */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-foreground"
+            onClick={() => navigate("/mypage")}
+          >
+            {isLoggedIn && user?.pictureUrl ? (
+              <img
+                src={user.pictureUrl}
+                alt={user.displayName}
+                className="w-7 h-7 rounded-full object-cover"
+              />
+            ) : (
+              <User className="h-6 w-6" />
+            )}
+          </Button>
           <CartDrawer />
         </div>
       </div>
