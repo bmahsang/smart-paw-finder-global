@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ShopifyProduct, fetchProducts, fetchCollectionProducts, formatPrice } from '@/lib/shopify';
+import { ShopifyProduct, fetchProducts, fetchCollectionProducts, fetchCollectionIntersection, formatPrice } from '@/lib/shopify';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ShoppingCart, Loader2, Heart } from 'lucide-react';
@@ -30,12 +30,14 @@ const ProductSkeleton = () => (
 interface ProductGridProps {
   searchQuery?: string;
   collectionHandle?: string | null;
+  multiCollections?: string[] | null;  // e.g. ["ssfw", "toy"] → intersection
+  overrideTitle?: string | null;
 }
 
 const PRODUCTS_PER_PAGE = 12;
 const DEFAULT_MAX_PRICE = 10000;
 
-export const ProductGrid = ({ searchQuery = "", collectionHandle = null }: ProductGridProps) => {
+export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCollections = null, overrideTitle = null }: ProductGridProps) => {
   const [allProducts, setAllProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -161,7 +163,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null }: Produ
       priceRange: [0, DEFAULT_MAX_PRICE],
       availability: "all",
     });
-  }, [searchQuery, collectionHandle]);
+  }, [searchQuery, collectionHandle, multiCollections]);
 
   // Initial load
   useEffect(() => {
@@ -174,7 +176,13 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null }: Produ
 
       try {
         let response;
-        if (collectionHandle) {
+        if (multiCollections && multiCollections.length > 0) {
+          // Collection intersection (e.g. ["ssfw", "toy"] → products in both collections)
+          console.log('[ProductGrid] intersection:', multiCollections);
+          response = await fetchCollectionIntersection(multiCollections, PRODUCTS_PER_PAGE);
+          console.log('[ProductGrid] intersection result:', response.products.length, 'products');
+          setCollectionTitle(overrideTitle ?? null);
+        } else if (collectionHandle) {
           console.log('[ProductGrid] Fetching collection:', collectionHandle);
           const collectionResponse = await fetchCollectionProducts(collectionHandle, PRODUCTS_PER_PAGE);
           console.log('[ProductGrid] Collection response:', collectionResponse.collectionTitle, collectionResponse.products.length, 'products');
@@ -194,7 +202,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null }: Produ
       }
     };
     loadProducts();
-  }, [searchQuery, collectionHandle, getQuery]);
+  }, [searchQuery, collectionHandle, multiCollections, overrideTitle, getQuery]);
 
   // Load more products
   const loadMore = useCallback(async () => {
@@ -203,7 +211,10 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null }: Produ
     setLoadingMore(true);
     try {
       let response;
-      if (collectionHandle) {
+      if (multiCollections && multiCollections.length > 0) {
+        // Intersection results are fetched all at once; no cursor-based load more
+        return;
+      } else if (collectionHandle) {
         response = await fetchCollectionProducts(collectionHandle, PRODUCTS_PER_PAGE, endCursor);
       } else {
         const query = getQuery();
@@ -217,7 +228,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null }: Produ
     } finally {
       setLoadingMore(false);
     }
-  }, [loadingMore, hasNextPage, endCursor, collectionHandle, getQuery]);
+  }, [loadingMore, hasNextPage, endCursor, multiCollections, collectionHandle, getQuery]);
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
@@ -266,7 +277,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null }: Produ
     }
   }, [collectionHandle]);
 
-  const displayTitle = searchQuery ? getSearchText() : collectionTitle || "ALL";
+  const displayTitle = searchQuery ? getSearchText() : overrideTitle || collectionTitle || "ALL";
 
   if (loading) {
     return (

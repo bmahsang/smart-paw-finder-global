@@ -416,6 +416,64 @@ const GET_COLLECTION_PRODUCTS_QUERY = `
   }
 `;
 
+// Fetch only product IDs from a collection (lightweight, for intersection)
+const GET_COLLECTION_IDS_QUERY = `
+  query GetCollectionIds($handle: String!, $after: String) {
+    collection(handle: $handle) {
+      products(first: 250, after: $after) {
+        pageInfo { hasNextPage endCursor }
+        edges { node { id } }
+      }
+    }
+  }
+`;
+
+async function fetchCollectionProductIds(handle: string): Promise<Set<string>> {
+  const ids = new Set<string>();
+  let after: string | undefined;
+  while (true) {
+    const data = await storefrontApiRequest(GET_COLLECTION_IDS_QUERY, { handle, after });
+    const products = data?.data?.collection?.products;
+    if (!products) break;
+    for (const { node } of products.edges) ids.add(node.id);
+    if (!products.pageInfo.hasNextPage) break;
+    after = products.pageInfo.endCursor;
+  }
+  return ids;
+}
+
+// Return products that belong to ALL given collections (handles ordered 大分→小分)
+// e.g. ["ssfw", "toy"] → products in both the ssfw collection AND the toy collection
+export async function fetchCollectionIntersection(
+  handles: string[],
+  first: number = 20,
+): Promise<ProductsResponse> {
+  if (handles.length === 0) return { products: [], pageInfo: { hasNextPage: false, endCursor: null } };
+  if (handles.length === 1) {
+    const r = await fetchCollectionProducts(handles[0], first);
+    return { products: r.products, pageInfo: r.pageInfo };
+  }
+
+  const parentHandles = handles.slice(0, -1);
+  const childHandle = handles[handles.length - 1];
+
+  // Fetch parent collection IDs and child products in parallel
+  const [parentIdSets, childResponse] = await Promise.all([
+    Promise.all(parentHandles.map(fetchCollectionProductIds)),
+    fetchCollectionProducts(childHandle, 250),
+  ]);
+
+  // Keep only products present in every parent collection
+  const filtered = childResponse.products.filter(p =>
+    parentIdSets.every(set => set.has(p.node.id))
+  );
+
+  return {
+    products: filtered.slice(0, first),
+    pageInfo: { hasNextPage: filtered.length > first, endCursor: null },
+  };
+}
+
 // Banners (Metaobjects)
 export interface ShopifyBanner {
   id: string;

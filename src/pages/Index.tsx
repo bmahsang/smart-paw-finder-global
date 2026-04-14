@@ -10,6 +10,9 @@ const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedCollection = searchParams.get("collection");
   const searchQuery = searchParams.get("q") || "";
+  const collectionsParam = searchParams.get("collections");  // e.g. "ssfw,toy"
+  const multiCollections = collectionsParam ? collectionsParam.split(",") : null;
+  const collectionTitle = searchParams.get("collectionTitle");
   useScrollRestoration();
 
   const handleSearch = (query: string) => {
@@ -28,19 +31,34 @@ const Index = () => {
     }
   };
 
+  const handleMultiCollectionSelect = (handles: string[], title: string) => {
+    setSearchParams({ collections: handles.join(","), collectionTitle: title });
+  };
+
+  const showHeroBanner = !searchQuery && !selectedCollection && !collectionsParam;
+
   return (
     <div className="bg-background min-h-screen overflow-x-hidden overflow-y-auto">
-      <Header onSearch={handleSearch} onCollectionSelect={handleCollectionSelect} />
+      <Header
+        onSearch={handleSearch}
+        onCollectionSelect={handleCollectionSelect}
+        onMultiCollectionSelect={handleMultiCollectionSelect}
+      />
       {(selectedCollection || searchQuery) && (
         <CategoryNav selectedCollection={selectedCollection} onSelect={handleCollectionSelect} />
       )}
-      {!searchQuery && !selectedCollection && (
+      {showHeroBanner && (
         <div className="max-w-7xl mx-auto">
           <HeroBanner />
         </div>
       )}
       <main className="max-w-7xl mx-auto pb-20">
-        <ProductGrid searchQuery={searchQuery} collectionHandle={selectedCollection} />
+        <ProductGrid
+          searchQuery={searchQuery}
+          collectionHandle={selectedCollection}
+          multiCollections={multiCollections}
+          overrideTitle={collectionTitle}
+        />
       </main>
       <Footer />
     </div>

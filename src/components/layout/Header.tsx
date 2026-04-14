@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 interface HeaderProps {
   onSearch?: (query: string) => void;
   onCollectionSelect?: (handle: string | null) => void;
+  onMultiCollectionSelect?: (handles: string[], title: string) => void;
 }
 
 // Recursive menu item component for nested categories
@@ -20,13 +21,16 @@ function MenuItemComponent({
   item,
   depth = 0,
   onNavigate,
+  ancestorHandles = [],
 }: {
   item: ShopifyMenuItem;
   depth?: number;
-  onNavigate: (item: ShopifyMenuItem) => void;
+  onNavigate: (item: ShopifyMenuItem, ancestorHandles: string[]) => void;
+  ancestorHandles?: string[];
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const hasChildren = item.items && item.items.length > 0;
+  const currentHandle = extractHandleFromUrl(item.url) ?? item.title.toLowerCase().replace(/\s+/g, '-');
 
   return (
     <div>
@@ -41,7 +45,7 @@ function MenuItemComponent({
       >
         {/* Title - navigates to the collection */}
         <button
-          onClick={() => onNavigate(item)}
+          onClick={() => onNavigate(item, ancestorHandles)}
           className={cn(
             "flex-1 text-left py-3",
             "text-sm",
@@ -70,7 +74,7 @@ function MenuItemComponent({
         )}
       </div>
 
-      {/* Children */}
+      {/* Children — pass current handle as part of ancestor path */}
       {hasChildren && isExpanded && (
         <div className="border-l-2 border-border/40 ml-6">
           {item.items.map((child) => (
@@ -79,6 +83,7 @@ function MenuItemComponent({
               item={child}
               depth={depth + 1}
               onNavigate={onNavigate}
+              ancestorHandles={[...ancestorHandles, currentHandle]}
             />
           ))}
         </div>
@@ -87,7 +92,7 @@ function MenuItemComponent({
   );
 }
 
-export function Header({ onSearch, onCollectionSelect }: HeaderProps) {
+export function Header({ onSearch, onCollectionSelect, onMultiCollectionSelect }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [menu, setMenu] = useState<ShopifyMenu | null>(null);
   const [collections, setCollections] = useState<ShopifyCollection[]>([]);
@@ -116,10 +121,25 @@ export function Header({ onSearch, onCollectionSelect }: HeaderProps) {
     }
   };
 
-  const handleMenuItemNavigate = (item: ShopifyMenuItem) => {
+  const handleMenuItemNavigate = (item: ShopifyMenuItem, ancestorHandles: string[]) => {
     const handle = extractHandleFromUrl(item.url);
     setIsMenuOpen(false);
 
+    // Sub-item (has ancestors): collection intersection filtering
+    // e.g. SSFW > Toys → products in both "ssfw" AND "toy" collections
+    if (ancestorHandles.length > 0 && handle) {
+      const allHandles = [...ancestorHandles, handle];
+      console.log('[Menu] intersection handles:', allHandles, '| title:', item.title);
+      if (onMultiCollectionSelect) {
+        onMultiCollectionSelect(allHandles, item.title);
+      } else {
+        onCollectionSelect?.(handle);
+      }
+      if (window.location.pathname !== '/') navigate('/');
+      return;
+    }
+
+    // Top-level item: use collection handle as before
     if (item.type === 'COLLECTION' || item.url.includes('/collections/')) {
       if (window.location.pathname === '/') {
         onCollectionSelect?.(handle);
@@ -139,7 +159,6 @@ export function Header({ onSearch, onCollectionSelect }: HeaderProps) {
         navigate('/');
       }
     } else {
-      // For external or other links, try collection handle as fallback
       if (handle) {
         if (window.location.pathname === '/') {
           onCollectionSelect?.(handle);
@@ -211,6 +230,7 @@ export function Header({ onSearch, onCollectionSelect }: HeaderProps) {
                       item={item}
                       depth={0}
                       onNavigate={handleMenuItemNavigate}
+                      ancestorHandles={[]}
                     />
                   ))}
                 </div>
