@@ -108,7 +108,7 @@ export function CategoryNav({ selectedCollection, onSelect }: CategoryNavProps) 
                 : 'bg-background border border-border text-foreground hover:bg-secondary'
             )}
           >
-            すべて
+            All
           </button>
 
           {subItems.map(child => {

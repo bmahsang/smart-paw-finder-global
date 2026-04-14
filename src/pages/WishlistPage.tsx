@@ -21,17 +21,17 @@ export default function WishlistPage() {
       <main className="flex-1 max-w-2xl mx-auto w-full px-4 py-8">
         <div className="flex items-center gap-2 mb-6">
           <Heart className="h-5 w-5 text-red-500 fill-red-500" />
-          <h1 className="text-xl font-bold">お気に入り</h1>
-          <span className="text-sm text-muted-foreground">({items.length}件)</span>
+          <h1 className="text-xl font-bold">Wishlist</h1>
+          <span className="text-sm text-muted-foreground">({items.length})</span>
         </div>
 
         {items.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <Heart className="h-16 w-16 text-muted-foreground/30 mb-4" />
-            <p className="text-muted-foreground font-medium mb-1">お気に入りはまだありません</p>
-            <p className="text-sm text-muted-foreground mb-6">気になる商品をハートマークで追加しましょう</p>
+            <p className="text-muted-foreground font-medium mb-1">No items in your wishlist</p>
+            <p className="text-sm text-muted-foreground mb-6">Tap the heart icon on products you love to save them here.</p>
             <Button variant="outline" onClick={() => navigate("/")}>
-              ショッピングを続ける
+              Continue Shopping
             </Button>
           </div>
         ) : (
@@ -77,7 +77,7 @@ export default function WishlistPage() {
                       onClick={() => navigate(`/product/${item.handle}`)}
                     >
                       <ShoppingCart className="h-3 w-3 mr-1" />
-                      購入する
+                      View
                     </Button>
                     <Button
                       size="icon"
@@ -85,7 +85,7 @@ export default function WishlistPage() {
                       className="h-8 w-8 text-muted-foreground hover:text-destructive"
                       onClick={() => {
                         removeItem(item.productId);
-                        toast.success("お気に入りから削除しました", { position: "top-center" });
+                        toast.success("Removed from wishlist", { position: "top-center" });
                       }}
                     >
                       <Trash2 className="h-3 w-3" />

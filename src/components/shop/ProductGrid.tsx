@@ -262,11 +262,11 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
     setOptionDialogOpen(true);
   };
 
-  const getSearchText = () => `検索: "${searchQuery}"`;
-  const getProductCountText = (count: number) => `${count} 商品`;
-  const getNoSearchResultsText = () => '検索結果が見つかりません';
-  const getTryDifferentSearchText = () => '別の検索語をお試しください。';
-  const getNoFilterResultsText = () => 'フィルター条件に一致する商品がありません';
+  const getSearchText = () => `Search: "${searchQuery}"`;
+  const getProductCountText = (count: number) => `${count} products`;
+  const getNoSearchResultsText = () => 'No results found';
+  const getTryDifferentSearchText = () => 'Try a different search term.';
+  const getNoFilterResultsText = () => 'No products match the selected filters';
 
   const [collectionTitle, setCollectionTitle] = useState<string | null>(null);
 
@@ -318,7 +318,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
         <h2 className="text-2xl font-bold">{displayTitle}</h2>
         {filteredAndSortedProducts.length > 0 && (
           <span className="text-sm text-muted-foreground">
-            {filteredAndSortedProducts.length}{hasNextPage ? '+' : ''} 商品
+            {filteredAndSortedProducts.length}{hasNextPage ? '+' : ''} products
           </span>
         )}
       </div>

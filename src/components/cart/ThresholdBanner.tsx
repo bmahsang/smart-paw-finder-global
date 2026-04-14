@@ -36,11 +36,11 @@ export function ThresholdBanner() {
         <Truck className="h-4 w-4 text-primary flex-shrink-0" />
         {isFreeShipping ? (
           <span className="text-sm font-medium text-green-600">
-            送料無料
+            Free Shipping
           </span>
         ) : (
           <span className="text-sm text-muted-foreground">
-            送料: {formatPrice(shippingCost, currencyCode)}
+            Shipping: {formatPrice(shippingCost, currencyCode)}
             <span className="text-xs ml-1">({shippingRate.title})</span>
           </span>
         )}

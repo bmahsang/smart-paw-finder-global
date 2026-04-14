@@ -691,7 +691,7 @@ export async function createStorefrontCheckout(items: { variantId: string; quant
    // If customer token is expired/invalid, retry without it
    const tokenError = data?.data?.cartCreate?.userErrors?.some(
      (e: { field: string[]; message: string }) =>
-       e.field?.includes('customerAccessToken') || e.message?.includes('無効')
+       e.field?.includes('customerAccessToken') || e.message?.includes('invalid')
    );
    if (tokenError || !data?.data?.cartCreate?.cart) {
      console.warn('[Checkout] Customer token invalid, retrying without token');

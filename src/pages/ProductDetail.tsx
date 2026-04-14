@@ -354,7 +354,7 @@ export default function ProductDetail() {
                   price: price.amount,
                   currencyCode: price.currencyCode,
                 });
-                toast.success(wishlisted ? '찜 목록에서 제거했습니다.' : '찜 목록에 추가했습니다.', {
+                toast.success(wishlisted ? 'Removed from wishlist' : 'Added to wishlist', {
                   position: 'top-center',
                 });
               }}
@@ -710,7 +710,7 @@ export default function ProductDetail() {
                 price: price.amount,
                 currencyCode: price.currencyCode,
               });
-              toast.success(wishlisted ? '찜 목록에서 제거했습니다.' : '찜 목록에 추가했습니다.', {
+              toast.success(wishlisted ? 'Removed from wishlist' : 'Added to wishlist', {
                 position: 'top-center',
               });
             }}
@@ -742,7 +742,7 @@ export default function ProductDetail() {
             disabled={!selectedVariant?.availableForSale || isBuyingNow}
             className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 h-12 font-semibold"
           >
-            {isBuyingNow ? '処理中...' : 'すぐ購入'}
+            {isBuyingNow ? 'Processing...' : 'Buy Now'}
           </Button>
         </div>
       </div>
