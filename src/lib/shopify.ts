@@ -549,6 +549,44 @@ export interface ProductsResponse {
   };
 }
 
+const GET_BEST_SELLING_PRODUCTS_QUERY = `
+  query GetBestSellingProducts($first: Int!) {
+    products(first: $first, sortKey: BEST_SELLING) {
+      edges {
+        node {
+          id
+          title
+          handle
+          priceRange {
+            minVariantPrice { amount currencyCode }
+          }
+          images(first: 1) {
+            edges { node { url altText } }
+          }
+          variants(first: 1) {
+            edges {
+              node {
+                id
+                title
+                price { amount currencyCode }
+                availableForSale
+                selectedOptions { name value }
+              }
+            }
+          }
+          options { name values }
+        }
+      }
+    }
+  }
+`;
+
+export async function fetchBestSellingProducts(first: number = 8): Promise<ShopifyProduct[]> {
+  const data = await storefrontApiRequest(GET_BEST_SELLING_PRODUCTS_QUERY, { first });
+  if (!data) return [];
+  return data.data?.products?.edges || [];
+}
+
 // API Functions
 export async function fetchProducts(first: number = 20, query?: string, after?: string): Promise<ProductsResponse> {
   const data = await storefrontApiRequest(GET_PRODUCTS_QUERY, { first, query, after });

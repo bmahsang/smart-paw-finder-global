@@ -16,6 +16,9 @@ async function load(): Promise<CategoryMenuResult> {
 
   pending = (async () => {
     try {
+      const primary = await fetchMenu('category');
+      if (primary && primary.items.length > 0) return { menu: primary, collections: [] };
+
       const menu = await fetchMenu('customer-account-main-menu');
       if (menu && menu.items.length > 0) return { menu, collections: [] };
 

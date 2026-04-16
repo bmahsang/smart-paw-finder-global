@@ -2,8 +2,8 @@ import { useSearchParams } from "react-router-dom";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroBanner } from "@/components/home/HeroBanner";
+import { PopularProducts } from "@/components/home/PopularProducts";
 import { ProductGrid } from "@/components/shop/ProductGrid";
-import { CategoryNav } from "@/components/shop/CategoryNav";
 import { useScrollRestoration } from "@/hooks/useScrollRestoration";
 
 const Index = () => {
@@ -44,12 +44,10 @@ const Index = () => {
         onCollectionSelect={handleCollectionSelect}
         onMultiCollectionSelect={handleMultiCollectionSelect}
       />
-      {(selectedCollection || searchQuery) && (
-        <CategoryNav selectedCollection={selectedCollection} onSelect={handleCollectionSelect} />
-      )}
       {showHeroBanner && (
         <div className="max-w-7xl mx-auto">
           <HeroBanner />
+          <PopularProducts />
         </div>
       )}
       <main className="max-w-7xl mx-auto pb-20">

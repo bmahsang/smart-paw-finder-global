@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Menu, Phone, ChevronRight, ChevronDown, Package, User, LogOut } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { SearchAutocomplete } from "@/components/layout/SearchAutocomplete";
+import { CategoryNav } from "@/components/shop/CategoryNav";
 import { fetchMenu, fetchCollections, ShopifyMenuItem, ShopifyMenu, ShopifyCollection, extractHandleFromUrl } from "@/lib/shopify";
 import biteMeLogo from "@/assets/bite-me-logo.png";
 import { cn } from "@/lib/utils";
@@ -371,6 +372,22 @@ export function Header({ onSearch, onCollectionSelect, onMultiCollectionSelect }
           <SearchAutocomplete onSearch={handleSearch} />
         </div>
       </div>
+
+      {/* Category chips (hamburger top-level) */}
+      <CategoryChips onCollectionSelect={onCollectionSelect} />
     </header>
+  );
+}
+
+function CategoryChips({ onCollectionSelect }: { onCollectionSelect?: (handle: string | null) => void }) {
+  const [searchParams] = useSearchParams();
+  const selectedCollection = searchParams.get("collection");
+  const searchQuery = searchParams.get("q");
+
+  if (searchQuery) return null;
+  if (!onCollectionSelect) return null;
+
+  return (
+    <CategoryNav selectedCollection={selectedCollection} onSelect={onCollectionSelect} />
   );
 }
