@@ -1,14 +1,22 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/stores/authStore';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   LogOut, User, ShoppingBag, Heart, HelpCircle, ChevronRight,
-  Package, Truck, ExternalLink, MapPin, Calendar, CreditCard,
+  Package, Truck, ExternalLink, MapPin, Calendar, CreditCard, XCircle, Loader2,
 } from 'lucide-react';
-import { fetchCustomerData, fetchProductByHandle, ShopifyCustomerProfile, ShopifyOrder, formatPrice } from '@/lib/shopify';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { fetchProductByHandle, formatPrice } from '@/lib/shopify';
+import { initiateLogin, isLoggedIn as isCustomerLoggedIn, logout as customerLogout } from '@/lib/customer-auth';
+import { fetchCustomerAccount, cancelCustomerOrder, CustomerAccountProfile, CustomerAccountOrder } from '@/lib/customer-account';
+import { useAuthStore } from '@/stores/authStore';
+import { toast } from 'sonner';
 import { useFavoritesStore } from '@/stores/favoritesStore';
 
 function MenuLink({ icon: Icon, label, badge, onClick }: {
@@ -30,6 +38,44 @@ function MenuLink({ icon: Icon, label, badge, onClick }: {
   );
 }
 
+function AuthScreen() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    setLoading(true);
+    try {
+      await initiateLogin('/mypage');
+    } catch {
+      toast.error('Failed to start login. Please try again.', { position: 'top-center' });
+      setLoading(false);
+    }
+  };
+
+  return (
+    <main className="max-w-md mx-auto px-4 py-16 flex flex-col items-center text-center">
+      <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mb-6">
+        <User className="h-10 w-10 text-muted-foreground" />
+      </div>
+      <h1 className="text-xl font-bold mb-2">My Page</h1>
+      <p className="text-sm text-muted-foreground mb-8">
+        Sign in to view your orders<br />and manage your account.
+      </p>
+      <div className="w-full space-y-3">
+        <Button onClick={handleLogin} disabled={loading} className="w-full h-12 text-base font-semibold">
+          {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+          Continue with Shopify
+        </Button>
+      </div>
+      <div className="w-full mt-4 pt-4 border-t border-border">
+        <Button onClick={() => navigate('/')} variant="ghost" className="w-full h-12 text-base text-muted-foreground">
+          Continue as Guest
+        </Button>
+      </div>
+    </main>
+  );
+}
+
 function StatusBadge({ status, type }: { status: string; type: 'financial' | 'fulfillment' }) {
   const map: Record<string, { label: string; cls: string }> = type === 'financial' ? {
     PAID: { label: 'Paid', cls: 'bg-green-100 text-green-700' },
@@ -37,7 +83,7 @@ function StatusBadge({ status, type }: { status: string; type: 'financial' | 'fu
     REFUNDED: { label: 'Refunded', cls: 'bg-gray-100 text-gray-600' },
     PARTIALLY_REFUNDED: { label: 'Partial Refund', cls: 'bg-gray-100 text-gray-600' },
     AUTHORIZED: { label: 'Authorized', cls: 'bg-blue-100 text-blue-700' },
-    VOIDED: { label: 'Voided', cls: 'bg-red-100 text-red-600' },
+    VOIDED: { label: 'Cancelled', cls: 'bg-red-100 text-red-600' },
   } : {
     FULFILLED: { label: 'Shipped', cls: 'bg-green-100 text-green-700' },
     UNFULFILLED: { label: 'Pending', cls: 'bg-orange-100 text-orange-700' },
@@ -47,9 +93,37 @@ function StatusBadge({ status, type }: { status: string; type: 'financial' | 'fu
   return <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${info.cls}`}>{info.label}</span>;
 }
 
-function OrderCard({ order }: { order: ShopifyOrder }) {
+function OrderCard({ order, onCancelled }: {
+  order: CustomerAccountOrder;
+  onCancelled: () => void;
+}) {
   const [expanded, setExpanded] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
   const date = new Date(order.processedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+
+  const isCancellable =
+    order.financialStatus === 'PAID' &&
+    (!order.fulfillmentStatus || order.fulfillmentStatus === 'UNFULFILLED');
+
+  const firstTracking = order.fulfillments[0];
+
+  const handleCancel = async () => {
+    if (cancelling) return;
+    setCancelling(true);
+    try {
+      const result = await cancelCustomerOrder(order.id);
+      if (result.success) {
+        toast.success('Order cancelled successfully. A refund has been initiated.', { position: 'top-center' });
+        onCancelled();
+      } else {
+        toast.error(result.error || 'Failed to cancel order.', { position: 'top-center' });
+      }
+    } catch {
+      toast.error('Failed to cancel order. Please try again.', { position: 'top-center' });
+    } finally {
+      setCancelling(false);
+    }
+  };
 
   return (
     <div className="bg-card rounded-xl border border-border overflow-hidden">
@@ -72,8 +146,8 @@ function OrderCard({ order }: { order: ShopifyOrder }) {
         <div className="px-4 pb-4 space-y-3 border-t border-border pt-3">
           {order.lineItems.map((item, i) => (
             <div key={i} className="flex items-center gap-3">
-              {item.variant?.image?.url ? (
-                <img src={item.variant.image.url} alt={item.title} className="w-12 h-12 rounded-lg object-cover" />
+              {item.image?.url ? (
+                <img src={item.image.url} alt={item.title} className="w-12 h-12 rounded-lg object-cover" />
               ) : (
                 <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center">
                   <Package className="h-5 w-5 text-muted-foreground" />
@@ -86,25 +160,25 @@ function OrderCard({ order }: { order: ShopifyOrder }) {
             </div>
           ))}
 
-          {order.fulfillments.length > 0 && order.fulfillments[0].trackingUrl && (
+          {firstTracking?.trackingUrl && (
             <a
-              href={order.fulfillments[0].trackingUrl}
+              href={firstTracking.trackingUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-sm text-primary hover:underline"
             >
               <Truck className="h-4 w-4" />
               Track Shipment
-              {order.fulfillments[0].trackingCompany && (
-                <span className="text-xs text-muted-foreground">({order.fulfillments[0].trackingCompany})</span>
+              {firstTracking.trackingCompany && (
+                <span className="text-xs text-muted-foreground">({firstTracking.trackingCompany})</span>
               )}
               <ExternalLink className="h-3 w-3" />
             </a>
           )}
 
-          {order.statusUrl && (
+          {order.statusPageUrl && (
             <a
-              href={order.statusUrl}
+              href={order.statusPageUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
@@ -114,6 +188,45 @@ function OrderCard({ order }: { order: ShopifyOrder }) {
               <ExternalLink className="h-3 w-3" />
             </a>
           )}
+
+          {isCancellable && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button
+                  disabled={cancelling}
+                  className="w-full mt-2 flex items-center justify-center gap-2 py-2.5 rounded-lg border border-destructive/30 text-destructive text-sm font-medium hover:bg-destructive/5 transition-colors disabled:opacity-50"
+                >
+                  {cancelling ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <XCircle className="h-4 w-4" />
+                  )}
+                  {cancelling ? 'Cancelling...' : 'Cancel Order'}
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Cancel Order {order.name}?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will cancel your order and initiate a full refund of{' '}
+                    <span className="font-semibold text-foreground">
+                      {formatPrice(order.totalPrice.amount, order.totalPrice.currencyCode)}
+                    </span>.
+                    This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Keep Order</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleCancel}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    Yes, Cancel Order
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
         </div>
       )}
     </div>
@@ -122,29 +235,42 @@ function OrderCard({ order }: { order: ShopifyOrder }) {
 
 export default function MyPage() {
   const navigate = useNavigate();
-  const { user, isLoggedIn, logout } = useAuthStore();
-  const [customerData, setCustomerData] = useState<ShopifyCustomerProfile | null>(null);
+  const [loggedIn, setLoggedIn] = useState(() => isCustomerLoggedIn());
+  const [customerData, setCustomerData] = useState<CustomerAccountProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'orders' | 'favorites' | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
   const [favoriteProducts, setFavoriteProducts] = useState<Array<{ handle: string; title: string; image?: string; price: string; currencyCode: string }>>([]);
   const [favoritesLoading, setFavoritesLoading] = useState(false);
   const { getFavorites, removeFavorite } = useFavoritesStore();
 
   useEffect(() => {
-    if (isLoggedIn && user?.shopifyCustomerToken) {
-      setLoading(true);
-      fetchCustomerData(user.shopifyCustomerToken)
-        .then(setCustomerData)
-        .catch(console.error)
-        .finally(() => setLoading(false));
-    } else {
+    if (!loggedIn) {
       setLoading(false);
+      return;
     }
-  }, [isLoggedIn, user?.shopifyCustomerToken]);
+    setLoading(true);
+    fetchCustomerAccount()
+      .then((data) => {
+        if (!data) {
+          setLoggedIn(false);
+          setCustomerData(null);
+        } else {
+          setCustomerData(data);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error('Failed to load account. Please sign in again.', { position: 'top-center' });
+      })
+      .finally(() => setLoading(false));
+  }, [loggedIn, refreshKey]);
+
+  const favoritesKey = customerData?.emailAddress || customerData?.id || '';
 
   useEffect(() => {
-    if (!user?.userId || activeTab !== 'favorites') return;
-    const handles = getFavorites(user.userId);
+    if (!favoritesKey || activeTab !== 'favorites') return;
+    const handles = getFavorites(favoritesKey);
     if (handles.length === 0) { setFavoriteProducts([]); return; }
 
     setFavoritesLoading(true);
@@ -160,35 +286,24 @@ export default function MyPage() {
         );
       })
       .finally(() => setFavoritesLoading(false));
-  }, [user?.userId, activeTab, getFavorites]);
+  }, [favoritesKey, activeTab, getFavorites]);
 
-  const handleLogout = () => { logout(); navigate('/'); };
+  const handleLogout = () => {
+    useAuthStore.getState().logout();
+    customerLogout();
+  };
 
-  if (!isLoggedIn) {
+  if (!loggedIn) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-        <main className="max-w-md mx-auto px-4 py-16 flex flex-col items-center text-center">
-          <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mb-6">
-            <User className="h-10 w-10 text-muted-foreground" />
-          </div>
-          <h1 className="text-xl font-bold mb-2">My Page</h1>
-          <p className="text-sm text-muted-foreground mb-8">
-            Login feature coming soon.
-          </p>
-          <button onClick={() => navigate('/')} className="mt-4 text-sm text-muted-foreground underline underline-offset-4">
-            Continue Shopping
-          </button>
-        </main>
+        <AuthScreen />
       </div>
     );
   }
 
   const orders = customerData?.orders || [];
-  const favCount = user?.userId ? getFavorites(user.userId).length : 0;
-  const memberSince = customerData?.createdAt
-    ? new Date(customerData.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
-    : null;
+  const favCount = favoritesKey ? getFavorites(favoritesKey).length : 0;
 
   return (
     <div className="min-h-screen bg-background">
@@ -197,25 +312,20 @@ export default function MyPage() {
 
         <div className="bg-card rounded-xl border border-border p-5">
           <div className="flex items-center gap-4">
-            {user.pictureUrl ? (
-              <img src={user.pictureUrl} alt={user.displayName} className="w-16 h-16 rounded-full object-cover ring-2 ring-border" />
-            ) : (
-              <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center ring-2 ring-border">
-                <User className="h-8 w-8 text-muted-foreground" />
-              </div>
-            )}
+            <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center ring-2 ring-border">
+              <User className="h-8 w-8 text-muted-foreground" />
+            </div>
             <div className="flex-1 min-w-0">
-              <h2 className="text-lg font-bold truncate">{user.displayName}</h2>
-              {user.email && <p className="text-xs text-muted-foreground truncate">{user.email}</p>}
+              <h2 className="text-lg font-bold truncate">
+                {customerData?.displayName || 'Customer'}
+              </h2>
+              {customerData?.emailAddress && (
+                <p className="text-xs text-muted-foreground truncate">{customerData.emailAddress}</p>
+              )}
               <div className="flex items-center gap-3 mt-1.5">
-                {memberSince && (
-                  <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />Since {memberSince}
-                  </span>
-                )}
                 {customerData && (
                   <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-                    <ShoppingBag className="h-3 w-3" />{customerData.numberOfOrders} orders
+                    <ShoppingBag className="h-3 w-3" />{orders.length} orders
                   </span>
                 )}
               </div>
@@ -263,7 +373,13 @@ export default function MyPage() {
                 <p className="text-sm text-muted-foreground">No orders yet</p>
               </div>
             ) : (
-              orders.map((order) => <OrderCard key={order.id} order={order} />)
+              orders.map((order) => (
+                <OrderCard
+                  key={order.id}
+                  order={order}
+                  onCancelled={() => setRefreshKey((k) => k + 1)}
+                />
+              ))
             )}
           </div>
         )}
@@ -305,8 +421,8 @@ export default function MyPage() {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (user?.userId) {
-                        removeFavorite(user.userId, product.handle);
+                      if (favoritesKey) {
+                        removeFavorite(favoritesKey, product.handle);
                         setFavoriteProducts((prev) => prev.filter((p) => p.handle !== product.handle));
                       }
                     }}

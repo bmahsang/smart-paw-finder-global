@@ -6,7 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useCartStore } from '@/stores/cartStore';
 import { useAuthStore } from '@/stores/authStore';
-import { formatPrice, fetchShippingRates, fetchCustomerData, ShippingRate } from '@/lib/shopify';
+import { formatPrice, fetchShippingRates, ShippingRate } from '@/lib/shopify';
+import { isLoggedIn as isCustomerLoggedIn } from '@/lib/customer-auth';
+import { fetchCustomerAccount } from '@/lib/customer-account';
 import { toast } from 'sonner';
 
 interface ShippingForm {
@@ -56,12 +58,12 @@ export default function Checkout() {
   }, []);
 
   useEffect(() => {
-    if (!user?.shopifyCustomerToken) return;
-    fetchCustomerData(user.shopifyCustomerToken).then((data) => {
+    if (!isCustomerLoggedIn()) return;
+    fetchCustomerAccount().then((data) => {
       if (!data) return;
       const addr = data.defaultAddress;
       setForm((prev) => ({
-        email: data.email || prev.email || '',
+        email: data.emailAddress || prev.email || '',
         lastName: data.lastName || prev.lastName || '',
         firstName: data.firstName || prev.firstName || '',
         zip: addr?.zip || prev.zip || '',
@@ -69,11 +71,11 @@ export default function Checkout() {
         city: addr?.city || prev.city || '',
         address1: addr?.address1 || prev.address1 || '',
         address2: prev.address2 || '',
-        phone: data.phone || prev.phone || '',
+        phone: data.phoneNumber || prev.phone || '',
         country: addr?.country || prev.country || '',
       }));
     }).catch(console.error);
-  }, [user?.shopifyCustomerToken]);
+  }, []);
 
   useEffect(() => {
     if (items.length === 0) navigate('/');

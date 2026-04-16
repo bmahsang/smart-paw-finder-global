@@ -15,6 +15,7 @@ import TermsOfUse from "./pages/TermsOfUse";
 import MyPage from "./pages/MyPage";
 import WishlistPage from "./pages/WishlistPage";
 import Checkout from "./pages/Checkout";
+import AuthCallback from "./pages/AuthCallback";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfUse />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

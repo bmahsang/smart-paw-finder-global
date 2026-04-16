@@ -877,6 +877,80 @@ export async function fetchCustomerData(customerAccessToken: string): Promise<Sh
   };
 }
 
+// Customer Authentication
+const CUSTOMER_CREATE_MUTATION = `
+  mutation customerCreate($input: CustomerCreateInput!) {
+    customerCreate(input: $input) {
+      customer { id email firstName lastName }
+      customerUserErrors { field message code }
+    }
+  }
+`;
+
+const CUSTOMER_ACCESS_TOKEN_CREATE_MUTATION = `
+  mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
+    customerAccessTokenCreate(input: $input) {
+      customerAccessToken { accessToken expiresAt }
+      customerUserErrors { field message code }
+    }
+  }
+`;
+
+export async function customerSignUp(
+  email: string,
+  password: string,
+  firstName?: string,
+  lastName?: string,
+): Promise<{ success: boolean; error?: string; accessToken?: string }> {
+  const data = await storefrontApiRequest(CUSTOMER_CREATE_MUTATION, {
+    input: { email, password, firstName: firstName || '', lastName: lastName || '' },
+  });
+
+  if (!data) return { success: false, error: 'Failed to connect to server' };
+
+  const errors = data.data?.customerCreate?.customerUserErrors || [];
+  if (errors.length > 0) {
+    const codes = errors.map((e: any) => e.code);
+    if (codes.includes('TAKEN') || codes.includes('CUSTOMER_DISABLED')) {
+      return { success: false, error: 'This email is already registered. Please log in instead.' };
+    }
+    return { success: false, error: errors.map((e: any) => e.message).join(', ') };
+  }
+
+  const loginResult = await customerLogin(email, password);
+  return loginResult;
+}
+
+export async function customerLogin(
+  email: string,
+  password: string,
+): Promise<{ success: boolean; error?: string; accessToken?: string }> {
+  const data = await storefrontApiRequest(CUSTOMER_ACCESS_TOKEN_CREATE_MUTATION, {
+    input: { email, password },
+  });
+
+  if (!data) return { success: false, error: 'Failed to connect to server' };
+
+  const errors = data.data?.customerAccessTokenCreate?.customerUserErrors || [];
+  if (errors.length > 0) {
+    return { success: false, error: errors.map((e: any) => e.message).join(', ') };
+  }
+
+  const token = data.data?.customerAccessTokenCreate?.customerAccessToken?.accessToken;
+  if (!token) return { success: false, error: 'Failed to get access token' };
+
+  return { success: true, accessToken: token };
+}
+
+export async function cancelOrder(orderId: string, customerAccessToken: string): Promise<{ success: boolean; error?: string }> {
+  const response = await fetch('/api/cancel-order', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ orderId, customerAccessToken }),
+  });
+  return response.json();
+}
+
 // Backward compat
 export async function fetchCustomerOrders(customerAccessToken: string): Promise<ShopifyOrder[]> {
   const profile = await fetchCustomerData(customerAccessToken);
