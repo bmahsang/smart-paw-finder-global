@@ -5,8 +5,8 @@ const SHOP_ID = import.meta.env.VITE_SHOPIFY_SHOP_ID;
 const CLIENT_ID = import.meta.env.VITE_SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID;
 
 const AUTHORIZATION_ENDPOINT = `https://shopify.com/authentication/${SHOP_ID}/oauth/authorize`;
-const TOKEN_ENDPOINT = `https://shopify.com/authentication/${SHOP_ID}/oauth/token`;
 const LOGOUT_ENDPOINT = `https://shopify.com/authentication/${SHOP_ID}/logout`;
+const TOKEN_PROXY = '/api/customer-token';
 
 const STORAGE_KEYS = {
   accessToken: 'sca_access_token',
@@ -80,18 +80,15 @@ export async function handleCallback(code: string, state: string): Promise<{ suc
   }
 
   try {
-    const body = new URLSearchParams({
-      grant_type: 'authorization_code',
-      client_id: CLIENT_ID,
-      redirect_uri: getRedirectUri(),
-      code,
-      code_verifier: codeVerifier,
-    });
-
-    const response = await fetch(TOKEN_ENDPOINT, {
+    const response = await fetch(TOKEN_PROXY, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: getRedirectUri(),
+        code_verifier: codeVerifier,
+      }),
     });
 
     if (!response.ok) {
@@ -131,16 +128,13 @@ export async function refreshAccessToken(): Promise<string | null> {
   if (!refreshToken) return null;
 
   try {
-    const body = new URLSearchParams({
-      grant_type: 'refresh_token',
-      client_id: CLIENT_ID,
-      refresh_token: refreshToken,
-    });
-
-    const response = await fetch(TOKEN_ENDPOINT, {
+    const response = await fetch(TOKEN_PROXY, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+      }),
     });
 
     if (!response.ok) return null;
