@@ -1,9 +1,7 @@
 // Shopify Customer Account API GraphQL client
 import { getAccessToken, refreshAccessToken } from './customer-auth';
 
-const SHOP_ID = import.meta.env.VITE_SHOPIFY_SHOP_ID;
-const API_VERSION = '2025-07';
-const API_ENDPOINT = `https://shopify.com/${SHOP_ID}/account/customer/api/${API_VERSION}/graphql`;
+const ACCOUNT_PROXY = '/api/customer-account';
 
 async function customerAccountRequest<T = any>(query: string, variables: Record<string, unknown> = {}): Promise<T | null> {
   let token = getAccessToken();
@@ -12,7 +10,7 @@ async function customerAccountRequest<T = any>(query: string, variables: Record<
     if (!token) return null;
   }
 
-  const response = await fetch(API_ENDPOINT, {
+  const response = await fetch(ACCOUNT_PROXY, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
