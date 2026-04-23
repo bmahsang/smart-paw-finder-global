@@ -7,7 +7,6 @@ import {
   LogOut, User, ShoppingBag, Heart, HelpCircle, ChevronRight,
   Package, Truck, ExternalLink, MapPin, Calendar, CreditCard, XCircle, Loader2, Search,
 } from 'lucide-react';
-import { Input } from '@/components/ui/input';
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -36,81 +35,6 @@ function MenuLink({ icon: Icon, label, badge, onClick }: {
         <ChevronRight className="h-4 w-4 text-muted-foreground" />
       </div>
     </button>
-  );
-}
-
-function GuestOrderLookup() {
-  const [email, setEmail] = useState('');
-  const [orderNumber, setOrderNumber] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [orders, setOrders] = useState<CustomerAccountOrder[] | null>(null);
-
-  const handleLookup = async () => {
-    if (!email.trim() || !orderNumber.trim()) {
-      toast.error('Please enter both email and order number.', { position: 'top-center' });
-      return;
-    }
-    setLoading(true);
-    setOrders(null);
-    try {
-      const res = await fetch('/api/guest-order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), orderNumber: orderNumber.trim() }),
-      });
-      const data = await res.json();
-      if (!data.success) {
-        toast.error(data.error || 'Order not found.', { position: 'top-center' });
-        return;
-      }
-      setOrders(data.orders);
-    } catch {
-      toast.error('Failed to look up order. Please try again.', { position: 'top-center' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="w-full space-y-4">
-      <div className="bg-card rounded-xl border border-border p-5 space-y-4">
-        <div className="flex items-center gap-2 mb-1">
-          <Search className="h-4 w-4 text-muted-foreground" />
-          <h3 className="text-sm font-semibold">Guest Order Lookup</h3>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          Enter the email and order number from your confirmation email.
-        </p>
-        <Input
-          type="email"
-          placeholder="Email address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="h-11"
-        />
-        <Input
-          type="text"
-          placeholder="Order number (e.g. #1001)"
-          value={orderNumber}
-          onChange={(e) => setOrderNumber(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleLookup()}
-          className="h-11"
-        />
-        <Button onClick={handleLookup} disabled={loading} variant="outline" className="w-full h-11">
-          {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Search className="h-4 w-4 mr-2" />}
-          Look Up Order
-        </Button>
-      </div>
-
-      {orders && orders.length > 0 && (
-        <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-muted-foreground px-1">Order Found</h3>
-          {orders.map((order) => (
-            <OrderCard key={order.id} order={order} onCancelled={() => {}} />
-          ))}
-        </div>
-      )}
-    </div>
   );
 }
 
@@ -143,12 +67,13 @@ function AuthScreen() {
           Continue with Shopify
         </Button>
       </div>
-      <div className="w-full mt-6 pt-6 border-t border-border space-y-4">
-        <GuestOrderLookup />
-      </div>
-      <div className="w-full mt-4 pt-4 border-t border-border">
+      <div className="w-full mt-4 pt-4 border-t border-border space-y-3">
         <Button onClick={() => navigate('/')} variant="ghost" className="w-full h-12 text-base text-muted-foreground">
           Continue as Guest
+        </Button>
+        <Button onClick={() => navigate('/guest-order')} variant="outline" className="w-full h-12 text-base">
+          <Search className="h-4 w-4 mr-2" />
+          Guest Order Lookup
         </Button>
       </div>
     </main>

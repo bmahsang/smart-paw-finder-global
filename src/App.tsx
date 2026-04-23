@@ -16,6 +16,7 @@ import MyPage from "./pages/MyPage";
 import WishlistPage from "./pages/WishlistPage";
 import Checkout from "./pages/Checkout";
 import AuthCallback from "./pages/AuthCallback";
+import GuestOrderLookup from "./pages/GuestOrderLookup";
 import { WhatsAppButton } from "./components/layout/WhatsAppButton";
 
 const queryClient = new QueryClient();
@@ -45,6 +46,7 @@ const App = () => (
           <Route path="/terms" element={<TermsOfUse />} />
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/guest-order" element={<GuestOrderLookup />} />
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
