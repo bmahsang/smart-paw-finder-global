@@ -5,7 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { useWishlistStore } from "@/stores/wishlistStore";
 import { useCartStore } from "@/stores/cartStore";
-import { formatPrice } from "@/lib/shopify";
+import { PriceTag } from "@/components/ui/PriceTag";
 import { useTranslation } from "@/hooks/useTranslation";
 import { toast } from "sonner";
 
@@ -64,9 +64,9 @@ export default function WishlistPage() {
                     className="text-left"
                   >
                     <p className="text-sm font-medium line-clamp-2 leading-snug">{item.title}</p>
-                    <p className="text-sm font-bold text-primary mt-1">
-                      {formatPrice(item.price, item.currencyCode)}
-                    </p>
+                    <div className="mt-1">
+                      <PriceTag amount={item.price} currencyCode={item.currencyCode} className="text-sm font-bold text-primary" originalClassName="text-xs" />
+                    </div>
                   </button>
 
                   {/* Actions */}

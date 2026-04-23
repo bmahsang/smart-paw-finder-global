@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { fetchProductByHandle, formatPrice, ShopifyProduct } from "@/lib/shopify";
+import { PriceTag } from "@/components/ui/PriceTag";
 import { trackViewItem, trackAddToCart, shopifyToGA4Item } from "@/lib/ga4-ecommerce";
 import { useCartStore } from "@/stores/cartStore";
 import { useWishlistStore } from "@/stores/wishlistStore";
@@ -458,9 +459,7 @@ export default function ProductDetail() {
         <div className="mb-4">
           <h1 className="text-xl font-bold text-foreground mb-2">{product.title}</h1>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-foreground" translate="no">
-              {formatPrice(price.amount, price.currencyCode)}
-            </span>
+            <PriceTag amount={price.amount} currencyCode={price.currencyCode} className="text-2xl font-bold text-foreground" originalClassName="text-base" />
           </div>
         </div>
 
@@ -509,9 +508,7 @@ export default function ProductDetail() {
                   <span className="text-sm font-medium text-foreground">{selectedOptions[option.name]}</span>
                 </div>
                 {showSwatchUI && (
-                  <span className="text-base font-semibold text-foreground">
-                    {formatPrice(price.amount, price.currencyCode)}
-                  </span>
+                  <PriceTag amount={price.amount} currencyCode={price.currencyCode} className="text-base font-semibold text-foreground" originalClassName="text-sm" />
                 )}
               </div>
 

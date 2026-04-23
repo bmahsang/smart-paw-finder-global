@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ShopifyProduct, fetchProducts, fetchCollectionProducts, fetchCollectionIntersection, formatPrice } from '@/lib/shopify';
+import { ShopifyProduct, fetchProducts, fetchCollectionProducts, fetchCollectionIntersection } from '@/lib/shopify';
+import { PriceTag } from '@/components/ui/PriceTag';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ShoppingCart, Loader2, Heart } from 'lucide-react';
@@ -406,9 +407,12 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
                     </h3>
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
-                        <span className={`font-bold text-sm ${isCompletelyOutOfStock ? 'text-muted-foreground' : 'text-primary'}`} translate="no">
-                          {formatPrice(price.amount, price.currencyCode)}
-                        </span>
+                        <PriceTag
+                          amount={price.amount}
+                          currencyCode={price.currencyCode}
+                          className={`font-bold text-sm ${isCompletelyOutOfStock ? 'text-muted-foreground' : 'text-primary'}`}
+                          originalClassName="text-xs"
+                        />
                       </div>
                       <Button
                         size="sm"

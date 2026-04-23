@@ -47,6 +47,21 @@ export default function AuthCallback() {
             displayName: profile.displayName || profile.emailAddress || 'Customer',
             email: profile.emailAddress || undefined,
           });
+
+          if (profile.emailAddress) {
+            try {
+              const tagRes = await fetch('/api/customer-tags', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: profile.emailAddress }),
+              });
+              const tagData = await tagRes.json();
+              const tags: string[] = tagData.tags || [];
+              useAuthStore.getState().setB2B(tags.some((t) => t.toUpperCase() === 'B2B'));
+            } catch {
+              // Non-fatal: tag check failed
+            }
+          }
         }
       } catch {
         // Non-fatal: profile sync failed but login succeeded

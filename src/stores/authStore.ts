@@ -13,7 +13,9 @@ export interface UserProfile {
 interface AuthStore {
   user: UserProfile | null;
   isLoggedIn: boolean;
+  isB2B: boolean;
   login: (user: UserProfile) => void;
+  setB2B: (isB2B: boolean) => void;
   logout: () => void;
 }
 
@@ -22,8 +24,10 @@ export const useAuthStore = create<AuthStore>()(
     (set) => ({
       user: null,
       isLoggedIn: false,
+      isB2B: false,
       login: (user) => set({ user, isLoggedIn: true }),
-      logout: () => set({ user: null, isLoggedIn: false }),
+      setB2B: (isB2B) => set({ isB2B }),
+      logout: () => set({ user: null, isLoggedIn: false, isB2B: false }),
     }),
     {
       name: 'auth',
@@ -31,3 +35,5 @@ export const useAuthStore = create<AuthStore>()(
     }
   )
 );
+
+export const B2B_DISCOUNT_RATE = 0.35;

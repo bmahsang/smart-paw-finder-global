@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { useCartStore } from '@/stores/cartStore';
 import { useAuthStore } from '@/stores/authStore';
 import { formatPrice, fetchShippingRates, ShippingRate } from '@/lib/shopify';
+import { B2B_DISCOUNT_RATE } from '@/stores/authStore';
 import { isLoggedIn as isCustomerLoggedIn } from '@/lib/customer-auth';
 import { fetchCustomerAccount } from '@/lib/customer-account';
 import { toast } from 'sonner';
@@ -85,7 +86,9 @@ export default function Checkout() {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const subtotal = items.reduce((sum, item) => sum + parseFloat(item.price.amount) * item.quantity, 0);
+  const isB2B = useAuthStore((s) => s.isB2B);
+  const rawSubtotal = items.reduce((sum, item) => sum + parseFloat(item.price.amount) * item.quantity, 0);
+  const subtotal = isB2B ? rawSubtotal * (1 - B2B_DISCOUNT_RATE) : rawSubtotal;
   const shipping = shippingRate ? parseFloat(shippingRate.amount) : 0;
   const total = subtotal + shipping;
   const currencyCode = items[0]?.price.currencyCode || 'USD';
@@ -161,7 +164,11 @@ export default function Checkout() {
                   </p>
                 </div>
                 <span className="text-sm font-semibold" translate="no">
-                  {formatPrice((parseFloat(item.price.amount) * item.quantity).toString(), item.price.currencyCode)}
+                  {(() => {
+                    const lineTotal = parseFloat(item.price.amount) * item.quantity;
+                    const displayed = isB2B ? (lineTotal * (1 - B2B_DISCOUNT_RATE)).toFixed(2) : lineTotal.toString();
+                    return formatPrice(displayed, item.price.currencyCode);
+                  })()}
                 </span>
               </div>
             ))}

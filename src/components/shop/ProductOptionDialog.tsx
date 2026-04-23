@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ShopifyProduct, formatPrice } from '@/lib/shopify';
+import { PriceTag, getB2BPrice } from '@/components/ui/PriceTag';
+import { useAuthStore } from '@/stores/authStore';
 import { useCartStore } from '@/stores/cartStore';
 import { Button } from '@/components/ui/button';
 import {
@@ -119,9 +121,7 @@ export const ProductOptionDialog = ({ product, open, onOpenChange }: ProductOpti
           )}
           <div className="flex-1 min-w-0">
             <h3 className="font-medium text-sm line-clamp-2 mb-1">{productNode.title}</h3>
-            <span className="font-bold text-primary">
-              {formatPrice(price.amount, price.currencyCode)}
-            </span>
+            <PriceTag amount={price.amount} currencyCode={price.currencyCode} className="font-bold text-primary" originalClassName="text-sm" />
           </div>
         </div>
 
@@ -291,7 +291,7 @@ export const ProductOptionDialog = ({ product, open, onOpenChange }: ProductOpti
             disabled={!selectedVariant?.availableForSale}
           >
             <ShoppingCart className="h-5 w-5 mr-2" />
-            Add to Cart - {formatPrice(totalPrice.toString(), price.currencyCode)}
+            Add to Cart - {formatPrice(useAuthStore.getState().isB2B ? getB2BPrice(totalPrice.toString()) : totalPrice.toString(), price.currencyCode)}
           </Button>
         </div>
       </DialogContent>

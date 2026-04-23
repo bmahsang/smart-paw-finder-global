@@ -14,6 +14,7 @@ import {
 import { ShoppingCart, Minus, Plus, Trash2, ExternalLink, Loader2 } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
 import { formatPrice } from "@/lib/shopify";
+import { useAuthStore, B2B_DISCOUNT_RATE } from "@/stores/authStore";
 import { ThresholdBanner } from "./ThresholdBanner";
 import { useTranslation } from "@/hooks/useTranslation";
 import { safeNavigate } from "@/lib/browser-utils";
@@ -243,12 +244,36 @@ export const CartDrawer = ({ open: controlledOpen, onOpenChange, showTrigger = t
                           </p>
                         )}
                         <div className="mt-1">
-                          <p className="text-xs text-muted-foreground">
-                            {formatPrice(item.price.amount, item.price.currencyCode)} x {item.quantity}
-                          </p>
-                          <p className="font-semibold text-sm text-primary">
-                            {formatPrice((parseFloat(item.price.amount) * item.quantity).toFixed(2), item.price.currencyCode)}
-                          </p>
+                          {(() => {
+                            const isB2B = useAuthStore.getState().isB2B;
+                            const unitPrice = parseFloat(item.price.amount);
+                            const lineTotal = unitPrice * item.quantity;
+                            if (isB2B) {
+                              const discUnit = (unitPrice * (1 - B2B_DISCOUNT_RATE)).toFixed(2);
+                              const discTotal = (lineTotal * (1 - B2B_DISCOUNT_RATE)).toFixed(2);
+                              return (
+                                <>
+                                  <p className="text-xs text-muted-foreground">
+                                    <span className="line-through">{formatPrice(item.price.amount, item.price.currencyCode)}</span>
+                                    {' '}{formatPrice(discUnit, item.price.currencyCode)} x {item.quantity}
+                                  </p>
+                                  <p className="font-semibold text-sm text-primary">
+                                    {formatPrice(discTotal, item.price.currencyCode)}
+                                  </p>
+                                </>
+                              );
+                            }
+                            return (
+                              <>
+                                <p className="text-xs text-muted-foreground">
+                                  {formatPrice(item.price.amount, item.price.currencyCode)} x {item.quantity}
+                                </p>
+                                <p className="font-semibold text-sm text-primary">
+                                  {formatPrice(lineTotal.toFixed(2), item.price.currencyCode)}
+                                </p>
+                              </>
+                            );
+                          })()}
                         </div>
                       </div>
 
@@ -302,7 +327,11 @@ export const CartDrawer = ({ open: controlledOpen, onOpenChange, showTrigger = t
                     {t('cart.total')} ({selectedCount} {t('cart.itemCount') || 'items'})
                   </span>
                   <span className="text-xl font-bold">
-                    {formatPrice(totalPrice.toFixed(2), currencyCode)}
+                    {(() => {
+                      const isB2B = useAuthStore.getState().isB2B;
+                      const displayed = isB2B ? (totalPrice * (1 - B2B_DISCOUNT_RATE)).toFixed(2) : totalPrice.toFixed(2);
+                      return formatPrice(displayed, currencyCode);
+                    })()}
                   </span>
                 </div>
 

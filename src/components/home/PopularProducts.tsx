@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { ShopifyProduct, fetchBestSellingProducts, formatPrice } from "@/lib/shopify";
+import { ShopifyProduct, fetchBestSellingProducts } from "@/lib/shopify";
+import { PriceTag } from "@/components/ui/PriceTag";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const BADGES = ["BEST", "POPULAR", "PICK", "TOP", "NEW", "HOT"];
@@ -87,9 +88,7 @@ export function PopularProducts() {
                 <h3 className="text-xs font-medium text-foreground line-clamp-2 mb-2 min-h-[32px]">
                   {product.node.title}
                 </h3>
-                <p className="text-sm font-bold text-primary" translate="no">
-                  {formatPrice(price.amount, price.currencyCode)}
-                </p>
+                <PriceTag amount={price.amount} currencyCode={price.currencyCode} className="text-sm font-bold text-primary" originalClassName="text-xs" />
               </div>
             </div>
           );
