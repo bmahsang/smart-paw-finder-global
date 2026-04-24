@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft, Loader2, Truck, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/stores/cartStore';
@@ -10,8 +10,15 @@ import { toast } from 'sonner';
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const { items, isLoading, createCheckout } = useCartStore();
+  const location = useLocation();
+  const { items: allItems, isLoading, createCheckout } = useCartStore();
   const isB2B = useAuthStore((s) => s.isB2B);
+
+  const selectedVariantIds: string[] | undefined = location.state?.selectedVariantIds;
+  const items = useMemo(() => {
+    if (!selectedVariantIds || selectedVariantIds.length === 0) return allItems;
+    return allItems.filter(item => selectedVariantIds.includes(item.variantId));
+  }, [allItems, selectedVariantIds]);
   const [shippingRate, setShippingRate] = useState<ShippingRate | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -22,8 +29,8 @@ export default function Checkout() {
   }, []);
 
   useEffect(() => {
-    if (items.length === 0) navigate('/');
-  }, [items.length, navigate]);
+    if (allItems.length === 0) navigate('/');
+  }, [allItems.length, navigate]);
 
   const rawSubtotal = items.reduce((sum, item) => sum + parseFloat(item.price.amount) * item.quantity, 0);
   const subtotal = isB2B ? rawSubtotal * (1 - B2B_DISCOUNT_RATE) : rawSubtotal;

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ShopifyProduct, fetchBestSellingProducts } from "@/lib/shopify";
 import { PriceTag } from "@/components/ui/PriceTag";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ProductOptionDialog } from "@/components/shop/ProductOptionDialog";
 
 const BADGES = ["BEST", "POPULAR", "PICK", "TOP", "NEW", "HOT"];
 
@@ -11,6 +13,8 @@ export function PopularProducts() {
   const navigate = useNavigate();
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [optionDialogOpen, setOptionDialogOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<ShopifyProduct | null>(null);
 
   useEffect(() => {
     fetchBestSellingProducts(8)
@@ -18,6 +22,12 @@ export function PopularProducts() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  const handleAddToCart = (e: React.MouseEvent, product: ShopifyProduct) => {
+    e.stopPropagation();
+    setSelectedProduct(product);
+    setOptionDialogOpen(true);
+  };
 
   if (loading) {
     return (
@@ -41,23 +51,18 @@ export function PopularProducts() {
     );
   }
 
-  if (products.length === 0) return null;
+  const availableProducts = products.filter(p => p.node.variants.edges.some(v => v.node.availableForSale));
+
+  if (availableProducts.length === 0) return null;
 
   return (
     <section className="mt-6 pb-4 animate-fade-up" style={{ animationDelay: "0.3s" }}>
-      <div className="flex items-center justify-between px-4 mb-3">
+      <div className="px-4 mb-3">
         <h2 className="text-base font-bold text-foreground">Popular Products</h2>
-        <button
-          onClick={() => navigate("/")}
-          className="flex items-center gap-0.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          View All
-          <ChevronRight className="h-4 w-4" />
-        </button>
       </div>
 
       <div className="grid grid-cols-3 gap-3 px-4">
-        {products.slice(0, 6).map((product, index) => {
+        {availableProducts.slice(0, 6).map((product, index) => {
           const image = product.node.images.edges[0]?.node;
           const price = product.node.priceRange.minVariantPrice;
 
@@ -88,12 +93,28 @@ export function PopularProducts() {
                 <h3 className="text-xs font-medium text-foreground line-clamp-2 mb-2 min-h-[32px]">
                   {product.node.title}
                 </h3>
-                <PriceTag amount={price.amount} currencyCode={price.currencyCode} className="text-sm font-bold text-primary" originalClassName="text-xs" />
+                <div className="flex items-start justify-between gap-1">
+                  <PriceTag amount={price.amount} currencyCode={price.currencyCode} className="text-sm font-bold text-primary" originalClassName="text-xs" />
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={(e) => handleAddToCart(e, product)}
+                    className="h-7 w-7 p-0 flex-shrink-0"
+                  >
+                    <ShoppingCart className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
               </div>
             </div>
           );
         })}
       </div>
+
+      <ProductOptionDialog
+        product={selectedProduct}
+        open={optionDialogOpen}
+        onOpenChange={setOptionDialogOpen}
+      />
     </section>
   );
 }

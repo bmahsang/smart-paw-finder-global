@@ -130,7 +130,10 @@ export const CartDrawer = ({ open: controlledOpen, onOpenChange, showTrigger = t
     trackBeginCheckout(ga4Items, currencyCode, totalPrice);
 
     setIsOpen(false);
-    navigate('/checkout');
+    const selectedVariantIds = selectedItems.size > 0
+      ? Array.from(selectedItems)
+      : items.map(item => item.variantId);
+    navigate('/checkout', { state: { selectedVariantIds } });
   };
 
   const handleProductClick = (handle: string) => {
