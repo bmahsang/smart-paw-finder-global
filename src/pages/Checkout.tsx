@@ -86,11 +86,18 @@ export default function Checkout() {
                     {' '}x{item.quantity}
                   </p>
                 </div>
-                <span className="text-sm font-semibold" translate="no">
+                <span className="text-sm font-semibold text-right" translate="no">
                   {(() => {
                     const lineTotal = parseFloat(item.price.amount) * item.quantity;
-                    const displayed = isB2B ? (lineTotal * (1 - B2B_DISCOUNT_RATE)).toFixed(2) : lineTotal.toString();
-                    return formatPrice(displayed, item.price.currencyCode);
+                    if (isB2B) {
+                      return (
+                        <span className="flex flex-col items-end">
+                          <span className="text-xs text-muted-foreground line-through">{formatPrice(lineTotal.toString(), item.price.currencyCode)}</span>
+                          <span>{formatPrice((lineTotal * (1 - B2B_DISCOUNT_RATE)).toFixed(2), item.price.currencyCode)}</span>
+                        </span>
+                      );
+                    }
+                    return formatPrice(lineTotal.toString(), item.price.currencyCode);
                   })()}
                 </span>
               </div>
@@ -99,7 +106,14 @@ export default function Checkout() {
           <div className="border-t border-border mt-3 pt-3 space-y-1">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Subtotal</span>
-              <span translate="no">{formatPrice(subtotal.toString(), currencyCode)}</span>
+              <span translate="no">
+                {isB2B ? (
+                  <span className="flex items-center gap-2">
+                    <span className="text-muted-foreground line-through">{formatPrice(rawSubtotal.toString(), currencyCode)}</span>
+                    <span>{formatPrice(subtotal.toString(), currencyCode)}</span>
+                  </span>
+                ) : formatPrice(subtotal.toString(), currencyCode)}
+              </span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground flex items-center gap-1">
@@ -109,7 +123,14 @@ export default function Checkout() {
             </div>
             <div className="flex justify-between text-base font-bold pt-1 border-t border-border">
               <span>Total</span>
-              <span translate="no">{formatPrice(total.toString(), currencyCode)}</span>
+              <span translate="no">
+                {isB2B ? (
+                  <span className="flex items-center gap-2">
+                    <span className="text-sm font-normal text-muted-foreground line-through">{formatPrice((rawSubtotal + shipping).toString(), currencyCode)}</span>
+                    <span>{formatPrice(total.toString(), currencyCode)}</span>
+                  </span>
+                ) : formatPrice(total.toString(), currencyCode)}
+              </span>
             </div>
           </div>
         </div>
