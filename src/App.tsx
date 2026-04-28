@@ -13,6 +13,8 @@ import NotFound from "./pages/NotFound";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import MyPage from "./pages/MyPage";
+import OrderHistory from "./pages/OrderHistory";
+import FavoritesPage from "./pages/FavoritesPage";
 import WishlistPage from "./pages/WishlistPage";
 import Checkout from "./pages/Checkout";
 import AuthCallback from "./pages/AuthCallback";
@@ -45,6 +47,8 @@ const App = () => (
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfUse />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/mypage/order-history" element={<OrderHistory />} />
+          <Route path="/mypage/favorites" element={<FavoritesPage />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/guest-order" element={<GuestOrderLookup />} />
           <Route path="/wishlist" element={<WishlistPage />} />
