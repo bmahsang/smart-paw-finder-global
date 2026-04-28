@@ -30,18 +30,21 @@ export function ThresholdBanner() {
   const shippingCost = parseFloat(shippingRate.amount);
   const isFreeShipping = shippingCost === 0;
 
+  const THRESHOLD = 150;
+  const remaining = THRESHOLD - total;
+  const qualifies = total >= THRESHOLD;
+
   return (
-    <div className="bg-card border border-border rounded-lg p-3 mb-4">
+    <div className={`border rounded-lg p-3 mb-4 ${qualifies ? 'bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-800' : 'bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800'}`}>
       <div className="flex items-center gap-2">
-        <Truck className="h-4 w-4 text-primary flex-shrink-0" />
-        {isFreeShipping ? (
-          <span className="text-sm font-medium text-green-600">
-            Free Shipping
+        <Truck className={`h-4 w-4 flex-shrink-0 ${qualifies ? 'text-green-600' : 'text-amber-600'}`} />
+        {qualifies ? (
+          <span className="text-sm font-semibold text-green-600">
+            $10 Flat Rate Shipping Unlocked!
           </span>
         ) : (
-          <span className="text-sm text-muted-foreground">
-            Shipping: {formatPrice(shippingCost, currencyCode)}
-            <span className="text-xs ml-1">({shippingRate.title})</span>
+          <span className="text-sm text-amber-700 dark:text-amber-400">
+            Add <strong>{formatPrice(remaining.toFixed(2), currencyCode)}</strong> more for <strong>$10 flat rate shipping!</strong>
           </span>
         )}
       </div>
