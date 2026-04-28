@@ -29,6 +29,7 @@ interface CartDrawerProps {
 export const CartDrawer = ({ open: controlledOpen, onOpenChange, showTrigger = true }: CartDrawerProps) => {
   const [internalOpen, setInternalOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const [initialized, setInitialized] = useState(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const {
@@ -43,6 +44,15 @@ export const CartDrawer = ({ open: controlledOpen, onOpenChange, showTrigger = t
   // Support both controlled and uncontrolled modes
   const isOpen = controlledOpen !== undefined ? controlledOpen : internalOpen;
   const setIsOpen = onOpenChange || setInternalOpen;
+
+  // Select all items by default when cart opens
+  useEffect(() => {
+    if (isOpen && items.length > 0 && !initialized) {
+      setSelectedItems(new Set(items.map(item => item.variantId)));
+      setInitialized(true);
+    }
+    if (!isOpen) setInitialized(false);
+  }, [isOpen, items, initialized]);
 
   // GA4: view_cart event when drawer opens
   useEffect(() => {
