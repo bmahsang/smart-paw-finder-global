@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ChevronLeft, Loader2, Truck, CreditCard, AlertTriangle } from 'lucide-react';
+import { ChevronLeft, Loader2, Truck, CreditCard, AlertTriangle, PartyPopper } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/stores/cartStore';
 import { useAuthStore } from '@/stores/authStore';
@@ -148,11 +148,39 @@ export default function Checkout() {
                 <span translate="no">{formatPrice(shipping.toFixed(2), currencyCode)}</span>
               )}
             </div>
-            {!countryLoading && !isKorean && !isLoggedIn && (
-              <p className="text-[11px] text-muted-foreground text-right">
-                ${SHIPPING_OVER} for orders ${SHIPPING_THRESHOLD}+ / ${SHIPPING_UNDER} under ${SHIPPING_THRESHOLD}
-              </p>
-            )}
+            {!countryLoading && !isKorean && (() => {
+              const progress = Math.min((subtotal / SHIPPING_THRESHOLD) * 100, 100);
+              const remaining = SHIPPING_THRESHOLD - subtotal;
+              const qualifies = subtotal >= SHIPPING_THRESHOLD;
+              return (
+                <div className={`rounded-lg p-3 mt-2 ${qualifies ? 'bg-green-50 border border-green-200 dark:bg-green-950/30 dark:border-green-800' : 'bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 dark:from-amber-950/30 dark:to-orange-950/30 dark:border-amber-800'}`}>
+                  <div className="flex items-center gap-2 mb-1.5">
+                    {qualifies ? (
+                      <PartyPopper className="h-3.5 w-3.5 text-green-600 flex-shrink-0" />
+                    ) : (
+                      <Truck className="h-3.5 w-3.5 text-amber-600 flex-shrink-0" />
+                    )}
+                    {qualifies ? (
+                      <span className="text-xs font-bold text-green-600">$10 Flat Rate Shipping Unlocked!</span>
+                    ) : (
+                      <span className="text-xs font-semibold text-amber-700 dark:text-amber-400">
+                        Add <span className="text-primary font-bold">{formatPrice(remaining.toFixed(2), currencyCode)}</span> more for <span className="font-bold">$10 shipping!</span>
+                      </span>
+                    )}
+                  </div>
+                  <div className="relative w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ease-out ${qualifies ? 'bg-green-500' : 'bg-gradient-to-r from-amber-400 to-orange-500'}`}
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                  <div className="flex justify-between mt-1">
+                    <span className="text-[10px] text-muted-foreground">{formatPrice(subtotal.toFixed(2), currencyCode)}</span>
+                    <span className="text-[10px] text-muted-foreground">{formatPrice(SHIPPING_THRESHOLD.toString(), currencyCode)}</span>
+                  </div>
+                </div>
+              );
+            })()}
             {isB2B && b2bEligible && (
               <div className="flex justify-between text-sm text-green-600">
                 <span>B2B Discount (35%)</span>
