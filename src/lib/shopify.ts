@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import { useAuthStore } from '@/stores/authStore';
 
 // Shopify API - requests go through the server proxy which handles authentication
 const SHOPIFY_PROXY_URL = '/api/shopify';
@@ -706,21 +707,20 @@ export async function createStorefrontCheckout(items: { variantId: string; quant
      input.discountCodes = [discountCode];
    }
 
-   // Attach customer info from auth store for checkout pre-fill
-   // Attach buyer identity if logged in
+   // Attach buyer identity from auth store for checkout pre-fill
    let userEmail: string | undefined;
    try {
-     const authData = JSON.parse(localStorage.getItem('auth') || '{}');
-     const user = authData?.state?.user;
+     const authState = useAuthStore.getState();
+     const user = authState.user;
      userEmail = user?.shopifyEmail || user?.email;
      if (user?.shopifyCustomerToken) {
        input.buyerIdentity = {
          customerAccessToken: user.shopifyCustomerToken,
          email: userEmail,
-         countryCode: 'JP',
+         countryCode: 'KR',
        };
      } else if (userEmail) {
-       input.buyerIdentity = { email: userEmail, countryCode: 'JP' };
+       input.buyerIdentity = { email: userEmail, countryCode: 'KR' };
      }
    } catch { /* continue without buyer identity */ }
 
@@ -734,7 +734,7 @@ export async function createStorefrontCheckout(items: { variantId: string; quant
    if (tokenError || !data?.data?.cartCreate?.cart) {
      console.warn('[Checkout] Customer token invalid, retrying without token');
      if (userEmail) {
-       input.buyerIdentity = { email: userEmail, countryCode: 'JP' };
+       input.buyerIdentity = { email: userEmail, countryCode: 'KR' };
      } else {
        delete input.buyerIdentity;
      }
@@ -761,6 +761,11 @@ export async function createStorefrontCheckout(items: { variantId: string; quant
    // Add discount code to URL as backup (in case cart discount doesn't persist)
    if (discountCode) {
      url.searchParams.set('discount', discountCode);
+   }
+
+   // Pre-fill email in Shopify checkout contact field
+   if (userEmail) {
+     url.searchParams.set('checkout[email]', userEmail);
    }
 
   // Add return URL for post-checkout redirect
