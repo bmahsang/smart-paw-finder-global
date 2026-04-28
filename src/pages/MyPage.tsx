@@ -247,6 +247,7 @@ export default function MyPage() {
   const [favoriteProducts, setFavoriteProducts] = useState<Array<{ handle: string; title: string; image?: string; price: string; currencyCode: string }>>([]);
   const [favoritesLoading, setFavoritesLoading] = useState(false);
   const { getFavorites, removeFavorite } = useFavoritesStore();
+  const favoritesData = useFavoritesStore((s) => s.favorites);
 
   useEffect(() => {
     if (!loggedIn) {
@@ -291,7 +292,7 @@ export default function MyPage() {
         );
       })
       .finally(() => setFavoritesLoading(false));
-  }, [favoritesKey, activeTab, getFavorites]);
+  }, [favoritesKey, activeTab, getFavorites, favoritesData]);
 
   const handleLogout = () => {
     useAuthStore.getState().logout();
@@ -308,7 +309,7 @@ export default function MyPage() {
   }
 
   const orders = customerData?.orders || [];
-  const favCount = favoritesKey ? getFavorites(favoritesKey).length : 0;
+  const favCount = favoritesKey ? (favoritesData[favoritesKey]?.length || 0) : 0;
 
   return (
     <div className="min-h-screen bg-background">

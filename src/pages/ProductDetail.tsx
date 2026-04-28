@@ -13,7 +13,8 @@ import { fetchProductByHandle, formatPrice, ShopifyProduct } from "@/lib/shopify
 import { PriceTag } from "@/components/ui/PriceTag";
 import { trackViewItem, trackAddToCart, shopifyToGA4Item } from "@/lib/ga4-ecommerce";
 import { useCartStore } from "@/stores/cartStore";
-import { useWishlistStore } from "@/stores/wishlistStore";
+import { useAuthStore } from "@/stores/authStore";
+import { useFavoritesStore } from "@/stores/favoritesStore";
 import { toast } from "sonner";
 import { useTranslation } from "@/hooks/useTranslation";
 import { CartDrawer } from "@/components/cart/CartDrawer";
@@ -135,7 +136,8 @@ export default function ProductDetail() {
   const thumbnailRef = useRef<HTMLDivElement>(null);
   const addItem = useCartStore(state => state.addItem);
   const totalCartItems = useCartStore(state => state.getTotalItems());
-  const { isWishlisted, toggleItem: toggleWishlist } = useWishlistStore();
+  const userId = useAuthStore((s) => s.user?.userId);
+  const { addFavorite, removeFavorite, isFavorite } = useFavoritesStore();
 
   // Scroll to top on mount
   useEffect(() => {
@@ -344,30 +346,24 @@ export default function ProductDetail() {
           </div>
 
           <div className="flex items-center gap-1">
-            <button
-              onClick={() => {
-                const wishlisted = isWishlisted(product.id);
-                toggleWishlist({
-                  productId: product.id,
-                  handle: product.handle,
-                  title: product.title,
-                  imageUrl: product.images.edges[0]?.node.url,
-                  price: price.amount,
-                  currencyCode: price.currencyCode,
-                });
-                toast.success(wishlisted ? 'Removed from wishlist' : 'Added to wishlist', {
-                  position: 'top-center',
-                });
-              }}
-              className="p-2 text-foreground"
-            >
-              <Heart
-                className={cn(
-                  "h-5 w-5 transition-colors",
-                  isWishlisted(product.id) ? "fill-red-500 text-red-500" : ""
-                )}
-              />
-            </button>
+            {userId && (
+              <button
+                onClick={() => {
+                  const fav = isFavorite(userId, product.handle);
+                  if (fav) removeFavorite(userId, product.handle);
+                  else addFavorite(userId, product.handle);
+                  toast.success(fav ? 'Removed from favorites' : 'Added to favorites', { position: 'top-center' });
+                }}
+                className="p-2 text-foreground"
+              >
+                <Heart
+                  className={cn(
+                    "h-5 w-5 transition-colors",
+                    isFavorite(userId, product.handle) ? "fill-red-500 text-red-500" : ""
+                  )}
+                />
+              </button>
+            )}
             <button
               onClick={() => {
                 navigator.clipboard.writeText(window.location.href);
@@ -695,36 +691,30 @@ export default function ProductDetail() {
       {/* Fixed Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4" translate="no">
         <div className="max-w-lg mx-auto flex items-center gap-3">
-          {/* Wishlist Button */}
-          <button
-            onClick={() => {
-              const wishlisted = isWishlisted(product.id);
-              toggleWishlist({
-                productId: product.id,
-                handle: product.handle,
-                title: product.title,
-                imageUrl: product.images.edges[0]?.node.url,
-                price: price.amount,
-                currencyCode: price.currencyCode,
-              });
-              toast.success(wishlisted ? 'Removed from wishlist' : 'Added to wishlist', {
-                position: 'top-center',
-              });
-            }}
-            className={cn(
-              "w-12 h-12 rounded-lg border flex items-center justify-center flex-shrink-0 transition-colors",
-              isWishlisted(product.id)
-                ? "border-red-400 bg-red-50 text-red-500"
-                : "border-border text-muted-foreground hover:border-red-400 hover:text-red-500"
-            )}
-          >
-            <Heart
+          {/* Favorite Button */}
+          {userId && (
+            <button
+              onClick={() => {
+                const fav = isFavorite(userId, product.handle);
+                if (fav) removeFavorite(userId, product.handle);
+                else addFavorite(userId, product.handle);
+                toast.success(fav ? 'Removed from favorites' : 'Added to favorites', { position: 'top-center' });
+              }}
               className={cn(
-                "h-5 w-5 transition-colors",
-                isWishlisted(product.id) ? "fill-red-500 text-red-500" : ""
+                "w-12 h-12 rounded-lg border flex items-center justify-center flex-shrink-0 transition-colors",
+                isFavorite(userId, product.handle)
+                  ? "border-red-400 bg-red-50 text-red-500"
+                  : "border-border text-muted-foreground hover:border-red-400 hover:text-red-500"
               )}
-            />
-          </button>
+            >
+              <Heart
+                className={cn(
+                  "h-5 w-5 transition-colors",
+                  isFavorite(userId, product.handle) ? "fill-red-500 text-red-500" : ""
+                )}
+              />
+            </button>
+          )}
           <Button
             onClick={handleAddToCart}
             disabled={!selectedVariant?.availableForSale}
