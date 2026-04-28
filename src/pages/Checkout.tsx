@@ -1,12 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ChevronLeft, Loader2, Truck, CreditCard } from 'lucide-react';
+import { ChevronLeft, Loader2, Truck, CreditCard, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/stores/cartStore';
 import { useAuthStore } from '@/stores/authStore';
 import { formatPrice, fetchShippingRates, ShippingRate } from '@/lib/shopify';
-import { B2B_DISCOUNT_RATE } from '@/stores/authStore';
 import { toast } from 'sonner';
+
+const B2B_MIN_ORDER = 150;
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -20,23 +21,27 @@ export default function Checkout() {
     return allItems.filter(item => selectedVariantIds.includes(item.variantId));
   }, [allItems, selectedVariantIds]);
   const [shippingRate, setShippingRate] = useState<ShippingRate | null>(null);
+  const [shippingLoading, setShippingLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    setShippingLoading(true);
     fetchShippingRates('US')
       .then((rates) => { if (rates.length > 0) setShippingRate(rates[0]); })
-      .catch(console.error);
+      .catch(console.error)
+      .finally(() => setShippingLoading(false));
   }, []);
 
   useEffect(() => {
     if (allItems.length === 0) navigate('/');
   }, [allItems.length, navigate]);
 
-  const rawSubtotal = items.reduce((sum, item) => sum + parseFloat(item.price.amount) * item.quantity, 0);
-  const subtotal = isB2B ? rawSubtotal * (1 - B2B_DISCOUNT_RATE) : rawSubtotal;
+  const subtotal = items.reduce((sum, item) => sum + parseFloat(item.price.amount) * item.quantity, 0);
   const shipping = shippingRate ? parseFloat(shippingRate.amount) : 0;
   const total = subtotal + shipping;
   const currencyCode = items[0]?.price.currencyCode || 'USD';
+
+  const b2bEligible = subtotal >= B2B_MIN_ORDER;
 
   const handleSubmit = async () => {
     if (isSubmitting) return;
@@ -71,6 +76,21 @@ export default function Checkout() {
       </header>
 
       <main className="max-w-lg mx-auto px-4 py-6 space-y-6">
+        {/* B2B minimum order warning */}
+        {isB2B && !b2bEligible && (
+          <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold text-amber-700 dark:text-amber-400">
+                Minimum order of {formatPrice(B2B_MIN_ORDER.toString(), currencyCode)} required for B2B pricing
+              </p>
+              <p className="text-xs text-amber-600 dark:text-amber-500 mt-1">
+                Add {formatPrice((B2B_MIN_ORDER - subtotal).toFixed(2), currencyCode)} more to unlock your 35% B2B discount at checkout.
+              </p>
+            </div>
+          </div>
+        )}
+
         <div className="bg-card rounded-xl border border-border p-4">
           <h2 className="text-sm font-semibold mb-3 flex items-center gap-2">
             <CreditCard className="h-4 w-4 text-muted-foreground" />
@@ -94,18 +114,7 @@ export default function Checkout() {
                   </p>
                 </div>
                 <span className="text-sm font-semibold text-right" translate="no">
-                  {(() => {
-                    const lineTotal = parseFloat(item.price.amount) * item.quantity;
-                    if (isB2B) {
-                      return (
-                        <span className="flex flex-col items-end">
-                          <span className="text-xs text-muted-foreground line-through">{formatPrice(lineTotal.toString(), item.price.currencyCode)}</span>
-                          <span>{formatPrice((lineTotal * (1 - B2B_DISCOUNT_RATE)).toFixed(2), item.price.currencyCode)}</span>
-                        </span>
-                      );
-                    }
-                    return formatPrice(lineTotal.toString(), item.price.currencyCode);
-                  })()}
+                  {formatPrice((parseFloat(item.price.amount) * item.quantity).toFixed(2), item.price.currencyCode)}
                 </span>
               </div>
             ))}
@@ -113,31 +122,25 @@ export default function Checkout() {
           <div className="border-t border-border mt-3 pt-3 space-y-1">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Subtotal</span>
-              <span translate="no">
-                {isB2B ? (
-                  <span className="flex items-center gap-2">
-                    <span className="text-muted-foreground line-through">{formatPrice(rawSubtotal.toString(), currencyCode)}</span>
-                    <span>{formatPrice(subtotal.toString(), currencyCode)}</span>
-                  </span>
-                ) : formatPrice(subtotal.toString(), currencyCode)}
-              </span>
+              <span translate="no">{formatPrice(subtotal.toFixed(2), currencyCode)}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground flex items-center gap-1">
                 <Truck className="h-3.5 w-3.5" />Shipping
               </span>
-              <span translate="no">{shipping > 0 ? formatPrice(shipping.toString(), currencyCode) : 'Free'}</span>
+              <span translate="no">
+                {shippingLoading ? '...' : shipping > 0 ? formatPrice(shipping.toFixed(2), currencyCode) : 'Free'}
+              </span>
             </div>
+            {isB2B && b2bEligible && (
+              <div className="flex justify-between text-sm text-green-600">
+                <span>B2B Discount (35%)</span>
+                <span translate="no">Applied at checkout</span>
+              </div>
+            )}
             <div className="flex justify-between text-base font-bold pt-1 border-t border-border">
               <span>Total</span>
-              <span translate="no">
-                {isB2B ? (
-                  <span className="flex items-center gap-2">
-                    <span className="text-sm font-normal text-muted-foreground line-through">{formatPrice((rawSubtotal + shipping).toString(), currencyCode)}</span>
-                    <span>{formatPrice(total.toString(), currencyCode)}</span>
-                  </span>
-                ) : formatPrice(total.toString(), currencyCode)}
-              </span>
+              <span translate="no">{formatPrice(total.toFixed(2), currencyCode)}</span>
             </div>
           </div>
         </div>
@@ -156,7 +159,7 @@ export default function Checkout() {
                 Processing...
               </>
             ) : (
-              <>Proceed to Payment — {formatPrice(total.toString(), currencyCode)}</>
+              <>Proceed to Payment — {formatPrice(total.toFixed(2), currencyCode)}</>
             )}
           </Button>
         </div>
