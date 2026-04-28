@@ -270,7 +270,6 @@ export default function ProductDetail() {
     const variant = getSelectedVariant();
     if (!variant) return;
 
-    // Add to cart then navigate to our checkout page
     addItem({
       product: { node: product } as any,
       variantId: variant.id,
@@ -281,7 +280,7 @@ export default function ProductDetail() {
       selectedOptions: variant.selectedOptions,
     });
 
-    navigate('/checkout');
+    navigate('/checkout', { state: { selectedVariantIds: [variant.id] } });
   };
 
   if (loading) {

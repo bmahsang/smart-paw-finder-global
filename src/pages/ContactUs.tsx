@@ -17,7 +17,7 @@ const ContactUs = () => {
       <main className="flex-1 flex items-center justify-center px-4 py-16">
         <div className="text-center space-y-8">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-            Customer Service
+            Contact Us
           </h1>
 
           <div className="space-y-4 text-lg text-muted-foreground">
