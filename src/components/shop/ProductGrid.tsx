@@ -122,6 +122,14 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
         break;
     }
 
+    // Push sold-out products to the bottom
+    result.sort((a, b) => {
+      const aAvailable = a.node.variants.edges.some(v => v.node.availableForSale);
+      const bAvailable = b.node.variants.edges.some(v => v.node.availableForSale);
+      if (aAvailable === bAvailable) return 0;
+      return aAvailable ? -1 : 1;
+    });
+
     return result;
   }, [allProducts, sortOption, filters]);
 
