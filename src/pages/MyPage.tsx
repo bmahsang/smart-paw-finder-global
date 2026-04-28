@@ -270,7 +270,8 @@ export default function MyPage() {
       .finally(() => setLoading(false));
   }, [loggedIn, refreshKey]);
 
-  const favoritesKey = customerData?.emailAddress || customerData?.id || '';
+  const authUser = useAuthStore((s) => s.user);
+  const favoritesKey = authUser?.userId || customerData?.emailAddress || customerData?.id || '';
 
   useEffect(() => {
     if (!favoritesKey || activeTab !== 'favorites') return;

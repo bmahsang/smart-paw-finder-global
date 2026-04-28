@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ShopifyProduct, fetchBestSellingProducts } from "@/lib/shopify";
 import { PriceTag } from "@/components/ui/PriceTag";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ProductOptionDialog } from "@/components/shop/ProductOptionDialog";
+import { useAuthStore } from "@/stores/authStore";
+import { useFavoritesStore } from "@/stores/favoritesStore";
 
 const BADGES = ["BEST", "POPULAR", "PICK", "TOP", "NEW", "HOT"];
 
@@ -15,6 +17,8 @@ export function PopularProducts() {
   const [loading, setLoading] = useState(true);
   const [optionDialogOpen, setOptionDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ShopifyProduct | null>(null);
+  const userId = useAuthStore((s) => s.user?.userId);
+  const { addFavorite, removeFavorite, isFavorite } = useFavoritesStore();
 
   useEffect(() => {
     fetchBestSellingProducts(8)
@@ -88,6 +92,24 @@ export function PopularProducts() {
                 <span className="absolute top-2 left-2 bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-md">
                   {BADGES[index] ?? "POPULAR"}
                 </span>
+                {userId && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const handle = product.node.handle;
+                      if (isFavorite(userId, handle)) {
+                        removeFavorite(userId, handle);
+                      } else {
+                        addFavorite(userId, handle);
+                      }
+                    }}
+                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-background/70 backdrop-blur-sm flex items-center justify-center hover:bg-background/90 transition-colors z-10"
+                  >
+                    <Heart
+                      className={`h-3.5 w-3.5 ${isFavorite(userId, product.node.handle) ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`}
+                    />
+                  </button>
+                )}
               </div>
               <div className="p-3">
                 <h3 className="text-xs font-medium text-foreground line-clamp-2 mb-2 min-h-[32px]">
