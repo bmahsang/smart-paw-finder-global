@@ -25,10 +25,10 @@ const ContactUs = () => {
               <Phone className="h-5 w-5 text-primary" />
               <span>Support Phone Number:</span>
               <a
-                href="tel:0368683009"
+                href="tel:+827048886191"
                 className="text-foreground hover:text-primary transition-colors font-medium"
               >
-                03-6868-3009
+                +82 70-4888-6191
               </a>
             </div>
 
