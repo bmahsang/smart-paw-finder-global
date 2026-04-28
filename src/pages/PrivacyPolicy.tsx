@@ -125,7 +125,7 @@ export default function PrivacyPolicy() {
             <p>For questions about this Privacy Policy, please contact us:</p>
             <div className="mt-2 p-4 bg-secondary rounded-lg">
               <p className="font-medium text-foreground">BITE ME</p>
-              <p>Email: global@biteme.co.kr</p>
+              <p>Email: mates@biteme.co.kr</p>
             </div>
           </section>
         </div>

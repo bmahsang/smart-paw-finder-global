@@ -10,8 +10,8 @@ export function Footer() {
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
             <span className="flex items-center gap-1.5">
               <Mail className="h-4 w-4 text-primary" />
-              <a href="mailto:global@biteme.co.kr" className="hover:text-primary transition-colors">
-                global@biteme.co.kr
+              <a href="mailto:mates@biteme.co.kr" className="hover:text-primary transition-colors">
+                mates@biteme.co.kr
               </a>
             </span>
           </div>

@@ -36,10 +36,10 @@ const ContactUs = () => {
               <Mail className="h-5 w-5 text-primary" />
               <span>Support E-mail:</span>
               <a
-                href="mailto:japan@biteme.co.kr"
+                href="mailto:mates@biteme.co.kr"
                 className="text-foreground hover:text-primary transition-colors font-medium"
               >
-                japan@biteme.co.kr
+                mates@biteme.co.kr
               </a>
             </div>
           </div>

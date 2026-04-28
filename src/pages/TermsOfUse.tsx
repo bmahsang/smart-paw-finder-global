@@ -121,7 +121,7 @@ export default function TermsOfUse() {
             <p>For inquiries regarding these Terms, please contact us:</p>
             <div className="mt-2 p-4 bg-secondary rounded-lg">
               <p className="font-medium text-foreground">BITE ME</p>
-              <p>Email: global@biteme.co.kr</p>
+              <p>Email: mates@biteme.co.kr</p>
             </div>
           </section>
         </div>
