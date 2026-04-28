@@ -4,7 +4,7 @@ import { ChevronLeft, Loader2, Truck, CreditCard, AlertTriangle } from 'lucide-r
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/stores/cartStore';
 import { useAuthStore } from '@/stores/authStore';
-import { formatPrice, fetchShippingRates, ShippingRate } from '@/lib/shopify';
+import { formatPrice } from '@/lib/shopify';
 import { toast } from 'sonner';
 
 const B2B_MIN_ORDER = 150;
@@ -20,24 +20,14 @@ export default function Checkout() {
     if (!selectedVariantIds || selectedVariantIds.length === 0) return allItems;
     return allItems.filter(item => selectedVariantIds.includes(item.variantId));
   }, [allItems, selectedVariantIds]);
-  const [shippingRate, setShippingRate] = useState<ShippingRate | null>(null);
-  const [shippingLoading, setShippingLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    setShippingLoading(true);
-    fetchShippingRates('US')
-      .then((rates) => { if (rates.length > 0) setShippingRate(rates[0]); })
-      .catch(console.error)
-      .finally(() => setShippingLoading(false));
-  }, []);
 
   useEffect(() => {
     if (allItems.length === 0) navigate('/');
   }, [allItems.length, navigate]);
 
   const subtotal = items.reduce((sum, item) => sum + parseFloat(item.price.amount) * item.quantity, 0);
-  const shipping = shippingRate ? parseFloat(shippingRate.amount) : 0;
+  const shipping = subtotal >= 150 ? 10 : 50;
   const total = subtotal + shipping;
   const currencyCode = items[0]?.price.currencyCode || 'USD';
 
@@ -128,9 +118,7 @@ export default function Checkout() {
               <span className="text-muted-foreground flex items-center gap-1">
                 <Truck className="h-3.5 w-3.5" />Shipping
               </span>
-              <span translate="no">
-                {shippingLoading ? '...' : shipping > 0 ? formatPrice(shipping.toFixed(2), currencyCode) : 'Free'}
-              </span>
+              <span translate="no">{formatPrice(shipping.toFixed(2), currencyCode)}</span>
             </div>
             {isB2B && b2bEligible && (
               <div className="flex justify-between text-sm text-green-600">
