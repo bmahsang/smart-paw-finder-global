@@ -11,7 +11,7 @@ import { initiateLogin, isLoggedIn as isCustomerLoggedIn, logout as customerLogo
 import { fetchCustomerAccount, CustomerAccountProfile } from '@/lib/customer-account';
 import { useAuthStore } from '@/stores/authStore';
 import { toast } from 'sonner';
-import { useFavoritesStore } from '@/stores/favoritesStore';
+import { useFavoritesStore, GUEST_FAVORITES_KEY } from '@/stores/favoritesStore';
 
 function MenuLink({ icon: Icon, label, badge, onClick }: {
   icon: typeof ShoppingBag; label: string; badge?: string | number; onClick?: () => void;
@@ -82,7 +82,7 @@ export default function MyPage() {
 
   const authUser = useAuthStore((s) => s.user);
   const favoritesData = useFavoritesStore((s) => s.favorites);
-  const favoritesKey = authUser?.userId || customerData?.emailAddress || customerData?.id || '';
+  const favoritesKey = authUser?.userId || customerData?.emailAddress || customerData?.id || GUEST_FAVORITES_KEY;
 
   useEffect(() => {
     if (!loggedIn) {

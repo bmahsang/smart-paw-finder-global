@@ -5,7 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ChevronLeft, Heart, Package } from 'lucide-react';
 import { fetchProductByHandle, formatPrice } from '@/lib/shopify';
 import { useAuthStore } from '@/stores/authStore';
-import { useFavoritesStore } from '@/stores/favoritesStore';
+import { useFavoritesStore, GUEST_FAVORITES_KEY } from '@/stores/favoritesStore';
 import { PriceTag } from '@/components/ui/PriceTag';
 
 export default function FavoritesPage() {
@@ -13,7 +13,7 @@ export default function FavoritesPage() {
   const authUser = useAuthStore((s) => s.user);
   const { getFavorites, removeFavorite } = useFavoritesStore();
   const favoritesData = useFavoritesStore((s) => s.favorites);
-  const favoritesKey = authUser?.userId || '';
+  const favoritesKey = authUser?.userId || GUEST_FAVORITES_KEY;
 
   const [products, setProducts] = useState<Array<{ handle: string; title: string; image?: string; price: string; currencyCode: string }>>([]);
   const [loading, setLoading] = useState(true);
@@ -52,7 +52,7 @@ export default function FavoritesPage() {
       <Header />
       <header className="sticky top-[57px] z-40 bg-background border-b border-border">
         <div className="max-w-md mx-auto flex items-center px-4 h-12">
-          <button onClick={() => navigate('/mypage')} className="p-2 -ml-2">
+          <button onClick={() => navigate(-1)} className="p-2 -ml-2">
             <ChevronLeft className="h-5 w-5" />
           </button>
           <h1 className="flex-1 text-center font-semibold text-sm">Favorites</h1>
@@ -95,9 +95,7 @@ export default function FavoritesPage() {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (favoritesKey) {
-                    removeFavorite(favoritesKey, product.handle);
-                  }
+                  removeFavorite(favoritesKey, product.handle);
                 }}
                 className="p-2 hover:bg-secondary rounded-full"
               >

@@ -1,15 +1,16 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
+export const GUEST_FAVORITES_KEY = '__guest__';
+
 interface FavoritesStore {
-  // Map of LINE userId → Set of product handles
   favorites: Record<string, string[]>;
 
-  // Actions
   addFavorite: (userId: string, productHandle: string) => void;
   removeFavorite: (userId: string, productHandle: string) => void;
   isFavorite: (userId: string, productHandle: string) => boolean;
   getFavorites: (userId: string) => string[];
+  mergeGuestToUser: (userId: string) => void;
 }
 
 export const useFavoritesStore = create<FavoritesStore>()(
@@ -40,6 +41,16 @@ export const useFavoritesStore = create<FavoritesStore>()(
       },
 
       getFavorites: (userId) => get().favorites[userId] || [],
+
+      mergeGuestToUser: (userId) =>
+        set((state) => {
+          const guest = state.favorites[GUEST_FAVORITES_KEY] || [];
+          if (guest.length === 0) return state;
+          const current = state.favorites[userId] || [];
+          const merged = Array.from(new Set([...current, ...guest]));
+          const { [GUEST_FAVORITES_KEY]: _, ...rest } = state.favorites;
+          return { favorites: { ...rest, [userId]: merged } };
+        }),
     }),
     {
       name: 'shopify-favorites',

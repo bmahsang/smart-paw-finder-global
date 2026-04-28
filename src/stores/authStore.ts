@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { useFavoritesStore } from './favoritesStore';
 
 export interface UserProfile {
   userId: string;
@@ -25,7 +26,10 @@ export const useAuthStore = create<AuthStore>()(
       user: null,
       isLoggedIn: false,
       isB2B: false,
-      login: (user) => set({ user, isLoggedIn: true }),
+      login: (user) => {
+        set({ user, isLoggedIn: true });
+        useFavoritesStore.getState().mergeGuestToUser(user.userId);
+      },
       setB2B: (isB2B) => set({ isB2B }),
       logout: () => set({ user: null, isLoggedIn: false, isB2B: false }),
     }),

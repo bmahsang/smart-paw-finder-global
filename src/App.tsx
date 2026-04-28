@@ -49,6 +49,7 @@ const App = () => (
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/mypage/order-history" element={<OrderHistory />} />
           <Route path="/mypage/favorites" element={<FavoritesPage />} />
+          <Route path="/favorites" element={<FavoritesPage />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/guest-order" element={<GuestOrderLookup />} />
           <Route path="/wishlist" element={<WishlistPage />} />

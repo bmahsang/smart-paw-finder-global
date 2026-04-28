@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ShoppingCart, Loader2, Heart } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
-import { useFavoritesStore } from '@/stores/favoritesStore';
+import { useFavoritesStore, GUEST_FAVORITES_KEY } from '@/stores/favoritesStore';
 import { saveScrollPosition } from '@/hooks/useScrollRestoration';
 import { ProductFilters, SortOption, FilterState } from './ProductFilters';
 import { ProductOptionDialog } from './ProductOptionDialog';
@@ -43,7 +43,8 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(false);
-  const userId = useAuthStore((s) => s.user?.userId);
+  const authUserId = useAuthStore((s) => s.user?.userId);
+  const userId = authUserId || GUEST_FAVORITES_KEY;
   const { addFavorite, removeFavorite, isFavorite } = useFavoritesStore();
   const [endCursor, setEndCursor] = useState<string | null>(null);
   const [totalProductCount, setTotalProductCount] = useState<number | null>(null);
@@ -382,24 +383,22 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
                       </div>
                     )}
                     {/* Favorite Button */}
-                    {userId && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const handle = product.node.handle;
-                          if (isFavorite(userId, handle)) {
-                            removeFavorite(userId, handle);
-                          } else {
-                            addFavorite(userId, handle);
-                          }
-                        }}
-                        className="absolute top-2 right-2 w-8 h-8 rounded-full bg-background/70 backdrop-blur-sm flex items-center justify-center hover:bg-background/90 transition-colors z-10"
-                      >
-                        <Heart
-                          className={`h-4 w-4 ${isFavorite(userId, product.node.handle) ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`}
-                        />
-                      </button>
-                    )}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const handle = product.node.handle;
+                        if (isFavorite(userId, handle)) {
+                          removeFavorite(userId, handle);
+                        } else {
+                          addFavorite(userId, handle);
+                        }
+                      }}
+                      className="absolute top-2 right-2 w-8 h-8 rounded-full bg-background/70 backdrop-blur-sm flex items-center justify-center hover:bg-background/90 transition-colors z-10"
+                    >
+                      <Heart
+                        className={`h-4 w-4 ${isFavorite(userId, product.node.handle) ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`}
+                      />
+                    </button>
                     {/* Sold Out Overlay */}
                     {isCompletelyOutOfStock && (
                       <div className="absolute inset-0 flex items-center justify-center bg-background/60">
