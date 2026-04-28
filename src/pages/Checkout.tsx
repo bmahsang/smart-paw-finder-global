@@ -5,15 +5,21 @@ import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/stores/cartStore';
 import { useAuthStore } from '@/stores/authStore';
 import { formatPrice } from '@/lib/shopify';
+import { isLoggedIn as isCustomerLoggedIn } from '@/lib/customer-auth';
+import { fetchCustomerAccount } from '@/lib/customer-account';
 import { toast } from 'sonner';
 
 const B2B_MIN_ORDER = 150;
+const SHIPPING_THRESHOLD = 150;
+const SHIPPING_OVER = 10;
+const SHIPPING_UNDER = 50;
 
 export default function Checkout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { items: allItems, isLoading, createCheckout } = useCartStore();
   const isB2B = useAuthStore((s) => s.isB2B);
+  const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
 
   const selectedVariantIds: string[] | undefined = location.state?.selectedVariantIds;
   const items = useMemo(() => {
@@ -21,14 +27,32 @@ export default function Checkout() {
     return allItems.filter(item => selectedVariantIds.includes(item.variantId));
   }, [allItems, selectedVariantIds]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [customerCountry, setCustomerCountry] = useState<string | null>(null);
+  const [countryLoading, setCountryLoading] = useState(true);
+
+  useEffect(() => {
+    if (isLoggedIn && isCustomerLoggedIn()) {
+      fetchCustomerAccount()
+        .then((data) => {
+          setCustomerCountry(data?.defaultAddress?.country || null);
+        })
+        .catch(() => setCustomerCountry(null))
+        .finally(() => setCountryLoading(false));
+    } else {
+      setCountryLoading(false);
+    }
+  }, [isLoggedIn]);
 
   useEffect(() => {
     if (allItems.length === 0) navigate('/');
   }, [allItems.length, navigate]);
 
   const subtotal = items.reduce((sum, item) => sum + parseFloat(item.price.amount) * item.quantity, 0);
-  const total = subtotal;
   const currencyCode = items[0]?.price.currencyCode || 'USD';
+
+  const isKorean = customerCountry === 'KR';
+  const shipping = isKorean ? 0 : (subtotal >= SHIPPING_THRESHOLD ? SHIPPING_OVER : SHIPPING_UNDER);
+  const total = subtotal + shipping;
 
   const b2bEligible = subtotal >= B2B_MIN_ORDER;
 
@@ -65,7 +89,6 @@ export default function Checkout() {
       </header>
 
       <main className="max-w-lg mx-auto px-4 py-6 space-y-6">
-        {/* B2B minimum order warning */}
         {isB2B && !b2bEligible && (
           <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 flex items-start gap-3">
             <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
@@ -117,8 +140,19 @@ export default function Checkout() {
               <span className="text-muted-foreground flex items-center gap-1">
                 <Truck className="h-3.5 w-3.5" />Shipping
               </span>
-              <span className="text-xs text-muted-foreground">Calculated at payment</span>
+              {countryLoading ? (
+                <span className="text-xs text-muted-foreground">...</span>
+              ) : isKorean ? (
+                <span className="text-sm font-medium text-green-600">Free</span>
+              ) : (
+                <span translate="no">{formatPrice(shipping.toFixed(2), currencyCode)}</span>
+              )}
             </div>
+            {!countryLoading && !isKorean && !isLoggedIn && (
+              <p className="text-[11px] text-muted-foreground text-right">
+                ${SHIPPING_OVER} for orders ${SHIPPING_THRESHOLD}+ / ${SHIPPING_UNDER} under ${SHIPPING_THRESHOLD}
+              </p>
+            )}
             {isB2B && b2bEligible && (
               <div className="flex justify-between text-sm text-green-600">
                 <span>B2B Discount (35%)</span>
