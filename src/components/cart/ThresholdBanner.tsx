@@ -10,7 +10,7 @@ export function ThresholdBanner() {
   const { formatPrice } = useTranslation();
 
   useEffect(() => {
-    fetchShippingRates("JP")
+    fetchShippingRates("US")
       .then((rates) => {
         if (rates.length > 0) {
           setShippingRate(rates[0]);
@@ -22,7 +22,7 @@ export function ThresholdBanner() {
   if (items.length === 0) return null;
 
   const total = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
-  const currencyCode = items[0]?.price.currencyCode || "JPY";
+  const currencyCode = items[0]?.price.currencyCode || "USD";
 
   // If no shipping rate fetched yet, show nothing
   if (!shippingRate) return null;

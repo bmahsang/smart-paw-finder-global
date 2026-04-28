@@ -18,7 +18,7 @@ export function useTranslation() {
     return new Date(dateString).toLocaleDateString(locale, options || defaultOptions);
   }, []);
 
-  const formatPrice = useCallback((amount: number | string, currency: string = 'JPY'): string => {
+  const formatPrice = useCallback((amount: number | string, currency: string = 'USD'): string => {
     const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
     return new Intl.NumberFormat(locale, {
       style: 'currency',

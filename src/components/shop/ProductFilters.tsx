@@ -138,16 +138,16 @@ export function ProductFilters({
                 />
                 {/* Price markers */}
                 <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
-                  <span>¥0</span>
-                  <span>¥2,500</span>
-                  <span>¥5,000</span>
-                  <span>¥7,500</span>
-                  <span>¥10,000</span>
+                  <span>$0</span>
+                  <span>$2,500</span>
+                  <span>$5,000</span>
+                  <span>$7,500</span>
+                  <span>$10,000</span>
                 </div>
                 <div className="flex items-center justify-between text-sm font-medium">
-                  <span>{formatPrice(tempFilters.priceRange[0], 'JPY')}</span>
+                  <span>{formatPrice(tempFilters.priceRange[0], 'USD')}</span>
                   <span className="text-muted-foreground">~</span>
-                  <span>{formatPrice(tempFilters.priceRange[1], 'JPY')}</span>
+                  <span>{formatPrice(tempFilters.priceRange[1], 'USD')}</span>
                 </div>
               </div>
             </div>

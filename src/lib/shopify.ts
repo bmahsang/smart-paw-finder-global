@@ -1007,7 +1007,7 @@ export interface ShippingRate {
   currencyCode: string;
 }
 
-export async function fetchShippingRates(countryCode: string = "JP"): Promise<ShippingRate[]> {
+export async function fetchShippingRates(countryCode: string = "US"): Promise<ShippingRate[]> {
   // Step 1: Get a product variant to create a temporary cart
   const productsData = await storefrontApiRequest(GET_PRODUCTS_QUERY, { first: 1 });
   if (!productsData) return [];
@@ -1090,7 +1090,7 @@ export function formatPrice(amount: string, currencyCode: string): string {
     'GBP': 'en-GB',
   };
 
-  const locale = localeMap[currencyCode] || 'ja-JP';
+  const locale = localeMap[currencyCode] || 'en-US';
 
   const noDecimalCurrencies = ['KRW', 'JPY'];
   const useNoDecimals = noDecimalCurrencies.includes(currencyCode);
