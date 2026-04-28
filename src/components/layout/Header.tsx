@@ -374,12 +374,12 @@ export function Header({ onSearch, onCollectionSelect, onMultiCollectionSelect }
       </div>
 
       {/* Category chips (hamburger top-level) */}
-      <CategoryChips onCollectionSelect={onCollectionSelect} />
+      <CategoryChips onCollectionSelect={onCollectionSelect} onMultiCollectionSelect={onMultiCollectionSelect} />
     </header>
   );
 }
 
-function CategoryChips({ onCollectionSelect }: { onCollectionSelect?: (handle: string | null) => void }) {
+function CategoryChips({ onCollectionSelect, onMultiCollectionSelect }: { onCollectionSelect?: (handle: string | null) => void; onMultiCollectionSelect?: (handles: string[], title: string) => void }) {
   const [searchParams] = useSearchParams();
   const selectedCollection = searchParams.get("collection");
   const searchQuery = searchParams.get("q");
@@ -388,6 +388,6 @@ function CategoryChips({ onCollectionSelect }: { onCollectionSelect?: (handle: s
   if (!onCollectionSelect) return null;
 
   return (
-    <CategoryNav selectedCollection={selectedCollection} onSelect={onCollectionSelect} />
+    <CategoryNav selectedCollection={selectedCollection} onSelect={onCollectionSelect} onMultiSelect={onMultiCollectionSelect} />
   );
 }

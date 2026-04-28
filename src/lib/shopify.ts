@@ -470,8 +470,8 @@ export async function fetchCollectionIntersection(
   );
 
   return {
-    products: filtered.slice(0, first),
-    pageInfo: { hasNextPage: filtered.length > first, endCursor: null },
+    products: filtered,
+    pageInfo: { hasNextPage: false, endCursor: null },
   };
 }
 
