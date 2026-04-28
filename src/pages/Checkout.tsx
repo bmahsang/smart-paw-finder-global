@@ -27,8 +27,7 @@ export default function Checkout() {
   }, [allItems.length, navigate]);
 
   const subtotal = items.reduce((sum, item) => sum + parseFloat(item.price.amount) * item.quantity, 0);
-  const shipping = subtotal >= 150 ? 10 : 50;
-  const total = subtotal + shipping;
+  const total = subtotal;
   const currencyCode = items[0]?.price.currencyCode || 'USD';
 
   const b2bEligible = subtotal >= B2B_MIN_ORDER;
@@ -118,7 +117,7 @@ export default function Checkout() {
               <span className="text-muted-foreground flex items-center gap-1">
                 <Truck className="h-3.5 w-3.5" />Shipping
               </span>
-              <span translate="no">{formatPrice(shipping.toFixed(2), currencyCode)}</span>
+              <span className="text-xs text-muted-foreground">Calculated at payment</span>
             </div>
             {isB2B && b2bEligible && (
               <div className="flex justify-between text-sm text-green-600">
