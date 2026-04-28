@@ -710,7 +710,7 @@ export async function createStorefrontCheckout(items: { variantId: string; quant
    // Attach buyer identity if logged in
    let userEmail: string | undefined;
    try {
-     const authData = JSON.parse(localStorage.getItem('line-auth') || '{}');
+     const authData = JSON.parse(localStorage.getItem('auth') || '{}');
      const user = authData?.state?.user;
      userEmail = user?.shopifyEmail || user?.email;
      if (user?.shopifyCustomerToken) {
