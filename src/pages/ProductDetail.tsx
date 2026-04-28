@@ -9,7 +9,7 @@ import biteMeLogo from "@/assets/bite-me-logo.png";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { fetchProductByHandle, formatPrice, ShopifyProduct } from "@/lib/shopify";
+import { fetchProductByHandle, formatPrice, createStorefrontCheckout, ShopifyProduct } from "@/lib/shopify";
 import { PriceTag } from "@/components/ui/PriceTag";
 import { trackViewItem, trackAddToCart, shopifyToGA4Item } from "@/lib/ga4-ecommerce";
 import { useCartStore } from "@/stores/cartStore";
@@ -265,22 +265,25 @@ export default function ProductDetail() {
 
   const [isBuyingNow, setIsBuyingNow] = useState(false);
 
-  const handleBuyNow = () => {
-    if (!product) return;
+  const handleBuyNow = async () => {
+    if (!product || isBuyingNow) return;
     const variant = getSelectedVariant();
     if (!variant) return;
 
-    addItem({
-      product: { node: product } as any,
-      variantId: variant.id,
-      variantTitle: variant.title,
-      price: variant.price,
-      quantity,
-      quantityAvailable: variant.quantityAvailable,
-      selectedOptions: variant.selectedOptions,
-    });
-
-    navigate('/checkout', { state: { selectedVariantIds: [variant.id] } });
+    setIsBuyingNow(true);
+    try {
+      const checkoutUrl = await createStorefrontCheckout([
+        { variantId: variant.id, quantity },
+      ]);
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
+      }
+    } catch (err) {
+      console.error('Buy now error:', err);
+      toast.error('Failed to proceed. Please try again.', { position: 'top-center' });
+    } finally {
+      setIsBuyingNow(false);
+    }
   };
 
   if (loading) {
