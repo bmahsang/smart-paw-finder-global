@@ -2,19 +2,20 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ChevronLeft, Heart, Package } from 'lucide-react';
+import { ChevronLeft, Heart, Package, Trash2 } from 'lucide-react';
 import { fetchProductByHandle, formatPrice } from '@/lib/shopify';
 import { useAuthStore } from '@/stores/authStore';
 import { useFavoritesStore } from '@/stores/favoritesStore';
 import { PriceTag } from '@/components/ui/PriceTag';
 import { initiateLogin } from '@/lib/customer-auth';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 export default function FavoritesPage() {
   const navigate = useNavigate();
   const authUser = useAuthStore((s) => s.user);
   const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
-  const { getFavorites, removeFavorite } = useFavoritesStore();
+  const { getFavorites, removeFavorite, clearFavorites } = useFavoritesStore();
   const favoritesData = useFavoritesStore((s) => s.favorites);
   const favoritesKey = authUser?.userId;
 
@@ -59,7 +60,20 @@ export default function FavoritesPage() {
             <ChevronLeft className="h-5 w-5" />
           </button>
           <h1 className="flex-1 text-center font-semibold text-sm">Favorites</h1>
-          <div className="w-9" />
+          {isLoggedIn && products.length > 0 ? (
+            <button
+              onClick={() => {
+                if (!favoritesKey) return;
+                clearFavorites(favoritesKey);
+                toast.success('All favorites removed', { position: 'top-center' });
+              }}
+              className="p-2 -mr-2 text-muted-foreground hover:text-destructive transition-colors"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          ) : (
+            <div className="w-9" />
+          )}
         </div>
       </header>
       <main className="max-w-md mx-auto px-4 py-6 space-y-3 pb-24">

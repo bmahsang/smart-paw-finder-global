@@ -10,6 +10,7 @@ interface FavoritesStore {
   removeFavorite: (userId: string, productHandle: string) => void;
   isFavorite: (userId: string, productHandle: string) => boolean;
   getFavorites: (userId: string) => string[];
+  clearFavorites: (userId: string) => void;
   mergeGuestToUser: (userId: string) => void;
 }
 
@@ -41,6 +42,11 @@ export const useFavoritesStore = create<FavoritesStore>()(
       },
 
       getFavorites: (userId) => get().favorites[userId] || [],
+
+      clearFavorites: (userId) =>
+        set((state) => ({
+          favorites: { ...state.favorites, [userId]: [] },
+        })),
 
       mergeGuestToUser: (userId) =>
         set((state) => {
