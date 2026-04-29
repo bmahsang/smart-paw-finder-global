@@ -31,16 +31,16 @@ export function CategoryNav({ selectedCollection, onSelect, onMultiSelect }: Cat
           items: [],
         }));
 
-  if (topItems.length === 0) return null;
-
-  const activeTopItem = topItems.find(item => {
-    const handle = extractHandleFromUrl(item.url);
-    if (handle === selectedCollection) return true;
-    if (multiCollections.length > 0 && multiCollections[0] === handle) return true;
-    return item.items?.some(
-      child => extractHandleFromUrl(child.url) === selectedCollection
-    );
-  }) ?? null;
+  const activeTopItem = topItems.length > 0
+    ? topItems.find(item => {
+        const handle = extractHandleFromUrl(item.url);
+        if (handle === selectedCollection) return true;
+        if (multiCollections.length > 0 && multiCollections[0] === handle) return true;
+        return item.items?.some(
+          child => extractHandleFromUrl(child.url) === selectedCollection
+        );
+      }) ?? null
+    : null;
 
   const allSubItems =
     activeTopItem?.items?.filter(
@@ -79,6 +79,8 @@ export function CategoryNav({ selectedCollection, onSelect, onMultiSelect }: Cat
         const h = extractHandleFromUrl(child.url);
         return h && visibleSubHandles.has(h);
       });
+
+  if (topItems.length === 0) return null;
 
   return (
     <div className="bg-background border-b border-border">
