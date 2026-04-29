@@ -36,6 +36,14 @@ function AuthScreen() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) setLoading(false);
+    };
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
+  }, []);
+
   const handleLogin = async () => {
     setLoading(true);
     try {
