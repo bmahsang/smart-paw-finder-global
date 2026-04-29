@@ -78,9 +78,11 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
 
   const isProductSoldOut = useCallback((product: ShopifyProduct) => {
     if (product.node.availableForSale === false) return true;
-    return product.node.variants.edges.every(v =>
-      !v.node.availableForSale || v.node.quantityAvailable === 0
-    );
+    const variants = product.node.variants.edges;
+    if (variants.every(v => !v.node.availableForSale)) return true;
+    const tracked = variants.filter(v => v.node.quantityAvailable !== null);
+    if (tracked.length > 0 && tracked.every(v => v.node.quantityAvailable! <= 0)) return true;
+    return false;
   }, []);
 
   // Apply filters and sorting to products
