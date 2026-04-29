@@ -1,15 +1,34 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { fetchBanners, ShopifyBanner } from "@/lib/shopify";
+import { useNavigate } from "react-router-dom";
+import { fetchBanners, ShopifyBanner, extractHandleFromUrl } from "@/lib/shopify";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 export function HeroBanner() {
+  const navigate = useNavigate();
   const [banners, setBanners] = useState<ShopifyBanner[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const bannersLengthRef = useRef(0);
+
+  const handleBannerClick = useCallback((linkUrl: string | null) => {
+    if (!linkUrl) return;
+    try {
+      const url = new URL(linkUrl);
+      const pathParts = url.pathname.split('/').filter(Boolean);
+      if (pathParts[0] === 'collections' && pathParts[1]) {
+        navigate(`/?collection=${encodeURIComponent(pathParts[1])}`);
+        return;
+      }
+      if (pathParts[0] === 'products' && pathParts[1]) {
+        navigate(`/product/${encodeURIComponent(pathParts[1])}`);
+        return;
+      }
+    } catch {}
+    window.location.href = linkUrl;
+  }, [navigate]);
 
   useEffect(() => {
     fetchBanners(10)
@@ -82,7 +101,7 @@ export function HeroBanner() {
           <div
             key={banner.id}
             className="w-full flex-shrink-0"
-            onClick={() => { if (banner.linkUrl) window.location.href = banner.linkUrl; }}
+            onClick={() => handleBannerClick(banner.linkUrl)}
             style={{ cursor: banner.linkUrl ? 'pointer' : 'default' }}
           >
             <img
