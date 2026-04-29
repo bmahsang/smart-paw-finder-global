@@ -362,7 +362,7 @@ export default function ProductDetail() {
             <button
               onClick={() => {
                 navigator.clipboard.writeText(window.location.href);
-                toast.success('Link copied!', { position: 'top-center' });
+                toast.success('Link copied!', { position: 'top-center', duration: 1500 });
               }}
               className="p-2 text-foreground"
             >
