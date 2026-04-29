@@ -30,10 +30,10 @@ export function RecommendedProducts({ productId, currentHandle }: RecommendedPro
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     const el = scrollRef.current;
     if (!el) return;
+    hasDragged.current = false;
     const target = e.target as HTMLElement;
     if (target.closest('button')) return;
     isDragging.current = true;
-    hasDragged.current = false;
     startX.current = e.clientX;
     scrollLeft.current = el.scrollLeft;
     el.setPointerCapture(e.pointerId);
