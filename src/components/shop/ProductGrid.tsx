@@ -77,6 +77,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
   }, [minPrice, maxPrice]);
 
   const isProductSoldOut = useCallback((product: ShopifyProduct) => {
+    if (product.node.availableForSale === false) return true;
     return product.node.variants.edges.every(v =>
       !v.node.availableForSale || v.node.quantityAvailable === 0
     );
@@ -85,6 +86,22 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
   // Apply filters and sorting to products
   const filteredAndSortedProducts = useMemo(() => {
     let result = [...allProducts];
+
+    // Debug: log sold-out detection when filter is active
+    if (filters.availability === "sold-out") {
+      const soldOutProducts = allProducts.filter(p => isProductSoldOut(p));
+      console.log('[SoldOut Filter] total:', allProducts.length,
+        'soldOut:', soldOutProducts.length,
+        soldOutProducts.map(p => ({
+          title: p.node.title,
+          productAvailable: p.node.availableForSale,
+          variants: p.node.variants.edges.map(v => ({
+            available: v.node.availableForSale,
+            qty: v.node.quantityAvailable,
+          })),
+        }))
+      );
+    }
 
     // Apply price filter
     result = result.filter(product => {
