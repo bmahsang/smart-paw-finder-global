@@ -31,6 +31,7 @@ interface ProductFiltersProps {
   onSortChange: (sort: SortOption) => void;
   filters: FilterState;
   onFiltersChange: (filters: FilterState) => void;
+  minPrice: number;
   maxPrice: number;
   activeFilterCount: number;
 }
@@ -40,6 +41,7 @@ export function ProductFilters({
   onSortChange,
   filters,
   onFiltersChange,
+  minPrice,
   maxPrice,
   activeFilterCount,
 }: ProductFiltersProps) {
@@ -75,7 +77,7 @@ export function ProductFilters({
 
   const handleResetFilters = () => {
     const defaultFilters: FilterState = {
-      priceRange: [0, maxPrice],
+      priceRange: [minPrice, maxPrice],
       availability: "all",
     };
     setTempFilters(defaultFilters);
@@ -132,17 +134,14 @@ export function ProductFilters({
                     setTempFilters((prev) => ({ ...prev, priceRange: value as [number, number] }))
                   }
                   max={maxPrice}
-                  min={0}
-                  step={250}
+                  min={minPrice}
+                  step={(() => { const range = maxPrice - minPrice; return range <= 10 ? 0.5 : range <= 50 ? 1 : range <= 200 ? 2 : 5; })()}
                   className="mb-4"
                 />
-                {/* Price markers */}
                 <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
-                  <span>$0</span>
-                  <span>$2,500</span>
-                  <span>$5,000</span>
-                  <span>$7,500</span>
-                  <span>$10,000</span>
+                  <span>{formatPrice(minPrice, 'USD')}</span>
+                  <span>{formatPrice(Math.round((minPrice + maxPrice) / 2), 'USD')}</span>
+                  <span>{formatPrice(maxPrice, 'USD')}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm font-medium">
                   <span>{formatPrice(tempFilters.priceRange[0], 'USD')}</span>

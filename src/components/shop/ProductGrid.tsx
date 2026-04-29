@@ -36,7 +36,7 @@ interface ProductGridProps {
 }
 
 const PRODUCTS_PER_PAGE = 12;
-const DEFAULT_MAX_PRICE = 10000;
+const DEFAULT_MAX_PRICE = 100;
 
 export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCollections = null, overrideTitle = null }: ProductGridProps) => {
   const [allProducts, setAllProducts] = useState<ShopifyProduct[]>([]);
@@ -66,20 +66,18 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
   const location = useLocation();
   const { t } = useTranslation();
 
-  // Calculate max price from products
-  const maxPrice = useMemo(() => {
-    if (allProducts.length === 0) return DEFAULT_MAX_PRICE;
+  const { minPrice, maxPrice } = useMemo(() => {
+    if (allProducts.length === 0) return { minPrice: 0, maxPrice: DEFAULT_MAX_PRICE };
     const prices = allProducts.map(p => parseFloat(p.node.priceRange.minVariantPrice.amount));
-    return Math.max(...prices, DEFAULT_MAX_PRICE);
+    return { minPrice: Math.min(...prices), maxPrice: Math.max(...prices) };
   }, [allProducts]);
 
-  // Reset filters when max price changes
   useEffect(() => {
     setFilters(prev => ({
       ...prev,
-      priceRange: [0, maxPrice],
+      priceRange: [minPrice, maxPrice],
     }));
-  }, [maxPrice]);
+  }, [minPrice, maxPrice]);
 
   // Apply filters and sorting to products
   const filteredAndSortedProducts = useMemo(() => {
@@ -148,10 +146,10 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
   // Count active filters
   const activeFilterCount = useMemo(() => {
     let count = 0;
-    if (filters.priceRange[0] > 0 || filters.priceRange[1] < maxPrice) count++;
+    if (filters.priceRange[0] > minPrice || filters.priceRange[1] < maxPrice) count++;
     if (filters.availability !== "all") count++;
     return count;
-  }, [filters, maxPrice]);
+  }, [filters, minPrice, maxPrice]);
 
   const handleProductClick = (handle: string) => {
     saveScrollPosition(location.pathname);
@@ -166,13 +164,9 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
     return undefined;
   }, [searchQuery]);
 
-  // Reset filters and sort when search or collection changes
   useEffect(() => {
     setSortOption("default");
-    setFilters({
-      priceRange: [0, DEFAULT_MAX_PRICE],
-      availability: "all",
-    });
+    setFilters(prev => ({ ...prev, availability: "all" }));
   }, [searchQuery, collectionHandle, multiCollections]);
 
   // Initial load
@@ -339,6 +333,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
         onSortChange={setSortOption}
         filters={filters}
         onFiltersChange={setFilters}
+        minPrice={minPrice}
         maxPrice={maxPrice}
         activeFilterCount={activeFilterCount}
       />
@@ -350,7 +345,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
           </p>
           <Button
             variant="outline"
-            onClick={() => setFilters({ priceRange: [0, maxPrice], availability: "all" })}
+            onClick={() => setFilters({ priceRange: [minPrice, maxPrice], availability: "all" })}
           >
             {t('filters.clearFilters')}
           </Button>
