@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ShopifyProduct, fetchProducts, fetchCollectionProducts, fetchCollectionIntersection } from '@/lib/shopify';
+import { ShopifyProduct, fetchProducts, fetchCollectionProducts, fetchCollectionIntersection, fetchProductCount, fetchCollectionProductCount } from '@/lib/shopify';
 import { PriceTag } from '@/components/ui/PriceTag';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -176,25 +176,28 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
 
       try {
         let response;
+        let countPromise: Promise<number>;
+
         if (multiCollections && multiCollections.length > 0) {
-          // Collection intersection (e.g. ["ssfw", "toy"] → products in both collections)
-          console.log('[ProductGrid] intersection:', multiCollections);
           response = await fetchCollectionIntersection(multiCollections, PRODUCTS_PER_PAGE);
-          console.log('[ProductGrid] intersection result:', response.products.length, 'products');
           setCollectionTitle(overrideTitle ?? null);
+          setTotalProductCount(response.products.length);
+          countPromise = Promise.resolve(response.products.length);
         } else if (collectionHandle) {
-          console.log('[ProductGrid] Fetching collection:', collectionHandle);
+          countPromise = fetchCollectionProductCount(collectionHandle);
           const collectionResponse = await fetchCollectionProducts(collectionHandle, PRODUCTS_PER_PAGE);
-          console.log('[ProductGrid] Collection response:', collectionResponse.collectionTitle, collectionResponse.products.length, 'products');
           response = collectionResponse;
           setCollectionTitle(collectionResponse.collectionTitle);
         } else {
           const query = getQuery();
+          countPromise = fetchProductCount(query);
           response = await fetchProducts(PRODUCTS_PER_PAGE, query, undefined);
         }
+
         setAllProducts(response.products);
         setHasNextPage(response.pageInfo.hasNextPage);
         setEndCursor(response.pageInfo.endCursor);
+        countPromise.then(c => setTotalProductCount(c));
       } catch (error) {
         console.error('Failed to fetch products:', error);
       } finally {
@@ -316,9 +319,9 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
     <section className="py-8 px-4">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-bold">{displayTitle}</h2>
-        {filteredAndSortedProducts.length > 0 && !hasNextPage && (
+        {totalProductCount !== null && (
           <span className="text-sm text-muted-foreground">
-            {filteredAndSortedProducts.length} products
+            {totalProductCount} products
           </span>
         )}
       </div>

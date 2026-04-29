@@ -158,8 +158,8 @@ const GET_PRODUCTS_QUERY = `
 `;
 
 const GET_PRODUCTS_COUNT_QUERY = `
-  query GetProductsCount($query: String) {
-    products(first: 250, query: $query) {
+  query GetProductsCount($query: String, $after: String) {
+    products(first: 250, query: $query, after: $after) {
       edges {
         node {
           id
@@ -167,6 +167,18 @@ const GET_PRODUCTS_COUNT_QUERY = `
       }
       pageInfo {
         hasNextPage
+        endCursor
+      }
+    }
+  }
+`;
+
+const GET_COLLECTION_COUNT_QUERY = `
+  query GetCollectionCount($handle: String!, $after: String) {
+    collection(handle: $handle) {
+      products(first: 250, after: $after) {
+        edges { node { id } }
+        pageInfo { hasNextPage endCursor }
       }
     }
   }
@@ -646,35 +658,34 @@ export async function fetchProducts(first: number = 20, query?: string, after?: 
   };
 }
 
-// Fetch total product count (fast query with minimal data)
 export async function fetchProductCount(query?: string): Promise<number> {
-  let totalCount = 0;
-  let hasNextPage = true;
-  let after: string | undefined = undefined;
-
-  // Note: Shopify Storefront API doesn't have a direct count endpoint
-  // We fetch minimal data (just IDs) to count products quickly
-  // For large catalogs, this may still take time
-  while (hasNextPage) {
-    const data = await storefrontApiRequest(GET_PRODUCTS_COUNT_QUERY, { query });
-    if (!data) return 0;
-
-    const productsData = data.data?.products;
-    totalCount += productsData?.edges?.length || 0;
-    hasNextPage = productsData?.pageInfo?.hasNextPage || false;
-
-    // If there are more pages, we'd need to paginate, but for now
-    // we'll return the count we have (max 250 for first page)
-    // This is a limitation of Storefront API
-    if (hasNextPage) {
-      // For accurate count, we'd need to paginate through all
-      // but that would be slow, so we return what we have
-      // and indicate there are more with a "+"
-      return totalCount; // Return partial count for now
-    }
+  let total = 0;
+  let after: string | undefined;
+  let more = true;
+  while (more) {
+    const data = await storefrontApiRequest(GET_PRODUCTS_COUNT_QUERY, { query, after });
+    if (!data) return total;
+    const p = data.data?.products;
+    total += p?.edges?.length || 0;
+    more = p?.pageInfo?.hasNextPage || false;
+    after = p?.pageInfo?.endCursor ?? undefined;
   }
+  return total;
+}
 
-  return totalCount;
+export async function fetchCollectionProductCount(handle: string): Promise<number> {
+  let total = 0;
+  let after: string | undefined;
+  let more = true;
+  while (more) {
+    const data = await storefrontApiRequest(GET_COLLECTION_COUNT_QUERY, { handle, after });
+    if (!data) return total;
+    const p = data.data?.collection?.products;
+    total += p?.edges?.length || 0;
+    more = p?.pageInfo?.hasNextPage || false;
+    after = p?.pageInfo?.endCursor ?? undefined;
+  }
+  return total;
 }
 
 export async function fetchProductByHandle(handle: string): Promise<ShopifyProduct['node'] | null> {
