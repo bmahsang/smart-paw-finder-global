@@ -165,8 +165,8 @@ export default function FavoritesPage() {
                     </div>
                   )}
                   {product.soldOut && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-background/60 rounded-lg">
-                      <span className="bg-foreground text-background px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                    <div className="absolute inset-0 flex items-center justify-center bg-muted-foreground/30 rounded-lg">
+                      <span className="text-white/90 text-[10px] font-semibold uppercase tracking-wider drop-shadow-sm">
                         Sold Out
                       </span>
                     </div>
