@@ -180,7 +180,7 @@ export const ProductOptionDialog = ({ product, open, onOpenChange }: ProductOpti
                     return (
                       <button
                         key={value}
-                        onClick={() => setSelectedOptions(prev => ({ ...prev, [option.name]: value }))}
+                        onClick={() => { setSelectedOptions(prev => ({ ...prev, [option.name]: value })); setQuantity(1); }}
                         disabled={!isAvailable}
                         className={cn(
                           "flex flex-col items-center gap-1 transition-all",
@@ -230,7 +230,7 @@ export const ProductOptionDialog = ({ product, open, onOpenChange }: ProductOpti
                     return (
                       <button
                         key={value}
-                        onClick={() => setSelectedOptions(prev => ({ ...prev, [option.name]: value }))}
+                        onClick={() => { setSelectedOptions(prev => ({ ...prev, [option.name]: value })); setQuantity(1); }}
                         disabled={!isAvailable}
                         className={cn(
                           "min-w-[48px] py-2 px-4 text-sm font-medium transition-all border rounded-md",
