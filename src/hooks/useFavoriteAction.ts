@@ -10,7 +10,14 @@ export function useFavoriteAction() {
 
   const toggleFavorite = (handle: string) => {
     if (!isLoggedIn || !authUserId) {
-      initiateLogin(window.location.pathname);
+      toast('Login required', {
+        description: 'Please log in to use favorites.',
+        position: 'top-center',
+        action: {
+          label: 'Log In',
+          onClick: () => initiateLogin(window.location.pathname),
+        },
+      });
       return;
     }
     if (isFavorite(authUserId, handle)) {
