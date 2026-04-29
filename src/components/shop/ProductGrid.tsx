@@ -238,19 +238,27 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
   }, [loadingMore, hasNextPage, endCursor, multiCollections, collectionHandle, getQuery]);
 
   // Bulk-load all remaining pages when availability filter is active
+  const bulkLoadingRef = useRef(false);
   const [bulkLoading, setBulkLoading] = useState(false);
+  const endCursorRef = useRef(endCursor);
+  const hasNextPageRef = useRef(hasNextPage);
+  endCursorRef.current = endCursor;
+  hasNextPageRef.current = hasNextPage;
+
   useEffect(() => {
-    if (filters.availability === "all" || !hasNextPage || loading || loadingMore || bulkLoading) return;
+    if (filters.availability === "all") return;
+    if (!hasNextPageRef.current || loading || bulkLoadingRef.current) return;
     if (multiCollections && multiCollections.length > 0) return;
 
-    let cancelled = false;
-    const loadAll = async () => {
-      setBulkLoading(true);
-      const accumulated: ShopifyProduct[] = [];
-      let cursor = endCursor;
-      let more = hasNextPage;
+    bulkLoadingRef.current = true;
+    setBulkLoading(true);
 
-      while (more && cursor && !cancelled) {
+    const loadAll = async () => {
+      const accumulated: ShopifyProduct[] = [];
+      let cursor = endCursorRef.current;
+      let more = hasNextPageRef.current;
+
+      while (more && cursor) {
         try {
           const response = collectionHandle
             ? await fetchCollectionProducts(collectionHandle, PRODUCTS_PER_PAGE, cursor)
@@ -263,17 +271,15 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
         }
       }
 
-      if (!cancelled) {
-        setAllProducts(prev => [...prev, ...accumulated]);
-        setHasNextPage(false);
-        setEndCursor(null);
-      }
+      setAllProducts(prev => [...prev, ...accumulated]);
+      setHasNextPage(false);
+      setEndCursor(null);
+      bulkLoadingRef.current = false;
       setBulkLoading(false);
     };
 
     loadAll();
-    return () => { cancelled = true; };
-  }, [filters.availability]);
+  }, [filters.availability, loading]);
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
