@@ -237,6 +237,13 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
     }
   }, [loadingMore, hasNextPage, endCursor, multiCollections, collectionHandle, getQuery]);
 
+  // Auto-load all pages when availability filter is active
+  useEffect(() => {
+    if (filters.availability !== "all" && hasNextPage && !loadingMore && !loading) {
+      loadMore();
+    }
+  }, [filters.availability, hasNextPage, loadingMore, loading, loadMore]);
+
   // Intersection Observer for infinite scroll
   useEffect(() => {
     if (observerRef.current) {
