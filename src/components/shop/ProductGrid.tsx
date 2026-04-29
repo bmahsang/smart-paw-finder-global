@@ -316,9 +316,9 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
     <section className="py-8 px-4">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-bold">{displayTitle}</h2>
-        {filteredAndSortedProducts.length > 0 && (
+        {filteredAndSortedProducts.length > 0 && !hasNextPage && (
           <span className="text-sm text-muted-foreground">
-            {filteredAndSortedProducts.length}{hasNextPage ? '+' : ''} products
+            {filteredAndSortedProducts.length} products
           </span>
         )}
       </div>
