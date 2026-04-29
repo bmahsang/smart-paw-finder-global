@@ -87,22 +87,6 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
   const filteredAndSortedProducts = useMemo(() => {
     let result = [...allProducts];
 
-    // Debug: log sold-out detection when filter is active
-    if (filters.availability === "sold-out") {
-      const soldOutProducts = allProducts.filter(p => isProductSoldOut(p));
-      console.log('[SoldOut Filter] total:', allProducts.length,
-        'soldOut:', soldOutProducts.length,
-        soldOutProducts.map(p => ({
-          title: p.node.title,
-          productAvailable: p.node.availableForSale,
-          variants: p.node.variants.edges.map(v => ({
-            available: v.node.availableForSale,
-            qty: v.node.quantityAvailable,
-          })),
-        }))
-      );
-    }
-
     // Apply price filter
     result = result.filter(product => {
       const price = parseFloat(product.node.priceRange.minVariantPrice.amount);
@@ -230,7 +214,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
 
   // Load more products
   const loadMore = useCallback(async () => {
-    if (loadingMore || !hasNextPage || !endCursor) return;
+    if (loadingMore || !hasNextPage || !endCursor || bulkLoadingRef.current) return;
 
     setLoadingMore(true);
     try {
@@ -298,11 +282,13 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
     loadAll();
   }, [filters.availability, loading]);
 
-  // Intersection Observer for infinite scroll
+  // Intersection Observer for infinite scroll (disabled during availability filter)
   useEffect(() => {
     if (observerRef.current) {
       observerRef.current.disconnect();
     }
+
+    if (filters.availability !== "all") return;
 
     observerRef.current = new IntersectionObserver(
       (entries) => {
@@ -322,7 +308,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
         observerRef.current.disconnect();
       }
     };
-  }, [hasNextPage, loadingMore, loadMore]);
+  }, [hasNextPage, loadingMore, loadMore, filters.availability]);
 
   const handleAddToCart = (e: React.MouseEvent, product: ShopifyProduct) => {
     e.stopPropagation();
