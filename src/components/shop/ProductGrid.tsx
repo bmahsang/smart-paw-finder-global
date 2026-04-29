@@ -120,16 +120,8 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
         break;
     }
 
-    // Push sold-out products to the bottom
-    result.sort((a, b) => {
-      const aSoldOut = isProductSoldOut(a);
-      const bSoldOut = isProductSoldOut(b);
-      if (aSoldOut === bSoldOut) return 0;
-      return aSoldOut ? 1 : -1;
-    });
-
     return result;
-  }, [allProducts, sortOption, filters, isProductSoldOut]);
+  }, [allProducts, sortOption, filters]);
 
   // GA4: view_item_list — fire once per search/collection change
   useEffect(() => {
