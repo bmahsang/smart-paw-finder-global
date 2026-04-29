@@ -12,6 +12,7 @@ export interface ShopifyProduct {
     descriptionHtml: string;
     handle: string;
     availableForSale?: boolean;
+    totalInventory?: number | null;
     productType: string;
     tags: string[];
     vendor: string;
@@ -106,6 +107,7 @@ const GET_PRODUCTS_QUERY = `
           description
           handle
           availableForSale
+          totalInventory
           productType
           tags
           vendor
@@ -179,6 +181,7 @@ const GET_PRODUCT_BY_HANDLE_QUERY = `
       descriptionHtml
       handle
       availableForSale
+      totalInventory
       productType
       tags
       vendor
@@ -374,6 +377,7 @@ const GET_COLLECTION_PRODUCTS_QUERY = `
             description
             handle
             availableForSale
+            totalInventory
             productType
             tags
             vendor
