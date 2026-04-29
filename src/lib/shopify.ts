@@ -131,6 +131,7 @@ const GET_PRODUCTS_QUERY = `
                   currencyCode
                 }
                 availableForSale
+                quantityAvailable
                 image {
                   url
                   altText
@@ -202,6 +203,7 @@ const GET_PRODUCT_BY_HANDLE_QUERY = `
               currencyCode
             }
             availableForSale
+            quantityAvailable
             image {
               url
               altText
@@ -395,6 +397,7 @@ const GET_COLLECTION_PRODUCTS_QUERY = `
                     currencyCode
                   }
                   availableForSale
+                  quantityAvailable
                   image {
                     url
                     altText

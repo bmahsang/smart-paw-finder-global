@@ -76,6 +76,12 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
     }));
   }, [minPrice, maxPrice]);
 
+  const isProductSoldOut = useCallback((product: ShopifyProduct) => {
+    return product.node.variants.edges.every(v =>
+      !v.node.availableForSale || v.node.quantityAvailable === 0
+    );
+  }, []);
+
   // Apply filters and sorting to products
   const filteredAndSortedProducts = useMemo(() => {
     let result = [...allProducts];
@@ -89,8 +95,8 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
     // Apply availability filter
     if (filters.availability !== "all") {
       result = result.filter(product => {
-        const isAvailable = product.node.variants.edges.some(v => v.node.availableForSale);
-        return filters.availability === "available" ? isAvailable : !isAvailable;
+        const soldOut = isProductSoldOut(product);
+        return filters.availability === "available" ? !soldOut : soldOut;
       });
     }
 
@@ -120,14 +126,14 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
 
     // Push sold-out products to the bottom
     result.sort((a, b) => {
-      const aAvailable = a.node.variants.edges.some(v => v.node.availableForSale);
-      const bAvailable = b.node.variants.edges.some(v => v.node.availableForSale);
-      if (aAvailable === bAvailable) return 0;
-      return aAvailable ? -1 : 1;
+      const aSoldOut = isProductSoldOut(a);
+      const bSoldOut = isProductSoldOut(b);
+      if (aSoldOut === bSoldOut) return 0;
+      return aSoldOut ? 1 : -1;
     });
 
     return result;
-  }, [allProducts, sortOption, filters]);
+  }, [allProducts, sortOption, filters, isProductSoldOut]);
 
   // GA4: view_item_list — fire once per search/collection change
   useEffect(() => {
@@ -353,7 +359,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
             {filteredAndSortedProducts.map((product) => {
               const image = product.node.images.edges[0]?.node;
               const price = product.node.priceRange.minVariantPrice;
-              const isCompletelyOutOfStock = !product.node.variants.edges.some(v => v.node.availableForSale);
+              const isCompletelyOutOfStock = isProductSoldOut(product);
 
               return (
                 <div
