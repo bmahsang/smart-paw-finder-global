@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ChevronLeft, Heart, Package, Trash2 } from 'lucide-react';
+import { ChevronLeft, Heart, Package, Trash2, Check } from 'lucide-react';
 import { fetchProductByHandle, formatPrice } from '@/lib/shopify';
 import { useAuthStore } from '@/stores/authStore';
 import { useFavoritesStore } from '@/stores/favoritesStore';
+import { Checkbox } from '@/components/ui/checkbox';
 import { PriceTag } from '@/components/ui/PriceTag';
 import { initiateLogin } from '@/lib/customer-auth';
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,29 @@ export default function FavoritesPage() {
 
   const [products, setProducts] = useState<Array<{ handle: string; title: string; image?: string; price: string; currencyCode: string }>>([]);
   const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  const allSelected = products.length > 0 && selected.size === products.length;
+
+  const handleToggle = (handle: string) => {
+    setSelected(prev => {
+      const next = new Set(prev);
+      next.has(handle) ? next.delete(handle) : next.add(handle);
+      return next;
+    });
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    setSelected(checked ? new Set(products.map(p => p.handle)) : new Set());
+  };
+
+  const handleDeleteSelected = () => {
+    if (!favoritesKey || selected.size === 0) return;
+    selected.forEach(handle => removeFavorite(favoritesKey, handle));
+    const count = selected.size;
+    setSelected(new Set());
+    toast.success(`${count} item${count > 1 ? 's' : ''} removed`, { position: 'top-center' });
+  };
 
   useEffect(() => {
     if (!favoritesKey) {
@@ -60,20 +84,7 @@ export default function FavoritesPage() {
             <ChevronLeft className="h-5 w-5" />
           </button>
           <h1 className="flex-1 text-center font-semibold text-sm">Favorites</h1>
-          {isLoggedIn && products.length > 0 ? (
-            <button
-              onClick={() => {
-                if (!favoritesKey) return;
-                clearFavorites(favoritesKey);
-                toast.success('All favorites removed', { position: 'top-center' });
-              }}
-              className="p-2 -mr-2 text-muted-foreground hover:text-destructive transition-colors"
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
-          ) : (
-            <div className="w-9" />
-          )}
+          <div className="w-9" />
         </div>
       </header>
       <main className="max-w-md mx-auto px-4 py-6 space-y-3 pb-24">
@@ -99,36 +110,67 @@ export default function FavoritesPage() {
             <p className="text-xs text-muted-foreground mt-1">Tap the heart on a product to save it</p>
           </div>
         ) : (
-          products.map((product) => (
-            <div
-              key={product.handle}
-              className="bg-card rounded-xl border border-border p-3 flex items-center gap-3 cursor-pointer hover:bg-secondary/30 transition-colors"
-              onClick={() => navigate(`/product/${product.handle}`)}
-            >
-              {product.image ? (
-                <img src={product.image} alt={product.title} className="w-16 h-16 rounded-lg object-cover" />
-              ) : (
-                <div className="w-16 h-16 rounded-lg bg-secondary flex items-center justify-center">
-                  <Package className="h-6 w-6 text-muted-foreground" />
-                </div>
-              )}
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{product.title}</p>
-                <div className="mt-1">
-                  <PriceTag amount={product.price} currencyCode={product.currencyCode} className="text-sm font-bold text-primary" originalClassName="text-xs" />
-                </div>
+          <>
+            <div className="flex items-center justify-between pb-2">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  checked={allSelected}
+                  onCheckedChange={handleSelectAll}
+                  className="border-primary data-[state=checked]:bg-primary"
+                />
+                <span className="text-sm text-muted-foreground">
+                  {selected.size > 0 ? `${selected.size} selected` : 'Select All'}
+                </span>
               </div>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeFavorite(favoritesKey, product.handle);
-                }}
-                className="p-2 hover:bg-secondary rounded-full"
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-destructive hover:text-destructive hover:bg-destructive/10 gap-1.5"
+                onClick={handleDeleteSelected}
+                disabled={selected.size === 0}
               >
-                <Heart className="h-4 w-4 fill-red-500 text-red-500" />
-              </button>
+                <Trash2 className="h-3.5 w-3.5" />
+                Delete
+              </Button>
             </div>
-          ))
+            {products.map((product) => (
+              <div
+                key={product.handle}
+                className="bg-card rounded-xl border border-border p-3 flex items-center gap-3 cursor-pointer hover:bg-secondary/30 transition-colors"
+                onClick={() => navigate(`/product/${product.handle}`)}
+              >
+                <div className="flex items-center" onClick={(e) => e.stopPropagation()}>
+                  <Checkbox
+                    checked={selected.has(product.handle)}
+                    onCheckedChange={() => handleToggle(product.handle)}
+                    className="border-primary data-[state=checked]:bg-primary"
+                  />
+                </div>
+                {product.image ? (
+                  <img src={product.image} alt={product.title} className="w-16 h-16 rounded-lg object-cover" />
+                ) : (
+                  <div className="w-16 h-16 rounded-lg bg-secondary flex items-center justify-center">
+                    <Package className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{product.title}</p>
+                  <div className="mt-1">
+                    <PriceTag amount={product.price} currencyCode={product.currencyCode} className="text-sm font-bold text-primary" originalClassName="text-xs" />
+                  </div>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFavorite(favoritesKey, product.handle);
+                  }}
+                  className="p-2 hover:bg-secondary rounded-full"
+                >
+                  <Heart className="h-4 w-4 fill-red-500 text-red-500" />
+                </button>
+              </div>
+            ))}
+          </>
         )}
       </main>
     </div>
