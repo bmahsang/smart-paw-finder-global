@@ -156,7 +156,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
   const getQuery = useCallback(() => {
     if (searchQuery) {
       const sanitized = searchQuery.replace(/[\\"`${}]/g, '');
-      return sanitized;
+      return `title:${sanitized} OR body:${sanitized}`;
     }
     return undefined;
   }, [searchQuery]);
