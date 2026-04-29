@@ -1,19 +1,17 @@
 import { Truck, PartyPopper } from "lucide-react";
-import { useCartStore } from "@/stores/cartStore";
-import { useAuthStore, B2B_DISCOUNT_RATE } from "@/stores/authStore";
 import { formatPrice } from "@/lib/shopify";
 
 const THRESHOLD = 150;
 
-export function ThresholdBanner() {
-  const items = useCartStore(state => state.items);
-  const isB2B = useAuthStore(state => state.isB2B);
+interface ThresholdBannerProps {
+  selectedTotal: number;
+  currencyCode: string;
+}
 
-  if (items.length === 0) return null;
+export function ThresholdBanner({ selectedTotal, currencyCode }: ThresholdBannerProps) {
+  if (selectedTotal <= 0) return null;
 
-  const rawTotal = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
-  const total = isB2B ? rawTotal * (1 - B2B_DISCOUNT_RATE) : rawTotal;
-  const currencyCode = items[0]?.price.currencyCode || "USD";
+  const total = selectedTotal;
   const progress = Math.min((total / THRESHOLD) * 100, 100);
   const remaining = THRESHOLD - total;
   const qualifies = total >= THRESHOLD;

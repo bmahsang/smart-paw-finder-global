@@ -185,7 +185,13 @@ export const CartDrawer = ({ open: controlledOpen, onOpenChange, showTrigger = t
           ) : (
             <>
               {/* Threshold Banner */}
-              <ThresholdBanner />
+              <ThresholdBanner
+                selectedTotal={(() => {
+                  const isB2B = useAuthStore.getState().isB2B;
+                  return isB2B ? totalPrice * (1 - B2B_DISCOUNT_RATE) : totalPrice;
+                })()}
+                currencyCode={currencyCode}
+              />
 
               {/* Select All & Delete Selected */}
               <div className="flex items-center justify-between py-3 border-b border-border mb-3">
