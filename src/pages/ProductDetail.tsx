@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { useTranslation } from "@/hooks/useTranslation";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { Footer } from "@/components/layout/Footer";
+import { RecommendedProducts } from "@/components/product/RecommendedProducts";
 
 // Product detail skeleton component
 function ProductDetailSkeleton() {
@@ -685,6 +686,9 @@ export default function ProductDetail() {
           </div>
         )}
       </div>
+
+      {/* Recommended Products */}
+      <RecommendedProducts productId={product.id} currentHandle={product.handle} />
 
       {/* Footer */}
       <Footer />

@@ -588,6 +588,41 @@ export async function fetchBestSellingProducts(first: number = 8): Promise<Shopi
   return data.data?.products?.edges || [];
 }
 
+const GET_PRODUCT_RECOMMENDATIONS_QUERY = `
+  query GetProductRecommendations($productId: ID!) {
+    productRecommendations(productId: $productId) {
+      id
+      title
+      handle
+      priceRange {
+        minVariantPrice { amount currencyCode }
+      }
+      images(first: 1) {
+        edges { node { url altText } }
+      }
+      variants(first: 10) {
+        edges {
+          node {
+            id
+            title
+            price { amount currencyCode }
+            availableForSale
+            selectedOptions { name value }
+          }
+        }
+      }
+      options { name values }
+    }
+  }
+`;
+
+export async function fetchProductRecommendations(productId: string): Promise<ShopifyProduct[]> {
+  const data = await storefrontApiRequest(GET_PRODUCT_RECOMMENDATIONS_QUERY, { productId });
+  if (!data) return [];
+  const recommendations = data.data?.productRecommendations || [];
+  return recommendations.map((node: any) => ({ node }));
+}
+
 // API Functions
 export async function fetchProducts(first: number = 20, query?: string, after?: string): Promise<ProductsResponse> {
   const data = await storefrontApiRequest(GET_PRODUCTS_QUERY, { first, query, after });
