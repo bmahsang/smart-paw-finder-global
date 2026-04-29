@@ -581,19 +581,26 @@ const GET_BEST_SELLING_PRODUCTS_QUERY = `
           id
           title
           handle
+          availableForSale
+          totalInventory
+          productType
+          tags
+          vendor
           priceRange {
             minVariantPrice { amount currencyCode }
           }
-          images(first: 1) {
+          images(first: 5) {
             edges { node { url altText } }
           }
-          variants(first: 1) {
+          variants(first: 50) {
             edges {
               node {
                 id
                 title
                 price { amount currencyCode }
                 availableForSale
+                quantityAvailable
+                image { url altText }
                 selectedOptions { name value }
               }
             }
