@@ -125,7 +125,7 @@ const GET_PRODUCTS_QUERY = `
               }
             }
           }
-          variants(first: 10) {
+          variants(first: 50) {
             edges {
               node {
                 id
@@ -407,7 +407,7 @@ const GET_COLLECTION_PRODUCTS_QUERY = `
                 }
               }
             }
-            variants(first: 10) {
+            variants(first: 50) {
               edges {
                 node {
                   id
@@ -623,13 +623,14 @@ const GET_PRODUCT_RECOMMENDATIONS_QUERY = `
       images(first: 1) {
         edges { node { url altText } }
       }
-      variants(first: 10) {
+      variants(first: 50) {
         edges {
           node {
             id
             title
             price { amount currencyCode }
             availableForSale
+            image { url altText }
             selectedOptions { name value }
           }
         }
