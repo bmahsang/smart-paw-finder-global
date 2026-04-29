@@ -237,12 +237,43 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
     }
   }, [loadingMore, hasNextPage, endCursor, multiCollections, collectionHandle, getQuery]);
 
-  // Auto-load all pages when availability filter is active
+  // Bulk-load all remaining pages when availability filter is active
+  const [bulkLoading, setBulkLoading] = useState(false);
   useEffect(() => {
-    if (filters.availability !== "all" && hasNextPage && !loadingMore && !loading) {
-      loadMore();
-    }
-  }, [filters.availability, hasNextPage, loadingMore, loading, loadMore]);
+    if (filters.availability === "all" || !hasNextPage || loading || loadingMore || bulkLoading) return;
+    if (multiCollections && multiCollections.length > 0) return;
+
+    let cancelled = false;
+    const loadAll = async () => {
+      setBulkLoading(true);
+      const accumulated: ShopifyProduct[] = [];
+      let cursor = endCursor;
+      let more = hasNextPage;
+
+      while (more && cursor && !cancelled) {
+        try {
+          const response = collectionHandle
+            ? await fetchCollectionProducts(collectionHandle, PRODUCTS_PER_PAGE, cursor)
+            : await fetchProducts(PRODUCTS_PER_PAGE, getQuery(), cursor);
+          accumulated.push(...response.products);
+          more = response.pageInfo.hasNextPage;
+          cursor = response.pageInfo.endCursor;
+        } catch {
+          break;
+        }
+      }
+
+      if (!cancelled) {
+        setAllProducts(prev => [...prev, ...accumulated]);
+        setHasNextPage(false);
+        setEndCursor(null);
+      }
+      setBulkLoading(false);
+    };
+
+    loadAll();
+    return () => { cancelled = true; };
+  }, [filters.availability]);
 
   // Intersection Observer for infinite scroll
   useEffect(() => {
@@ -439,7 +470,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
 
           {/* Infinite scroll trigger */}
           <div ref={loadMoreRef} className="h-20 flex items-center justify-center">
-            {loadingMore && (
+            {(loadingMore || bulkLoading) && (
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
             )}
           </div>
