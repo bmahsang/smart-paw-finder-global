@@ -5,15 +5,18 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ChevronLeft, Heart, Package } from 'lucide-react';
 import { fetchProductByHandle, formatPrice } from '@/lib/shopify';
 import { useAuthStore } from '@/stores/authStore';
-import { useFavoritesStore, GUEST_FAVORITES_KEY } from '@/stores/favoritesStore';
+import { useFavoritesStore } from '@/stores/favoritesStore';
 import { PriceTag } from '@/components/ui/PriceTag';
+import { initiateLogin } from '@/lib/customer-auth';
+import { Button } from '@/components/ui/button';
 
 export default function FavoritesPage() {
   const navigate = useNavigate();
   const authUser = useAuthStore((s) => s.user);
+  const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
   const { getFavorites, removeFavorite } = useFavoritesStore();
   const favoritesData = useFavoritesStore((s) => s.favorites);
-  const favoritesKey = authUser?.userId || GUEST_FAVORITES_KEY;
+  const favoritesKey = authUser?.userId;
 
   const [products, setProducts] = useState<Array<{ handle: string; title: string; image?: string; price: string; currencyCode: string }>>([]);
   const [loading, setLoading] = useState(true);
@@ -60,7 +63,16 @@ export default function FavoritesPage() {
         </div>
       </header>
       <main className="max-w-md mx-auto px-4 py-6 space-y-3 pb-24">
-        {loading ? (
+        {!isLoggedIn ? (
+          <div className="bg-card rounded-xl border border-border p-12 text-center">
+            <Heart className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+            <p className="text-sm text-foreground font-medium mb-1">Login to view favorites</p>
+            <p className="text-xs text-muted-foreground mb-4">Save your favorite products by logging in</p>
+            <Button onClick={() => initiateLogin('/favorites')} className="w-full max-w-[200px]">
+              Log In
+            </Button>
+          </div>
+        ) : loading ? (
           <div className="space-y-3">
             <Skeleton className="h-20 w-full rounded-xl" />
             <Skeleton className="h-20 w-full rounded-xl" />

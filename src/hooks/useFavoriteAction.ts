@@ -1,0 +1,31 @@
+import { useAuthStore } from '@/stores/authStore';
+import { useFavoritesStore } from '@/stores/favoritesStore';
+import { initiateLogin } from '@/lib/customer-auth';
+import { toast } from 'sonner';
+
+export function useFavoriteAction() {
+  const authUserId = useAuthStore((s) => s.user?.userId);
+  const isLoggedIn = useAuthStore((s) => s.isLoggedIn);
+  const { addFavorite, removeFavorite, isFavorite } = useFavoritesStore();
+
+  const toggleFavorite = (handle: string) => {
+    if (!isLoggedIn || !authUserId) {
+      initiateLogin(window.location.pathname);
+      return;
+    }
+    if (isFavorite(authUserId, handle)) {
+      removeFavorite(authUserId, handle);
+      toast.success('Removed from favorites', { position: 'top-center' });
+    } else {
+      addFavorite(authUserId, handle);
+      toast.success('Added to favorites', { position: 'top-center' });
+    }
+  };
+
+  const checkFavorite = (handle: string) => {
+    if (!isLoggedIn || !authUserId) return false;
+    return isFavorite(authUserId, handle);
+  };
+
+  return { toggleFavorite, checkFavorite };
+}

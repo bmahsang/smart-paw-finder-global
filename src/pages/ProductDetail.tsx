@@ -13,8 +13,7 @@ import { fetchProductByHandle, formatPrice, createStorefrontCheckout, ShopifyPro
 import { PriceTag } from "@/components/ui/PriceTag";
 import { trackViewItem, trackAddToCart, shopifyToGA4Item } from "@/lib/ga4-ecommerce";
 import { useCartStore } from "@/stores/cartStore";
-import { useAuthStore } from "@/stores/authStore";
-import { useFavoritesStore, GUEST_FAVORITES_KEY } from "@/stores/favoritesStore";
+import { useFavoriteAction } from "@/hooks/useFavoriteAction";
 import { toast } from "sonner";
 import { useTranslation } from "@/hooks/useTranslation";
 import { CartDrawer } from "@/components/cart/CartDrawer";
@@ -137,9 +136,7 @@ export default function ProductDetail() {
   const thumbnailRef = useRef<HTMLDivElement>(null);
   const addItem = useCartStore(state => state.addItem);
   const totalCartItems = useCartStore(state => state.getTotalItems());
-  const authUserId = useAuthStore((s) => s.user?.userId);
-  const userId = authUserId || GUEST_FAVORITES_KEY;
-  const { addFavorite, removeFavorite, isFavorite } = useFavoritesStore();
+  const { toggleFavorite, checkFavorite } = useFavoriteAction();
 
   // Scroll to top on mount
   useEffect(() => {
@@ -351,18 +348,13 @@ export default function ProductDetail() {
 
           <div className="flex items-center gap-1">
             <button
-              onClick={() => {
-                const fav = isFavorite(userId, product.handle);
-                if (fav) removeFavorite(userId, product.handle);
-                else addFavorite(userId, product.handle);
-                toast.success(fav ? 'Removed from favorites' : 'Added to favorites', { position: 'top-center' });
-              }}
+              onClick={() => toggleFavorite(product.handle)}
               className="p-2 text-foreground"
             >
               <Heart
                 className={cn(
                   "h-5 w-5 transition-colors",
-                  isFavorite(userId, product.handle) ? "fill-red-500 text-red-500" : ""
+                  checkFavorite(product.handle) ? "fill-red-500 text-red-500" : ""
                 )}
               />
             </button>
@@ -698,15 +690,10 @@ export default function ProductDetail() {
         <div className="max-w-lg mx-auto flex items-center gap-3">
           {/* Favorite Button */}
           <button
-            onClick={() => {
-              const fav = isFavorite(userId, product.handle);
-              if (fav) removeFavorite(userId, product.handle);
-              else addFavorite(userId, product.handle);
-              toast.success(fav ? 'Removed from favorites' : 'Added to favorites', { position: 'top-center' });
-            }}
+            onClick={() => toggleFavorite(product.handle)}
             className={cn(
               "w-12 h-12 rounded-lg border flex items-center justify-center flex-shrink-0 transition-colors",
-              isFavorite(userId, product.handle)
+              checkFavorite(product.handle)
                 ? "border-red-400 bg-red-50 text-red-500"
                 : "border-border text-muted-foreground hover:border-red-400 hover:text-red-500"
             )}
@@ -714,7 +701,7 @@ export default function ProductDetail() {
             <Heart
               className={cn(
                 "h-5 w-5 transition-colors",
-                isFavorite(userId, product.handle) ? "fill-red-500 text-red-500" : ""
+                checkFavorite(product.handle) ? "fill-red-500 text-red-500" : ""
               )}
             />
           </button>
