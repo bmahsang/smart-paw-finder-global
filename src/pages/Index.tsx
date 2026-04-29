@@ -11,8 +11,6 @@ const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedCollection = searchParams.get("collection");
   const searchQuery = searchParams.get("q") || "";
-  const collectionsParam = searchParams.get("collections");  // e.g. "ssfw,toy"
-  const multiCollections = collectionsParam ? collectionsParam.split(",") : null;
   const collectionTitle = searchParams.get("collectionTitle");
   useScrollRestoration();
 
@@ -32,18 +30,13 @@ const Index = () => {
     }
   };
 
-  const handleMultiCollectionSelect = (handles: string[], title: string) => {
-    setSearchParams({ collections: handles.join(","), collectionTitle: title });
-  };
-
-  const showHeroBanner = !searchQuery && !selectedCollection && !collectionsParam;
+  const showHeroBanner = !searchQuery && !selectedCollection;
 
   return (
     <div className="bg-background min-h-screen">
       <Header
         onSearch={handleSearch}
         onCollectionSelect={handleCollectionSelect}
-        onMultiCollectionSelect={handleMultiCollectionSelect}
       />
       {showHeroBanner && (
         <div className="max-w-7xl mx-auto">
@@ -55,7 +48,6 @@ const Index = () => {
         <ProductGrid
           searchQuery={searchQuery}
           collectionHandle={selectedCollection}
-          multiCollections={multiCollections}
           overrideTitle={collectionTitle}
         />
       </main>

@@ -14,7 +14,6 @@ import { cn } from "@/lib/utils";
 interface HeaderProps {
   onSearch?: (query: string) => void;
   onCollectionSelect?: (handle: string | null) => void;
-  onMultiCollectionSelect?: (handles: string[], title: string) => void;
 }
 
 // Recursive menu item component for nested categories
@@ -93,7 +92,7 @@ function MenuItemComponent({
   );
 }
 
-export function Header({ onSearch, onCollectionSelect, onMultiCollectionSelect }: HeaderProps) {
+export function Header({ onSearch, onCollectionSelect }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [menu, setMenu] = useState<ShopifyMenu | null>(null);
   const [collections, setCollections] = useState<ShopifyCollection[]>([]);
@@ -126,21 +125,13 @@ export function Header({ onSearch, onCollectionSelect, onMultiCollectionSelect }
     const handle = extractHandleFromUrl(item.url);
     setIsMenuOpen(false);
 
-    // Sub-item (has ancestors): collection intersection filtering
-    // e.g. SSFW > Toys → products in both "ssfw" AND "toy" collections
     if (ancestorHandles.length > 0 && handle) {
-      const allHandles = [...ancestorHandles, handle];
-      console.log('[Menu] intersection handles:', allHandles, '| title:', item.title);
-      if (onMultiCollectionSelect) {
-        onMultiCollectionSelect(allHandles, item.title);
-      } else {
-        onCollectionSelect?.(handle);
-      }
+      onCollectionSelect?.(handle);
       if (window.location.pathname !== '/') navigate('/');
       return;
     }
 
-    // Top-level item: use collection handle as before
+
     if (item.type === 'COLLECTION' || item.url.includes('/collections/')) {
       if (window.location.pathname === '/') {
         onCollectionSelect?.(handle);
@@ -374,12 +365,12 @@ export function Header({ onSearch, onCollectionSelect, onMultiCollectionSelect }
       </div>
 
       {/* Category chips (hamburger top-level) */}
-      <CategoryChips onCollectionSelect={onCollectionSelect} onMultiCollectionSelect={onMultiCollectionSelect} />
+      <CategoryChips onCollectionSelect={onCollectionSelect} />
     </header>
   );
 }
 
-function CategoryChips({ onCollectionSelect, onMultiCollectionSelect }: { onCollectionSelect?: (handle: string | null) => void; onMultiCollectionSelect?: (handles: string[], title: string) => void }) {
+function CategoryChips({ onCollectionSelect }: { onCollectionSelect?: (handle: string | null) => void }) {
   const [searchParams] = useSearchParams();
   const selectedCollection = searchParams.get("collection");
   const searchQuery = searchParams.get("q");
@@ -388,6 +379,6 @@ function CategoryChips({ onCollectionSelect, onMultiCollectionSelect }: { onColl
   if (!onCollectionSelect) return null;
 
   return (
-    <CategoryNav selectedCollection={selectedCollection} onSelect={onCollectionSelect} onMultiSelect={onMultiCollectionSelect} />
+    <CategoryNav selectedCollection={selectedCollection} onSelect={onCollectionSelect} />
   );
 }
