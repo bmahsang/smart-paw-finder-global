@@ -56,7 +56,6 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
   const [sortOption, setSortOption] = useState<SortOption>("default");
   const [filters, setFilters] = useState<FilterState>({
     priceRange: [0, DEFAULT_MAX_PRICE],
-    availability: "all",
   });
 
   const navigate = useNavigate();
@@ -87,9 +86,6 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
     return false;
   }, []);
 
-  // Tracks whether we're bulk-loading all remaining pages for filtering
-  const [bulkLoading, setBulkLoading] = useState(false);
-
   // Apply filters and sorting to products
   const filteredAndSortedProducts = useMemo(() => {
     let result = [...allProducts];
@@ -99,13 +95,6 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
       const price = parseFloat(product.node.priceRange.minVariantPrice.amount);
       return price >= filters.priceRange[0] && price <= filters.priceRange[1];
     });
-
-    // Apply availability filter
-    if (filters.availability === "available") {
-      result = result.filter(product => !isProductSoldOut(product));
-    } else if (filters.availability === "sold-out") {
-      result = result.filter(product => isProductSoldOut(product));
-    }
 
     // Apply sorting
     switch (sortOption) {
@@ -131,15 +120,13 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
         break;
     }
 
-    // Push sold-out products to the bottom (only for "all" view)
-    if (filters.availability === "all") {
-      result.sort((a, b) => {
-        const aSoldOut = isProductSoldOut(a);
-        const bSoldOut = isProductSoldOut(b);
-        if (aSoldOut === bSoldOut) return 0;
-        return aSoldOut ? 1 : -1;
-      });
-    }
+    // Push sold-out products to the bottom
+    result.sort((a, b) => {
+      const aSoldOut = isProductSoldOut(a);
+      const bSoldOut = isProductSoldOut(b);
+      if (aSoldOut === bSoldOut) return 0;
+      return aSoldOut ? 1 : -1;
+    });
 
     return result;
   }, [allProducts, sortOption, filters, isProductSoldOut]);
@@ -159,7 +146,6 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
   const activeFilterCount = useMemo(() => {
     let count = 0;
     if (filters.priceRange[0] > minPrice || filters.priceRange[1] < maxPrice) count++;
-    if (filters.availability !== "all") count++;
     return count;
   }, [filters, minPrice, maxPrice]);
 
@@ -178,7 +164,6 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
 
   useEffect(() => {
     setSortOption("default");
-    setFilters(prev => ({ ...prev, availability: "all" }));
   }, [searchQuery, collectionHandle, multiCollections]);
 
   // Initial load
@@ -222,7 +207,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
 
   // Load more products
   const loadMore = useCallback(async () => {
-    if (loadingMore || !hasNextPage || !endCursor || bulkLoading) return;
+    if (loadingMore || !hasNextPage || !endCursor) return;
 
     setLoadingMore(true);
     try {
@@ -244,62 +229,13 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
     } finally {
       setLoadingMore(false);
     }
-  }, [loadingMore, hasNextPage, endCursor, multiCollections, collectionHandle, getQuery, bulkLoading]);
+  }, [loadingMore, hasNextPage, endCursor, multiCollections, collectionHandle, getQuery]);
 
-  // Bulk-load all remaining pages when availability filter is active
-  const bulkLoadingRef = useRef(false);
-  const endCursorRef = useRef(endCursor);
-  const hasNextPageRef = useRef(hasNextPage);
-  endCursorRef.current = endCursor;
-  hasNextPageRef.current = hasNextPage;
-
-  useEffect(() => {
-    if (filters.availability === "all") return;
-    if (!hasNextPageRef.current || loading || bulkLoadingRef.current) return;
-    if (multiCollections && multiCollections.length > 0) return;
-
-    bulkLoadingRef.current = true;
-    setBulkLoading(true);
-
-    let cancelled = false;
-    const loadAll = async () => {
-      const accumulated: ShopifyProduct[] = [];
-      let cursor = endCursorRef.current;
-      let more = hasNextPageRef.current;
-
-      while (more && cursor) {
-        try {
-          const response = collectionHandle
-            ? await fetchCollectionProducts(collectionHandle, 250, cursor)
-            : await fetchProducts(250, getQuery(), cursor);
-          accumulated.push(...response.products);
-          more = response.pageInfo.hasNextPage;
-          cursor = response.pageInfo.endCursor;
-        } catch {
-          break;
-        }
-      }
-
-      if (!cancelled) {
-        setAllProducts(prev => [...prev, ...accumulated]);
-        setHasNextPage(false);
-        setEndCursor(null);
-      }
-      bulkLoadingRef.current = false;
-      setBulkLoading(false);
-    };
-
-    loadAll();
-    return () => { cancelled = true; };
-  }, [filters.availability, loading, collectionHandle, multiCollections, getQuery]);
-
-  // Intersection Observer for infinite scroll (disabled during sold-out filter)
+  // Intersection Observer for infinite scroll
   useEffect(() => {
     if (observerRef.current) {
       observerRef.current.disconnect();
     }
-
-    if (filters.availability !== "all") return;
 
     observerRef.current = new IntersectionObserver(
       (entries) => {
@@ -319,7 +255,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
         observerRef.current.disconnect();
       }
     };
-  }, [hasNextPage, loadingMore, loadMore, filters.availability]);
+  }, [hasNextPage, loadingMore, loadMore]);
 
   const handleAddToCart = (e: React.MouseEvent, product: ShopifyProduct) => {
     e.stopPropagation();
@@ -400,24 +336,17 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
       />
 
       {filteredAndSortedProducts.length === 0 ? (
-        bulkLoading ? (
-          <div className="flex flex-col items-center justify-center py-16 gap-3">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-sm text-muted-foreground">Loading products...</p>
-          </div>
-        ) : (
-          <div className="bg-muted/50 rounded-xl p-12 text-center">
-            <p className="text-muted-foreground text-lg mb-4">
-              {getNoFilterResultsText()}
-            </p>
-            <Button
-              variant="outline"
-              onClick={() => setFilters({ priceRange: [minPrice, maxPrice], availability: "all" })}
-            >
-              {t('filters.clearFilters')}
-            </Button>
-          </div>
-        )
+        <div className="bg-muted/50 rounded-xl p-12 text-center">
+          <p className="text-muted-foreground text-lg mb-4">
+            {getNoFilterResultsText()}
+          </p>
+          <Button
+            variant="outline"
+            onClick={() => setFilters({ priceRange: [minPrice, maxPrice] })}
+          >
+            {t('filters.clearFilters')}
+          </Button>
+        </div>
       ) : (
         <>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -497,7 +426,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
 
           {/* Infinite scroll trigger */}
           <div ref={loadMoreRef} className="h-20 flex items-center justify-center">
-            {(loadingMore || bulkLoading) && (
+            {loadingMore && (
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
             )}
           </div>

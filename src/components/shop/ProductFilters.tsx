@@ -23,7 +23,6 @@ export type SortOption = "default" | "price-asc" | "price-desc" | "title-asc" | 
 
 export interface FilterState {
   priceRange: [number, number];
-  availability: "all" | "available" | "sold-out";
 }
 
 interface ProductFiltersProps {
@@ -64,12 +63,6 @@ export function ProductFilters({
     { value: "title-desc", labelKey: "filters.sortOptions.titleDesc" },
   ];
 
-  const availabilityOptions = [
-    { value: "all", labelKey: "filters.all" },
-    { value: "available", labelKey: "filters.available" },
-    { value: "sold-out", labelKey: "product.soldOut" },
-  ];
-
   const handleApplyFilters = () => {
     onFiltersChange(tempFilters);
     setIsOpen(false);
@@ -78,7 +71,6 @@ export function ProductFilters({
   const handleResetFilters = () => {
     const defaultFilters: FilterState = {
       priceRange: [minPrice, maxPrice],
-      availability: "all",
     };
     setTempFilters(defaultFilters);
     onFiltersChange(defaultFilters);
@@ -151,27 +143,6 @@ export function ProductFilters({
               </div>
             </div>
 
-            {/* Availability */}
-            <div>
-              <h3 className="text-sm font-semibold mb-4">{t('filters.availability')}</h3>
-              <div className="flex flex-wrap gap-2">
-                {availabilityOptions.map((option) => (
-                  <Button
-                    key={option.value}
-                    variant={tempFilters.availability === option.value ? "default" : "outline"}
-                    size="sm"
-                    onClick={() =>
-                      setTempFilters((prev) => ({
-                        ...prev,
-                        availability: option.value as FilterState["availability"],
-                      }))
-                    }
-                  >
-                    {t(option.labelKey)}
-                  </Button>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* Apply Button */}
