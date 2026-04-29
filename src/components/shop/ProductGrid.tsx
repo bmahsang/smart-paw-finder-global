@@ -89,6 +89,20 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
   const filteredAndSortedProducts = useMemo(() => {
     let result = [...allProducts];
 
+    if (filters.availability === "sold-out" && !bulkLoading) {
+      console.log('[SoldOut Debug] total:', allProducts.length, 'detected:', allProducts.filter(p => isProductSoldOut(p)).length);
+      allProducts.filter(p => !isProductSoldOut(p)).slice(0, 5).forEach(p => {
+        console.log('[NOT soldOut]', p.node.title, {
+          productAvail: p.node.availableForSale,
+          tags: p.node.tags,
+          variants: p.node.variants.edges.map(v => ({
+            avail: v.node.availableForSale,
+            qty: v.node.quantityAvailable,
+          })),
+        });
+      });
+    }
+
     // Apply price filter
     result = result.filter(product => {
       const price = parseFloat(product.node.priceRange.minVariantPrice.amount);
