@@ -38,7 +38,7 @@ const Index = () => {
   const showHeroBanner = !searchQuery && !selectedCollection && !collectionsParam;
 
   return (
-    <div className="bg-background min-h-screen overflow-x-hidden overflow-y-auto">
+    <div className="bg-background min-h-screen">
       <Header
         onSearch={handleSearch}
         onCollectionSelect={handleCollectionSelect}
