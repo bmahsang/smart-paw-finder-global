@@ -262,8 +262,8 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
       while (more && cursor) {
         try {
           const response = collectionHandle
-            ? await fetchCollectionProducts(collectionHandle, PRODUCTS_PER_PAGE, cursor)
-            : await fetchProducts(PRODUCTS_PER_PAGE, getQuery(), cursor);
+            ? await fetchCollectionProducts(collectionHandle, 250, cursor)
+            : await fetchProducts(250, getQuery(), cursor);
           accumulated.push(...response.products);
           more = response.pageInfo.hasNextPage;
           cursor = response.pageInfo.endCursor;
