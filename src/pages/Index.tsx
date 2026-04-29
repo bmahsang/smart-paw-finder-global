@@ -5,6 +5,7 @@ import { HeroBanner } from "@/components/home/HeroBanner";
 import { PopularProducts } from "@/components/home/PopularProducts";
 import { ProductGrid } from "@/components/shop/ProductGrid";
 import { useScrollRestoration } from "@/hooks/useScrollRestoration";
+import { ScrollToTop } from "@/components/ui/ScrollToTop";
 
 const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -59,6 +60,7 @@ const Index = () => {
         />
       </main>
       <Footer />
+      <ScrollToTop />
     </div>
   );
 };

@@ -19,6 +19,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { Footer } from "@/components/layout/Footer";
 import { RecommendedProducts } from "@/components/product/RecommendedProducts";
+import { ScrollToTop } from "@/components/ui/ScrollToTop";
 
 // Product detail skeleton component
 function ProductDetailSkeleton() {
@@ -320,7 +321,7 @@ export default function ProductDetail() {
   const maxQuantity = selectedVariant?.quantityAvailable ?? 99;
 
   return (
-    <div className="bg-background min-h-screen flex flex-col pb-24 overflow-x-hidden w-full max-w-[100vw]">
+    <div className="bg-background min-h-screen flex flex-col pb-24">
       {/* Product Detail Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 h-14">
@@ -684,6 +685,8 @@ export default function ProductDetail() {
 
       {/* Footer */}
       <Footer />
+
+      <ScrollToTop />
 
       {/* Fixed Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 z-50" translate="no">
