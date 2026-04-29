@@ -389,17 +389,24 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
       />
 
       {filteredAndSortedProducts.length === 0 ? (
-        <div className="bg-muted/50 rounded-xl p-12 text-center">
-          <p className="text-muted-foreground text-lg mb-4">
-            {getNoFilterResultsText()}
-          </p>
-          <Button
-            variant="outline"
-            onClick={() => setFilters({ priceRange: [minPrice, maxPrice], availability: "all" })}
-          >
-            {t('filters.clearFilters')}
-          </Button>
-        </div>
+        bulkLoading ? (
+          <div className="flex flex-col items-center justify-center py-16 gap-3">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="text-sm text-muted-foreground">Loading products...</p>
+          </div>
+        ) : (
+          <div className="bg-muted/50 rounded-xl p-12 text-center">
+            <p className="text-muted-foreground text-lg mb-4">
+              {getNoFilterResultsText()}
+            </p>
+            <Button
+              variant="outline"
+              onClick={() => setFilters({ priceRange: [minPrice, maxPrice], availability: "all" })}
+            >
+              {t('filters.clearFilters')}
+            </Button>
+          </div>
+        )
       ) : (
         <>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
