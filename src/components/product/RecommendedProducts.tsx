@@ -30,29 +30,29 @@ export function RecommendedProducts({ productId, currentHandle }: RecommendedPro
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     const el = scrollRef.current;
     if (!el) return;
-    hasDragged.current = false;
-    const target = e.target as HTMLElement;
-    if (target.closest('button')) return;
     isDragging.current = true;
+    hasDragged.current = false;
     startX.current = e.clientX;
     scrollLeft.current = el.scrollLeft;
-    el.setPointerCapture(e.pointerId);
   }, []);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (!isDragging.current || !scrollRef.current) return;
     const dx = e.clientX - startX.current;
-    if (Math.abs(dx) > 4) hasDragged.current = true;
+    if (Math.abs(dx) > 5) hasDragged.current = true;
     scrollRef.current.scrollLeft = scrollLeft.current - dx;
   }, []);
 
-  const onPointerUp = useCallback((e: React.PointerEvent) => {
+  const onPointerUp = useCallback(() => {
     isDragging.current = false;
-    scrollRef.current?.releasePointerCapture(e.pointerId);
   }, []);
 
-  const handleCardClick = useCallback((handle: string) => {
-    if (!hasDragged.current) navigate(`/product/${handle}`);
+  const handleCardClick = useCallback((e: React.MouseEvent, handle: string) => {
+    if (hasDragged.current) {
+      e.preventDefault();
+      return;
+    }
+    navigate(`/product/${handle}`);
   }, [navigate]);
 
   useEffect(() => {
@@ -117,7 +117,7 @@ export function RecommendedProducts({ productId, currentHandle }: RecommendedPro
           return (
             <div
               key={product.node.id}
-              onClick={() => handleCardClick(product.node.handle)}
+              onClick={(e) => handleCardClick(e, product.node.handle)}
               className="w-32 flex-shrink-0 bg-card rounded-xl border border-border overflow-hidden shadow-sm hover:shadow-card transition-all cursor-pointer"
             >
               <div className="aspect-square bg-secondary relative overflow-hidden">
