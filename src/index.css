@@ -193,3 +193,9 @@
 .animate-pulse-soft {
   animation: pulse-soft 2s ease-in-out infinite;
 }
+
+/* Sonner toast close button → right side */
+[data-sonner-toast] [data-close-button] {
+  left: unset !important;
+  right: 0 !important;
+}
