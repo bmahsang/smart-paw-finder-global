@@ -147,7 +147,7 @@ export function RecommendedProducts({ productId, currentHandle }: RecommendedPro
                       addFavorite(userId, handle);
                     }
                   }}
-                  className="absolute top-2 right-2 w-7 h-7 rounded-full bg-background/70 backdrop-blur-sm flex items-center justify-center hover:bg-background/90 transition-colors z-10"
+                  className="absolute top-2 right-2 w-7 h-7 rounded-full bg-background/70 backdrop-blur-sm flex items-center justify-center hover:bg-background/90 transition-colors"
                 >
                   <Heart
                     className={`h-3.5 w-3.5 ${isFavorite(userId, product.node.handle) ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`}

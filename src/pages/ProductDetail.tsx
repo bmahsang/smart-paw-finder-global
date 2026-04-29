@@ -694,7 +694,7 @@ export default function ProductDetail() {
       <Footer />
 
       {/* Fixed Bottom Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4" translate="no">
+      <div className="fixed bottom-0 left-0 right-0 bg-card border-t border-border p-4 z-50" translate="no">
         <div className="max-w-lg mx-auto flex items-center gap-3">
           {/* Favorite Button */}
           <button
