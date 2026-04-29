@@ -85,16 +85,12 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
     return false;
   }, []);
 
-  // Sold-out products fetched directly from Shopify API
-  const [soldOutProducts, setSoldOutProducts] = useState<ShopifyProduct[]>([]);
-  const [soldOutLoading, setSoldOutLoading] = useState(false);
+  // Tracks whether we're bulk-loading all remaining pages for filtering
+  const [bulkLoading, setBulkLoading] = useState(false);
 
   // Apply filters and sorting to products
   const filteredAndSortedProducts = useMemo(() => {
-    // Sold-out filter: use dedicated API results
-    let result = filters.availability === "sold-out"
-      ? [...soldOutProducts]
-      : [...allProducts];
+    let result = [...allProducts];
 
     // Apply price filter
     result = result.filter(product => {
@@ -102,9 +98,11 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
       return price >= filters.priceRange[0] && price <= filters.priceRange[1];
     });
 
-    // Apply availability filter (available only)
+    // Apply availability filter
     if (filters.availability === "available") {
       result = result.filter(product => !isProductSoldOut(product));
+    } else if (filters.availability === "sold-out") {
+      result = result.filter(product => isProductSoldOut(product));
     }
 
     // Apply sorting
@@ -142,7 +140,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
     }
 
     return result;
-  }, [allProducts, soldOutProducts, sortOption, filters, isProductSoldOut]);
+  }, [allProducts, sortOption, filters, isProductSoldOut]);
 
   // GA4: view_item_list — fire once per search/collection change
   useEffect(() => {
@@ -222,7 +220,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
 
   // Load more products
   const loadMore = useCallback(async () => {
-    if (loadingMore || !hasNextPage || !endCursor || soldOutLoading) return;
+    if (loadingMore || !hasNextPage || !endCursor || bulkLoading) return;
 
     setLoadingMore(true);
     try {
@@ -244,42 +242,54 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
     } finally {
       setLoadingMore(false);
     }
-  }, [loadingMore, hasNextPage, endCursor, multiCollections, collectionHandle, getQuery, soldOutLoading]);
+  }, [loadingMore, hasNextPage, endCursor, multiCollections, collectionHandle, getQuery, bulkLoading]);
 
-  // Fetch sold-out products directly from Shopify API
+  // Bulk-load all remaining pages when availability filter is active
+  const bulkLoadingRef = useRef(false);
+  const endCursorRef = useRef(endCursor);
+  const hasNextPageRef = useRef(hasNextPage);
+  endCursorRef.current = endCursor;
+  hasNextPageRef.current = hasNextPage;
+
   useEffect(() => {
-    if (filters.availability !== "sold-out") {
-      setSoldOutProducts([]);
-      return;
-    }
+    if (filters.availability === "all") return;
+    if (!hasNextPageRef.current || loading || bulkLoadingRef.current) return;
+    if (multiCollections && multiCollections.length > 0) return;
+
+    bulkLoadingRef.current = true;
+    setBulkLoading(true);
 
     let cancelled = false;
-    const loadSoldOut = async () => {
-      setSoldOutLoading(true);
-      const all: ShopifyProduct[] = [];
-      let cursor: string | undefined;
-      let more = true;
+    const loadAll = async () => {
+      const accumulated: ShopifyProduct[] = [];
+      let cursor = endCursorRef.current;
+      let more = hasNextPageRef.current;
 
-      while (more) {
+      while (more && cursor) {
         try {
-          const response = await fetchProducts(250, 'available_for_sale:false', cursor);
-          all.push(...response.products);
+          const response = collectionHandle
+            ? await fetchCollectionProducts(collectionHandle, 250, cursor)
+            : await fetchProducts(250, getQuery(), cursor);
+          accumulated.push(...response.products);
           more = response.pageInfo.hasNextPage;
-          cursor = response.pageInfo.endCursor ?? undefined;
+          cursor = response.pageInfo.endCursor;
         } catch {
           break;
         }
       }
 
       if (!cancelled) {
-        setSoldOutProducts(all);
-        setSoldOutLoading(false);
+        setAllProducts(prev => [...prev, ...accumulated]);
+        setHasNextPage(false);
+        setEndCursor(null);
       }
+      bulkLoadingRef.current = false;
+      setBulkLoading(false);
     };
 
-    loadSoldOut();
+    loadAll();
     return () => { cancelled = true; };
-  }, [filters.availability]);
+  }, [filters.availability, loading, collectionHandle, multiCollections, getQuery]);
 
   // Intersection Observer for infinite scroll (disabled during sold-out filter)
   useEffect(() => {
@@ -388,7 +398,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
       />
 
       {filteredAndSortedProducts.length === 0 ? (
-        soldOutLoading ? (
+        bulkLoading ? (
           <div className="flex flex-col items-center justify-center py-16 gap-3">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
             <p className="text-sm text-muted-foreground">Loading products...</p>
@@ -485,7 +495,7 @@ export const ProductGrid = ({ searchQuery = "", collectionHandle = null, multiCo
 
           {/* Infinite scroll trigger */}
           <div ref={loadMoreRef} className="h-20 flex items-center justify-center">
-            {(loadingMore || soldOutLoading) && (
+            {(loadingMore || bulkLoading) && (
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
             )}
           </div>
