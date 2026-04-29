@@ -20,7 +20,7 @@ export default function FavoritesPage() {
   const favoritesData = useFavoritesStore((s) => s.favorites);
   const favoritesKey = authUser?.userId;
 
-  const [products, setProducts] = useState<Array<{ handle: string; title: string; image?: string; price: string; currencyCode: string }>>([]);
+  const [products, setProducts] = useState<Array<{ handle: string; title: string; image?: string; price: string; currencyCode: string; soldOut: boolean }>>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
@@ -63,13 +63,23 @@ export default function FavoritesPage() {
     Promise.all(handles.map((h) => fetchProductByHandle(h).catch(() => null)))
       .then((results) => {
         setProducts(
-          results.filter(Boolean).map((p: any) => ({
-            handle: p.handle,
-            title: p.title,
-            image: p.images.edges[0]?.node.url,
-            price: p.priceRange.minVariantPrice.amount,
-            currencyCode: p.priceRange.minVariantPrice.currencyCode,
-          }))
+          results.filter(Boolean).map((p: any) => {
+            const isSoldOut =
+              p.availableForSale === false ||
+              p.variants.edges.every((v: any) => !v.node.availableForSale) ||
+              (p.totalInventory != null && p.totalInventory <= 0) ||
+              (p.variants.edges.length > 0 &&
+                p.variants.edges.filter((v: any) => v.node.quantityAvailable !== null).length > 0 &&
+                p.variants.edges.filter((v: any) => v.node.quantityAvailable !== null).every((v: any) => v.node.quantityAvailable <= 0));
+            return {
+              handle: p.handle,
+              title: p.title,
+              image: p.images.edges[0]?.node.url,
+              price: p.priceRange.minVariantPrice.amount,
+              currencyCode: p.priceRange.minVariantPrice.currencyCode,
+              soldOut: isSoldOut,
+            };
+          })
         );
       })
       .finally(() => setLoading(false));
@@ -146,17 +156,26 @@ export default function FavoritesPage() {
                     className="border-primary data-[state=checked]:bg-primary"
                   />
                 </div>
-                {product.image ? (
-                  <img src={product.image} alt={product.title} className="w-16 h-16 rounded-lg object-cover" />
-                ) : (
-                  <div className="w-16 h-16 rounded-lg bg-secondary flex items-center justify-center">
-                    <Package className="h-6 w-6 text-muted-foreground" />
-                  </div>
-                )}
+                <div className="relative w-16 h-16 flex-shrink-0">
+                  {product.image ? (
+                    <img src={product.image} alt={product.title} className={`w-16 h-16 rounded-lg object-cover ${product.soldOut ? 'opacity-50' : ''}`} />
+                  ) : (
+                    <div className="w-16 h-16 rounded-lg bg-secondary flex items-center justify-center">
+                      <Package className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                  )}
+                  {product.soldOut && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-background/60 rounded-lg">
+                      <span className="bg-foreground text-background px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                        Sold Out
+                      </span>
+                    </div>
+                  )}
+                </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{product.title}</p>
+                  <p className={`text-sm font-medium truncate ${product.soldOut ? 'text-muted-foreground' : ''}`}>{product.title}</p>
                   <div className="mt-1">
-                    <PriceTag amount={product.price} currencyCode={product.currencyCode} className="text-sm font-bold text-primary" originalClassName="text-xs" />
+                    <PriceTag amount={product.price} currencyCode={product.currencyCode} className={`text-sm font-bold ${product.soldOut ? 'text-muted-foreground' : 'text-primary'}`} originalClassName="text-xs" />
                   </div>
                 </div>
                 <button
