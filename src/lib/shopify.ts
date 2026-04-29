@@ -498,6 +498,21 @@ export async function fetchCollectionIntersection(
   };
 }
 
+export async function fetchCollectionIntersectionCount(handles: string[]): Promise<number> {
+  if (handles.length === 0) return 0;
+  if (handles.length === 1) {
+    return fetchCollectionProductCount(handles[0]);
+  }
+  const allSets = await Promise.all(handles.map(fetchCollectionProductIds));
+  const base = allSets[0];
+  const rest = allSets.slice(1);
+  let count = 0;
+  for (const id of base) {
+    if (rest.every(set => set.has(id))) count++;
+  }
+  return count;
+}
+
 // Banners (Metaobjects)
 export interface ShopifyBanner {
   id: string;

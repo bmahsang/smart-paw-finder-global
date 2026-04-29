@@ -1,7 +1,7 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { extractHandleFromUrl } from '@/lib/shopify';
+import { extractHandleFromUrl, fetchCollectionIntersectionCount } from '@/lib/shopify';
 import { useCategoryMenu } from '@/hooks/useCategoryMenu';
 
 interface CategoryNavProps {
@@ -42,10 +42,43 @@ export function CategoryNav({ selectedCollection, onSelect, onMultiSelect }: Cat
     );
   }) ?? null;
 
-  const subItems =
+  const allSubItems =
     activeTopItem?.items?.filter(
       child => child.type === 'COLLECTION' || child.url.includes('/collections/')
     ) ?? [];
+
+  const parentHandle = activeTopItem ? extractHandleFromUrl(activeTopItem.url) : null;
+  const [visibleSubHandles, setVisibleSubHandles] = useState<Set<string> | null>(null);
+
+  useEffect(() => {
+    if (!parentHandle || allSubItems.length === 0) {
+      setVisibleSubHandles(null);
+      return;
+    }
+    let cancelled = false;
+    const checkCounts = async () => {
+      const results = await Promise.all(
+        allSubItems.map(async (child) => {
+          const h = extractHandleFromUrl(child.url);
+          if (!h) return { handle: h, count: 0 };
+          const count = await fetchCollectionIntersectionCount([parentHandle, h]);
+          return { handle: h, count };
+        })
+      );
+      if (!cancelled) {
+        setVisibleSubHandles(new Set(results.filter(r => r.count > 0).map(r => r.handle!)));
+      }
+    };
+    checkCounts();
+    return () => { cancelled = true; };
+  }, [parentHandle, allSubItems.map(i => i.id).join(',')]);
+
+  const subItems = visibleSubHandles === null
+    ? allSubItems
+    : allSubItems.filter(child => {
+        const h = extractHandleFromUrl(child.url);
+        return h && visibleSubHandles.has(h);
+      });
 
   return (
     <div className="bg-background border-b border-border">
