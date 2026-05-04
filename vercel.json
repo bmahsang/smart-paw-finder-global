@@ -50,6 +50,7 @@
     { "source": "/api/b2b-list", "destination": "/api/b2b-list" },
     { "source": "/api/b2b-detail", "destination": "/api/b2b-detail" },
     { "source": "/api/b2b-approve", "destination": "/api/b2b-approve" },
+    { "source": "/api/b2b-status", "destination": "/api/b2b-status" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
