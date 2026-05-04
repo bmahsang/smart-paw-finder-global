@@ -1,0 +1,177 @@
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { kv } from '@vercel/kv';
+
+const ALLOWED_ORIGINS = ['https://biteme.one', 'https://www.biteme.one', 'http://localhost:5173'];
+function getCorsOrigin(req: VercelRequest): string {
+  const origin = req.headers.origin || '';
+  if (ALLOWED_ORIGINS.includes(origin)) return origin;
+  if (/^https:\/\/smart-paw-finder[a-z0-9-]*\.vercel\.app$/.test(origin)) return origin;
+  return ALLOWED_ORIGINS[0];
+}
+
+let cachedToken: string | null = null;
+let tokenExpiresAt = 0;
+async function getAdminToken(): Promise<string> {
+  const now = Date.now();
+  if (cachedToken && now < tokenExpiresAt - 5 * 60 * 1000) return cachedToken;
+  const shop = process.env.VITE_SHOPIFY_STORE_DOMAIN;
+  const clientId = process.env.VITE_SHOPIFY_CLIENT_ID;
+  const clientSecret = process.env.SHOPIFY_CLIENT_SECRET;
+  const res = await fetch(`https://${shop}/admin/oauth/access_token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ grant_type: 'client_credentials', client_id: clientId!, client_secret: clientSecret! }),
+  });
+  if (!res.ok) throw new Error(`Token failed (${res.status})`);
+  const data = await res.json();
+  cachedToken = data.access_token;
+  tokenExpiresAt = now + data.expires_in * 1000;
+  return cachedToken!;
+}
+
+async function findCustomerAndTag(email: string, tagsToAdd: string[], tagsToRemove: string[]) {
+  try {
+    const token = await getAdminToken();
+    const shop = process.env.VITE_SHOPIFY_STORE_DOMAIN;
+    const custRes = await fetch(`https://${shop}/admin/api/2025-07/graphql.json`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': token },
+      body: JSON.stringify({
+        query: `query($q:String!){customers(first:1,query:$q){edges{node{id}}}}`,
+        variables: { q: `email:${email}` },
+      }),
+    });
+    const custData = await custRes.json();
+    const customerId = custData.data?.customers?.edges?.[0]?.node?.id;
+    if (!customerId) return;
+
+    if (tagsToRemove.length > 0) {
+      await fetch(`https://${shop}/admin/api/2025-07/graphql.json`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': token },
+        body: JSON.stringify({
+          query: `mutation($id:ID!,$tags:[String!]!){tagsRemove(id:$id,tags:$tags){userErrors{message}}}`,
+          variables: { id: customerId, tags: tagsToRemove },
+        }),
+      });
+    }
+    if (tagsToAdd.length > 0) {
+      await fetch(`https://${shop}/admin/api/2025-07/graphql.json`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': token },
+        body: JSON.stringify({
+          query: `mutation($id:ID!,$tags:[String!]!){tagsAdd(id:$id,tags:$tags){userErrors{message}}}`,
+          variables: { id: customerId, tags: tagsToAdd },
+        }),
+      });
+    }
+  } catch (e) {
+    console.error('[B2B] Shopify tag error:', e);
+  }
+}
+
+function checkAdmin(req: VercelRequest): boolean {
+  return (req.headers['x-admin-key'] as string) === process.env.B2B_ADMIN_PASSWORD;
+}
+
+async function handleApply(req: VercelRequest, res: VercelResponse) {
+  const { email, representativeName, phoneNumber, address, companyName, document } = req.body || {};
+  if (!email || !representativeName || !phoneNumber || !address || !companyName || !document) {
+    return res.status(400).json({ error: 'All fields are required.' });
+  }
+  const existingId = await kv.get<string>(`b2b:email:${email.toLowerCase()}`);
+  if (existingId) return res.status(409).json({ error: 'An application with this email already exists.' });
+
+  const id = `b2b_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  const now = new Date().toISOString();
+  await Promise.all([
+    kv.set(`b2b:app:${id}`, {
+      id, email, representativeName, phoneNumber, address, companyName,
+      documentName: document.name, documentType: document.type,
+      status: 'pending', createdAt: now, updatedAt: now,
+    }),
+    kv.set(`b2b:doc:${id}`, { name: document.name, type: document.type, data: document.data }),
+    kv.set(`b2b:email:${email.toLowerCase()}`, id),
+    kv.sadd('b2b:ids', id),
+  ]);
+  await findCustomerAndTag(email, ['B2B-pending'], []);
+  return res.status(200).json({ success: true, id });
+}
+
+async function handleList(req: VercelRequest, res: VercelResponse) {
+  if (!checkAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+  const ids = await kv.smembers('b2b:ids');
+  if (!ids || ids.length === 0) return res.status(200).json({ applications: [] });
+  const keys = (ids as string[]).map((id) => `b2b:app:${id}`);
+  const apps = await kv.mget(...keys);
+  const valid = (apps as any[]).filter(Boolean).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  return res.status(200).json({ applications: valid });
+}
+
+async function handleDetail(req: VercelRequest, res: VercelResponse) {
+  if (!checkAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+  const id = req.query.id as string;
+  if (!id) return res.status(400).json({ error: 'Missing id' });
+  const [appMeta, docData] = await Promise.all([kv.get(`b2b:app:${id}`), kv.get(`b2b:doc:${id}`)]);
+  if (!appMeta) return res.status(404).json({ error: 'Application not found' });
+  return res.status(200).json({ application: { ...(appMeta as any), document: docData } });
+}
+
+async function handleApprove(req: VercelRequest, res: VercelResponse) {
+  if (!checkAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+  const { id, action, reason } = req.body || {};
+  if (!id || !['approve', 'reject'].includes(action)) return res.status(400).json({ error: 'Invalid request.' });
+  if (action === 'reject' && !reason?.trim()) return res.status(400).json({ error: 'Rejection reason is required.' });
+
+  const appMeta = await kv.get<any>(`b2b:app:${id}`);
+  if (!appMeta) return res.status(404).json({ error: 'Application not found' });
+
+  const newStatus = action === 'approve' ? 'approved' : 'rejected';
+  await kv.set(`b2b:app:${id}`, {
+    ...appMeta, status: newStatus,
+    rejectionReason: action === 'reject' ? reason.trim() : undefined,
+    updatedAt: new Date().toISOString(),
+  });
+
+  if (action === 'approve') {
+    await findCustomerAndTag(appMeta.email, ['B2B-approved'], ['B2B-pending']);
+  } else {
+    await findCustomerAndTag(appMeta.email, [], ['B2B-pending']);
+  }
+  return res.status(200).json({ success: true, status: newStatus });
+}
+
+async function handleStatus(req: VercelRequest, res: VercelResponse) {
+  const email = req.query.email as string;
+  if (!email) return res.status(200).json({ status: 'none' });
+  const appId = await kv.get<string>(`b2b:email:${email.toLowerCase()}`);
+  if (!appId) return res.status(200).json({ status: 'none' });
+  const app = await kv.get<any>(`b2b:app:${appId}`);
+  if (!app) return res.status(200).json({ status: 'none' });
+  return res.status(200).json({ status: app.status, rejectionReason: app.rejectionReason || null, companyName: app.companyName, createdAt: app.createdAt });
+}
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const cors = getCorsOrigin(req);
+  res.setHeader('Access-Control-Allow-Origin', cors);
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-key');
+    return res.status(200).end();
+  }
+
+  const action = req.query.action as string;
+  try {
+    switch (action) {
+      case 'apply': return handleApply(req, res);
+      case 'list': return handleList(req, res);
+      case 'detail': return handleDetail(req, res);
+      case 'approve': return handleApprove(req, res);
+      case 'status': return handleStatus(req, res);
+      default: return res.status(400).json({ error: 'Invalid action' });
+    }
+  } catch (e) {
+    console.error('[B2B] Error:', e);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+}
