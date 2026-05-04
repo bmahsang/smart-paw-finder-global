@@ -19,6 +19,8 @@ import WishlistPage from "./pages/WishlistPage";
 import Checkout from "./pages/Checkout";
 import AuthCallback from "./pages/AuthCallback";
 import GuestOrderLookup from "./pages/GuestOrderLookup";
+import B2BApply from "./pages/B2BApply";
+import B2BAdmin from "./pages/B2BAdmin";
 import { WhatsAppButton } from "./components/layout/WhatsAppButton";
 
 const queryClient = new QueryClient();
@@ -53,6 +55,8 @@ const App = () => (
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/guest-order" element={<GuestOrderLookup />} />
           <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/mypage/b2b-apply" element={<B2BApply />} />
+          <Route path="/admin/b2b" element={<B2BAdmin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <WhatsAppButton />

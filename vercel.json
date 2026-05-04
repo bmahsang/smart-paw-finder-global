@@ -46,6 +46,10 @@
     { "source": "/api/wishlist", "destination": "/api/wishlist" },
     { "source": "/api/slack-report", "destination": "/api/slack-report" },
     { "source": "/api/cancel-order", "destination": "/api/cancel-order" },
+    { "source": "/api/b2b-apply", "destination": "/api/b2b-apply" },
+    { "source": "/api/b2b-list", "destination": "/api/b2b-list" },
+    { "source": "/api/b2b-detail", "destination": "/api/b2b-detail" },
+    { "source": "/api/b2b-approve", "destination": "/api/b2b-approve" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

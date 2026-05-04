@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   LogOut, User, ShoppingBag, Heart, HelpCircle, ChevronRight,
-  MapPin, Loader2, Search,
+  MapPin, Loader2, Search, Building2,
 } from 'lucide-react';
 import { initiateLogin, isLoggedIn as isCustomerLoggedIn, logout as customerLogout } from '@/lib/customer-auth';
 import { fetchCustomerAccount, CustomerAccountProfile } from '@/lib/customer-account';
@@ -124,6 +124,12 @@ export default function MyPage() {
       <div className="min-h-screen bg-background">
         <Header />
         <AuthScreen />
+        <div className="max-w-md mx-auto px-4 mt-4 pb-24">
+          <div className="bg-card rounded-xl border border-border px-4">
+            <MenuLink icon={Building2} label="B2B Application"
+              onClick={() => toast.info('Please sign in to use this feature.', { position: 'top-center' })} />
+          </div>
+        </div>
       </div>
     );
   }
@@ -186,6 +192,7 @@ export default function MyPage() {
                 badge={favCount > 0 ? favCount : undefined}
                 onClick={() => navigate('/mypage/favorites')}
               />
+              <MenuLink icon={Building2} label="B2B Application" onClick={() => navigate('/mypage/b2b-apply')} />
               <MenuLink icon={HelpCircle} label="Contact Us" onClick={() => navigate('/contact')} />
             </div>
 
