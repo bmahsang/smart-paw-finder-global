@@ -56,7 +56,7 @@ const App = () => (
           <Route path="/guest-order" element={<GuestOrderLookup />} />
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/mypage/b2b-apply" element={<B2BApply />} />
-          <Route path="/admin/b2b" element={<B2BAdmin />} />
+          <Route path="/manage/b2b" element={<B2BAdmin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <WhatsAppButton />
