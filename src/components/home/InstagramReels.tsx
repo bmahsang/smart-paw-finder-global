@@ -32,7 +32,7 @@ export function InstagramReels() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center gap-2 mb-4">
           <Instagram className="h-5 w-5 text-pink-500" />
-          <h2 className="text-lg font-bold">Check us on Insta🐶</h2>
+          <h2 className="text-lg font-bold">See more on our Insta🐶</h2>
           <a
             href="https://www.instagram.com/biteme_global/"
             target="_blank"
@@ -53,14 +53,14 @@ export function InstagramReels() {
             ))}
           </div>
         ) : (
-          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
+          <div className="flex gap-3 overflow-hidden">
             {reels.map((reel) => (
               <a
                 key={reel.id}
                 href="https://www.instagram.com/biteme_global/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-none w-36 aspect-[9/16] relative rounded-xl overflow-hidden bg-muted snap-start group"
+                className="flex-none w-36 aspect-[9/16] relative rounded-xl overflow-hidden bg-muted group"
               >
                 <img
                   src={reel.thumbnail_url || reel.media_url}
