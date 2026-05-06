@@ -29,44 +29,61 @@ async function getAdminToken(): Promise<string> {
   return cachedToken!;
 }
 
-async function findCustomerAndTag(email: string, tagsToAdd: string[], tagsToRemove: string[]) {
+async function findCustomerAndTag(email: string, tagsToAdd: string[], tagsToRemove: string[]): Promise<{ success: boolean; customerId?: string; error?: string }> {
   try {
     const token = await getAdminToken();
     const shop = process.env.VITE_SHOPIFY_STORE_DOMAIN;
-    const custRes = await fetch(`https://${shop}/admin/api/2025-07/graphql.json`, {
+    const apiUrl = `https://${shop}/admin/api/2025-07/graphql.json`;
+    const headers = { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': token };
+
+    const custRes = await fetch(apiUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': token },
+      headers,
       body: JSON.stringify({
-        query: `query($q:String!){customers(first:1,query:$q){edges{node{id}}}}`,
+        query: `query($q:String!){customers(first:1,query:$q){edges{node{id tags}}}}`,
         variables: { q: `email:${email}` },
       }),
     });
     const custData = await custRes.json();
+    console.log('[B2B] Customer lookup for', email, JSON.stringify(custData));
+
     const customerId = custData.data?.customers?.edges?.[0]?.node?.id;
-    if (!customerId) return;
+    if (!customerId) return { success: false, error: `Customer not found for email: ${email}` };
 
     if (tagsToRemove.length > 0) {
-      await fetch(`https://${shop}/admin/api/2025-07/graphql.json`, {
+      const removeRes = await fetch(apiUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': token },
+        headers,
         body: JSON.stringify({
-          query: `mutation($id:ID!,$tags:[String!]!){tagsRemove(id:$id,tags:$tags){userErrors{message}}}`,
+          query: `mutation($id:ID!,$tags:[String!]!){tagsRemove(id:$id,tags:$tags){node{id}userErrors{field message}}}`,
           variables: { id: customerId, tags: tagsToRemove },
         }),
       });
+      const removeData = await removeRes.json();
+      console.log('[B2B] Tags remove result:', JSON.stringify(removeData));
+      const removeErrors = removeData.data?.tagsRemove?.userErrors;
+      if (removeErrors?.length > 0) return { success: false, customerId, error: `Tag remove failed: ${removeErrors[0].message}` };
     }
+
     if (tagsToAdd.length > 0) {
-      await fetch(`https://${shop}/admin/api/2025-07/graphql.json`, {
+      const addRes = await fetch(apiUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': token },
+        headers,
         body: JSON.stringify({
-          query: `mutation($id:ID!,$tags:[String!]!){tagsAdd(id:$id,tags:$tags){userErrors{message}}}`,
+          query: `mutation($id:ID!,$tags:[String!]!){tagsAdd(id:$id,tags:$tags){node{id}userErrors{field message}}}`,
           variables: { id: customerId, tags: tagsToAdd },
         }),
       });
+      const addData = await addRes.json();
+      console.log('[B2B] Tags add result:', JSON.stringify(addData));
+      const addErrors = addData.data?.tagsAdd?.userErrors;
+      if (addErrors?.length > 0) return { success: false, customerId, error: `Tag add failed: ${addErrors[0].message}` };
     }
+
+    return { success: true, customerId };
   } catch (e) {
     console.error('[B2B] Shopify tag error:', e);
+    return { success: false, error: String(e) };
   }
 }
 
@@ -94,8 +111,8 @@ async function handleApply(req: VercelRequest, res: VercelResponse) {
     kv.set(`b2b:email:${email.toLowerCase()}`, id),
     kv.sadd('b2b:ids', id),
   ]);
-  await findCustomerAndTag(email, ['B2B-pending'], []);
-  return res.status(200).json({ success: true, id });
+  const tagResult = await findCustomerAndTag(email, ['B2B-pending'], []);
+  return res.status(200).json({ success: true, id, tagResult });
 }
 
 async function handleList(req: VercelRequest, res: VercelResponse) {
@@ -133,12 +150,13 @@ async function handleApprove(req: VercelRequest, res: VercelResponse) {
     updatedAt: new Date().toISOString(),
   });
 
+  let tagResult;
   if (action === 'approve') {
-    await findCustomerAndTag(appMeta.email, ['B2B-approved'], ['B2B-pending']);
+    tagResult = await findCustomerAndTag(appMeta.email, ['B2B-approved'], ['B2B-pending']);
   } else {
-    await findCustomerAndTag(appMeta.email, [], ['B2B-pending']);
+    tagResult = await findCustomerAndTag(appMeta.email, [], ['B2B-pending']);
   }
-  return res.status(200).json({ success: true, status: newStatus });
+  return res.status(200).json({ success: true, status: newStatus, tagResult });
 }
 
 async function handleStatus(req: VercelRequest, res: VercelResponse) {
