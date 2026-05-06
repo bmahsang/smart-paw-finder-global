@@ -9,30 +9,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!igId) return res.status(500).json({ error: 'Instagram account ID not configured' });
 
     const fields = 'id,media_type,media_url,thumbnail_url,permalink,caption,timestamp';
-    const baseUrl = `https://graph.facebook.com/v21.0/${igId}`;
 
-    const [mediaRes, tagsRes] = await Promise.all([
-      fetch(`${baseUrl}/media?fields=${fields}&limit=50&access_token=${token}`),
-      fetch(`${baseUrl}/tags?fields=${fields}&limit=50&access_token=${token}`),
-    ]);
+    const mediaRes = await fetch(
+      `https://graph.facebook.com/v21.0/${igId}/media?fields=${fields}&limit=50&access_token=${token}`
+    );
+    const media = await mediaRes.json();
 
-    const [media, tags] = await Promise.all([mediaRes.json(), tagsRes.json()]);
-    console.log('[Instagram] /media count:', media.data?.length ?? 0, 'error:', media.error?.message ?? 'none');
-    console.log('[Instagram] /tags count:', tags.data?.length ?? 0, 'error:', tags.error?.message ?? 'none');
-
-    const isReel = (item: { media_type: string }) =>
-      item.media_type === 'REELS' || item.media_type === 'VIDEO';
-
-    const combined = [...(media.data || []), ...(tags.data || [])];
-    const seen = new Set<string>();
-    const reels = combined.filter((item: { id: string; media_type: string }) => {
-      if (!isReel(item) || seen.has(item.id)) return false;
-      seen.add(item.id);
-      return true;
-    });
+    const reels = (media.data || []).filter(
+      (item: { media_type: string }) =>
+        item.media_type === 'REELS' || item.media_type === 'VIDEO'
+    );
 
     res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
-    return res.status(200).json({ reels, debug: { mediaCount: media.data?.length ?? 0, tagsCount: tags.data?.length ?? 0, tagsError: tags.error?.message ?? null } });
+    return res.status(200).json({ reels });
   } catch {
     return res.status(500).json({ error: 'Failed to fetch Instagram media' });
   }
