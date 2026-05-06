@@ -3,6 +3,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { HeroBanner } from "@/components/home/HeroBanner";
 import { PopularProducts } from "@/components/home/PopularProducts";
+import { InstagramReels } from "@/components/home/InstagramReels";
 import { ProductGrid } from "@/components/shop/ProductGrid";
 import { useScrollRestoration } from "@/hooks/useScrollRestoration";
 import { ScrollToTop } from "@/components/ui/ScrollToTop";
@@ -41,6 +42,7 @@ const Index = () => {
       {showHeroBanner && (
         <div className="max-w-7xl mx-auto">
           <HeroBanner />
+          <InstagramReels />
           <PopularProducts />
         </div>
       )}
