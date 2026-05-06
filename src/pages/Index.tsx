@@ -42,8 +42,8 @@ const Index = () => {
       {showHeroBanner && (
         <div className="max-w-7xl mx-auto">
           <HeroBanner />
-          <InstagramReels />
           <PopularProducts />
+          <InstagramReels />
         </div>
       )}
       <main className="max-w-7xl mx-auto pb-20">
