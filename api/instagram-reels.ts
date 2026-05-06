@@ -30,8 +30,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
-    const allTypes = (media.data || []).slice(0, 5).map((item: { id: string; media_type: string; permalink: string }) => ({ id: item.id, media_type: item.media_type, permalink: item.permalink }));
-    return res.status(200).json({ reels, debug: { mediaCount: media.data?.length ?? 0, tagsCount: tags.data?.length ?? 0, tagsError: tags.error?.message ?? null, first5: allTypes } });
+    return res.status(200).json({ reels });
   } catch {
     return res.status(500).json({ error: 'Failed to fetch Instagram media' });
   }
