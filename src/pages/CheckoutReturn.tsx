@@ -14,6 +14,7 @@ export default function CheckoutReturn() {
 
   useEffect(() => {
     clearCart();
+    localStorage.removeItem('affiliate_discount');
   }, [clearCart]);
 
   return (

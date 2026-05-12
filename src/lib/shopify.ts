@@ -842,7 +842,6 @@ export async function createStorefrontCheckout(items: { variantId: string; quant
    // Add discount code to URL as backup (in case cart discount doesn't persist)
    if (discountCode) {
      url.searchParams.set('discount', discountCode);
-     localStorage.removeItem('affiliate_discount');
    }
 
    // Pre-fill email in Shopify checkout contact field
