@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 
-const WHATSAPP_URL = 'https://wa.me/15559433437';
+const WHATSAPP_NUMBER = '15559433437';
+const COUPON_CODE = 'WHATSAPP10';
+const DISCOUNT_LINK = 'https://biteme.one/discount/WHATSAPP10';
+const PREFILLED_MESSAGE = `Hi BITE ME! I'd like to get my 10% OFF coupon.`;
+const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(PREFILLED_MESSAGE)}`;
 const DISMISS_KEY = 'wa_bubble_dismissed';
 
 export function WhatsAppButton() {
   const [showBubble, setShowBubble] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (sessionStorage.getItem(DISMISS_KEY) === '1') return;
@@ -20,19 +25,40 @@ export function WhatsAppButton() {
     setShowBubble(false);
   };
 
+  const handleCopy = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(COUPON_CODE);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {}
+  };
+
   return (
     <div className="fixed bottom-20 right-6 z-50 flex items-end gap-2">
       {showBubble && (
-        <a
-          href={WHATSAPP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group relative mb-1 flex flex-col rounded-2xl bg-white pl-4 pr-8 py-2.5 shadow-lg ring-1 ring-black/5 text-sm font-medium text-gray-800 hover:bg-gray-50 transition-colors animate-in fade-in slide-in-from-right-2 duration-300 leading-tight"
-        >
-          <span>💬 Say hi on WhatsApp</span>
-          <span>
-            &amp; get <span className="text-primary font-bold">10% OFF</span>
-          </span>
+        <div className="group relative mb-1 flex flex-col rounded-2xl bg-white pl-4 pr-8 py-3 shadow-lg ring-1 ring-black/5 text-sm text-gray-800 animate-in fade-in slide-in-from-right-2 duration-300 leading-tight max-w-[220px]">
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:opacity-80 transition-opacity"
+          >
+            <span className="font-medium">💬 Say hi on WhatsApp</span>
+            <span className="block mt-0.5">
+              & get <span className="text-primary font-bold">10% OFF</span>
+            </span>
+          </a>
+          <div className="mt-2 flex items-center gap-1.5">
+            <span className="font-mono text-xs bg-gray-100 rounded px-2 py-1 tracking-wider font-semibold">{COUPON_CODE}</span>
+            <button
+              onClick={handleCopy}
+              className="text-[10px] px-2 py-1 rounded bg-primary/10 text-primary font-medium hover:bg-primary/20 transition-colors"
+            >
+              {copied ? '✓ Copied!' : 'Copy'}
+            </button>
+          </div>
           <button
             onClick={dismissBubble}
             aria-label="Dismiss"
@@ -40,7 +66,7 @@ export function WhatsAppButton() {
           >
             <X className="h-3.5 w-3.5" />
           </button>
-        </a>
+        </div>
       )}
 
       <a

@@ -768,7 +768,8 @@ export async function fetchCollectionProducts(handle: string, first: number = 20
 }
 
 export async function createStorefrontCheckout(items: { variantId: string; quantity: number }[]): Promise<string> {
-   return createStorefrontCheckoutWithDiscount(items, null);
+   const affiliateDiscount = localStorage.getItem('affiliate_discount');
+   return createStorefrontCheckoutWithDiscount(items, affiliateDiscount);
  }
 
  // Create checkout with optional discount code for B2B members
@@ -841,6 +842,7 @@ export async function createStorefrontCheckout(items: { variantId: string; quant
    // Add discount code to URL as backup (in case cart discount doesn't persist)
    if (discountCode) {
      url.searchParams.set('discount', discountCode);
+     localStorage.removeItem('affiliate_discount');
    }
 
    // Pre-fill email in Shopify checkout contact field
