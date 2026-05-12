@@ -21,6 +21,7 @@ import AuthCallback from "./pages/AuthCallback";
 import GuestOrderLookup from "./pages/GuestOrderLookup";
 import B2BApply from "./pages/B2BApply";
 import B2BAdmin from "./pages/B2BAdmin";
+import AdminDashboard from "./pages/AdminDashboard";
 import DiscountRedirect from "./pages/DiscountRedirect";
 import { WhatsAppButton } from "./components/layout/WhatsAppButton";
 
@@ -58,6 +59,7 @@ const App = () => (
           <Route path="/wishlist" element={<WishlistPage />} />
           <Route path="/mypage/b2b-apply" element={<B2BApply />} />
           <Route path="/manage/b2b" element={<B2BAdmin />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/discount/:code" element={<DiscountRedirect />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
