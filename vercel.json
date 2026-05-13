@@ -70,8 +70,8 @@
     { "source": "/api/b2b-status", "destination": "/api/b2b?action=status" },
     { "source": "/api/instagram-reels", "destination": "/api/instagram-reels" },
     { "source": "/api/analytics", "destination": "/api/analytics" },
-    { "source": "/api/shopify-analytics", "destination": "/api/shopify-analytics" },
-    { "source": "/api/customer-analytics", "destination": "/api/customer-analytics" },
+    { "source": "/api/shopify-analytics", "destination": "/api/analytics?type=shopify" },
+    { "source": "/api/customer-analytics", "destination": "/api/analytics?type=customer" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
