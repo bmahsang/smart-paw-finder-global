@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
 import { trackPageView } from "@/lib/ga4-pageview";
 import Index from "./pages/Index";
 import ProductDetail from "./pages/ProductDetail";
@@ -26,6 +26,16 @@ import DiscountRedirect from "./pages/DiscountRedirect";
 import { WhatsAppButton } from "./components/layout/WhatsAppButton";
 
 const queryClient = new QueryClient();
+
+function ShopifyProductRedirect() {
+  const { handle } = useParams();
+  return <Navigate to={`/product/${handle}`} replace />;
+}
+
+function ShopifyCollectionRedirect() {
+  const { handle } = useParams();
+  return <Navigate to={`/?collection=${handle}`} replace />;
+}
 
 function GA4PageViewTracker() {
   const location = useLocation();
@@ -61,6 +71,9 @@ const App = () => (
           <Route path="/manage/b2b" element={<B2BAdmin />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/discount/:code" element={<DiscountRedirect />} />
+          <Route path="/products/:handle" element={<ShopifyProductRedirect />} />
+          <Route path="/collections/:handle" element={<ShopifyCollectionRedirect />} />
+          <Route path="/collections" element={<Navigate to="/" replace />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <WhatsAppButton />

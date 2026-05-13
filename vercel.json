@@ -40,6 +40,23 @@
       ]
     }
   ],
+  "redirects": [
+    {
+      "source": "/products/:handle",
+      "destination": "/product/:handle",
+      "permanent": true
+    },
+    {
+      "source": "/collections/:handle",
+      "destination": "/?collection=:handle",
+      "permanent": true
+    },
+    {
+      "source": "/collections",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     { "source": "/api/shopify", "destination": "/api/shopify" },
     { "source": "/api/line-callback", "destination": "/api/line-callback" },
