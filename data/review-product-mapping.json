@@ -1,0 +1,257 @@
+[
+  {
+    "sku_name": "드라이미",
+    "sheet_no": [60],
+    "product_cd": "1000000757",
+    "full_name": "바잇미 마이크로화이버 펫타올 드라이미",
+    "source": "kr-products.json"
+  },
+  {
+    "sku_name": "장튼튼",
+    "sheet_no": [76],
+    "product_cd": "1000001377",
+    "full_name": "바잇미 닥터이너피스 장튼튼 유산균",
+    "source": "kr-products.json"
+  },
+  {
+    "sku_name": "버섯 노즈워크",
+    "sheet_no": [142],
+    "product_cd": "1000002570",
+    "full_name": "바잇미 버섯 노즈워크 장난감 (노즈워크/바스락/삑삑)",
+    "source": "search_verified"
+  },
+  {
+    "sku_name": "베이글쿠키",
+    "sheet_no": [231],
+    "product_cd": null,
+    "full_name": null,
+    "source": "not_found_biteme_pb",
+    "note": "검색결과 중 바잇미 PB 없음 — 자사몰 전용 제품일 수 있음"
+  },
+  {
+    "sku_name": "크로와상",
+    "sheet_no": [290],
+    "product_cd": "1000046505",
+    "full_name": "SSFW 크로와상 벌룬탑 - 블랙",
+    "source": "search_verified",
+    "note": "SSFW 브랜드 (바잇미 편집샵), 의류 제품"
+  },
+  {
+    "sku_name": "손가락칫솔",
+    "sheet_no": [296],
+    "product_cd": "1000031437",
+    "full_name": "핏펫 플라고 손가락칫솔 패드(60매입)",
+    "source": "kr-products.json"
+  },
+  {
+    "sku_name": "고양이참",
+    "sheet_no": [311],
+    "product_cd": "1000008117",
+    "full_name": "바잇미 고양이참 장난감/키링 (바스락)",
+    "source": "kr-products.json"
+  },
+  {
+    "sku_name": "양배추 킁킁볼",
+    "sheet_no": [312],
+    "product_cd": "1000026262",
+    "full_name": "바잇미 양배추 킁킁볼 장난감 (삑삑/바스락/노즈워크)",
+    "source": "kr-products.json"
+  },
+  {
+    "sku_name": "플레이북-버스데이",
+    "sheet_no": [356],
+    "product_cd": "1000045750",
+    "full_name": "바잇미 마이버스데이 노즈워크 플레이북",
+    "source": "kr-products.json"
+  },
+  {
+    "sku_name": "뉴 마카롱 방수줄 리쉬",
+    "sheet_no": [357],
+    "product_cd": "1000028811",
+    "full_name": "바잇미 new 마카롱 핸즈프리 워터프루프 리쉬 (4 colors)",
+    "source": "search_verified"
+  },
+  {
+    "sku_name": "뉴 마카롱 방수줄 목줄&리쉬",
+    "sheet_no": [358],
+    "product_cd": "1000029569",
+    "full_name": "[세트할인] 바잇미 new 마카롱 핸즈프리 워터프루프 목줄&리쉬 (4 colors)",
+    "source": "search_verified"
+  },
+  {
+    "sku_name": "드라이미 미니",
+    "sheet_no": [385, 657],
+    "product_cd": "1000014311",
+    "full_name": "바잇미 마이크로화이버 펫타올 드라이미 미니 (2개입)",
+    "source": "kr-products.json"
+  },
+  {
+    "sku_name": "크런치팝",
+    "sheet_no": [387, 720, 775],
+    "product_cd": "1000055991",
+    "full_name": "바잇미 헬로키티 크런치팝 시리얼 (알러지프리/저칼로리)",
+    "source": "search_verified"
+  },
+  {
+    "sku_name": "얼레벌레",
+    "sheet_no": [425],
+    "product_cd": "1000015832",
+    "full_name": "바잇미 얼레벌레 애벌레 터그 장난감 (바스락/삑삑)",
+    "source": "search_verified"
+  },
+  {
+    "sku_name": "안티버그 쿨가드 올인원",
+    "sheet_no": [441],
+    "product_cd": "1000048287",
+    "full_name": "바잇미 안티버그 에어리 올인원 (3 colors)",
+    "source": "search_verified"
+  },
+  {
+    "sku_name": "뉴 XO 방수줄 리쉬",
+    "sheet_no": [446],
+    "product_cd": "1000037028",
+    "full_name": "바잇미 new XO 핸즈프리 워터프루프 목줄&리쉬 (4 colors)",
+    "source": "kr-products.json"
+  },
+  {
+    "sku_name": "뉴 XO 방수줄 목줄&리쉬",
+    "sheet_no": [447],
+    "product_cd": "1000029570",
+    "full_name": "[세트할인] 바잇미 new XO 핸즈프리 워터프루프 목줄&리쉬 (4 colors)",
+    "source": "search_verified"
+  },
+  {
+    "sku_name": "컴포트 하네스",
+    "sheet_no": [482],
+    "product_cd": "1000055147",
+    "full_name": "바잇미 컴포트 하네스 v2 (3 colors)",
+    "source": "search_verified"
+  },
+  {
+    "sku_name": "릭매트",
+    "sheet_no": [493],
+    "product_cd": "1000018908",
+    "full_name": "바잇미 실리콘 릭매트 (2 colors)",
+    "source": "kr-products.json"
+  },
+  {
+    "sku_name": "아랑 슬리커",
+    "sheet_no": [650],
+    "product_cd": "1000006613",
+    "full_name": "바잇미 타이니 슬리커 브러쉬",
+    "source": "kr-products.json"
+  },
+  {
+    "sku_name": "파티카드",
+    "sheet_no": [655],
+    "product_cd": "1000021650",
+    "full_name": "바잇미 파티 시리즈 - 고깔모자 장난감 세트 (바스락/노즈워크)",
+    "source": "search_verified",
+    "note": "파티카드가 아닌 파티 시리즈, 검증 필요"
+  },
+  {
+    "sku_name": "덴티스틱",
+    "sheet_no": [730],
+    "product_cd": "1000020064",
+    "full_name": "바잇미 덴티스틱 소프트 오리지널 구취제거 덴탈껌 - 10개입",
+    "source": "search_verified"
+  },
+  {
+    "sku_name": "덴티스틱",
+    "sheet_no": [733],
+    "product_cd": "1000020072",
+    "full_name": "바잇미 덴티스틱 소프트 베지 구취제거 덴탈껌 - 10개입",
+    "source": "search_verified"
+  },
+  {
+    "sku_name": "헤잇미 밴드",
+    "sheet_no": [765, 1012],
+    "product_cd": "1000048009",
+    "full_name": "바잇미 헤잇미 밴드 - 3 colors (해충이 싫어하는 오일 함유)",
+    "source": "search_verified"
+  },
+  {
+    "sku_name": "스쿠티 쿨매트",
+    "sheet_no": [772],
+    "product_cd": "1000037774",
+    "full_name": "바잇미X포코리프렌즈 쿨매트 (2 size)",
+    "source": "kr-products.json"
+  },
+  {
+    "sku_name": "붕어빵 메이커",
+    "sheet_no": [774],
+    "product_cd": null,
+    "full_name": null,
+    "source": "not_found_biteme_pb",
+    "note": "검색결과 바잇미 PB 없음 (외부 브랜드만)"
+  },
+  {
+    "sku_name": "언더더씨",
+    "sheet_no": [818],
+    "product_cd": "1000046558",
+    "full_name": "개달당 언더더씨 이갈이 소형견 장난감 치발기 삑삑 터그 4종세트",
+    "source": "search_verified",
+    "note": "개달당 브랜드 (바잇미 편집샵 입점)"
+  },
+  {
+    "sku_name": "빅터그 오리너구리",
+    "sheet_no": [848],
+    "product_cd": "1000033834",
+    "full_name": "바잇미 빅 터그 장난감 - 랍스터",
+    "source": "search_verified",
+    "note": "빅터그 검색결과 랍스터만 있음, 오리너구리 버전 별도 확인 필요"
+  },
+  {
+    "sku_name": "코인칩-북어",
+    "sheet_no": [937],
+    "product_cd": "1000016961",
+    "full_name": "바잇미 부스팅 코인칩 비프 (뼈튼튼)",
+    "source": "search_verified",
+    "note": "북어 버전은 유통기한 임박 제품만 검색됨. 비프로 대체 매핑"
+  },
+  {
+    "sku_name": "오모오모 장난감",
+    "sheet_no": [939],
+    "product_cd": null,
+    "full_name": null,
+    "source": "not_found_biteme_pb",
+    "note": "오모오모 장난감 정확히 매칭되는 제품 없음 (와펜/도어사인만 있음)"
+  },
+  {
+    "sku_name": "필소굿 펫티슈",
+    "sheet_no": [1024],
+    "product_cd": "1000018627",
+    "full_name": "바잇미 필소굿 저자극 펫티슈 휴대용 50매 세트",
+    "source": "kr-products.json"
+  },
+  {
+    "sku_name": "농장타이쿤",
+    "sheet_no": [1032],
+    "product_cd": "1000035855",
+    "full_name": "바잇미 농장타이쿤 노즈워크 장난감",
+    "source": "kr-products.json"
+  },
+  {
+    "sku_name": "라운드 페이스콤",
+    "sheet_no": [1037],
+    "product_cd": "1000035324",
+    "full_name": "바잇미 젤리곰 라운드 페이스콤",
+    "source": "kr-products.json"
+  },
+  {
+    "sku_name": "헤잇미 패치 포코리",
+    "sheet_no": [1061],
+    "product_cd": null,
+    "full_name": null,
+    "source": "not_found_biteme_pb",
+    "note": "헤잇미 패치 + 포코리 콜라보 제품 매칭 불가"
+  },
+  {
+    "sku_name": "멜로우백 글로시",
+    "sheet_no": [1099],
+    "product_cd": null,
+    "full_name": null,
+    "source": "not_found_biteme_pb",
+    "note": "멜로우백 바잇미 PB 없음 (외부 브랜드만)"
+  }
+]
