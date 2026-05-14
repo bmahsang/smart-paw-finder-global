@@ -159,6 +159,35 @@ async function handleApprove(req: VercelRequest, res: VercelResponse) {
   return res.status(200).json({ success: true, status: newStatus, tagResult });
 }
 
+async function handleShopifyB2B(req: VercelRequest, res: VercelResponse) {
+  if (!checkAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
+  try {
+    const token = await getAdminToken();
+    const shop = process.env.VITE_SHOPIFY_STORE_DOMAIN;
+    const apiUrl = `https://${shop}/admin/api/2025-07/graphql.json`;
+    const headers = { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': token };
+
+    let cursor: string | null = null;
+    const customers: any[] = [];
+    while (true) {
+      const query = cursor
+        ? `query($q:String!,$after:String){customers(first:50,query:$q,after:$after){edges{node{id displayName email phone tags numberOfOrders amountSpent{amount currencyCode} defaultAddress{address1 city country company} createdAt}cursor}pageInfo{hasNextPage}}}`
+        : `query($q:String!){customers(first:50,query:$q){edges{node{id displayName email phone tags numberOfOrders amountSpent{amount currencyCode} defaultAddress{address1 city country company} createdAt}cursor}pageInfo{hasNextPage}}}`;
+      const variables = cursor ? { q: 'tag:B2B', after: cursor } : { q: 'tag:B2B' };
+      const r = await fetch(apiUrl, { method: 'POST', headers, body: JSON.stringify({ query, variables }) });
+      const data = await r.json();
+      const edges = data.data?.customers?.edges || [];
+      customers.push(...edges.map((e: any) => e.node));
+      if (!data.data?.customers?.pageInfo?.hasNextPage || edges.length === 0) break;
+      cursor = edges[edges.length - 1].cursor;
+    }
+    return res.status(200).json({ customers });
+  } catch (e) {
+    console.error('[B2B] Shopify B2B list error:', e);
+    return res.status(500).json({ error: 'Failed to fetch Shopify B2B customers' });
+  }
+}
+
 async function handleStatus(req: VercelRequest, res: VercelResponse) {
   const email = req.query.email as string;
   if (!email) return res.status(200).json({ status: 'none' });
@@ -186,6 +215,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       case 'detail': return handleDetail(req, res);
       case 'approve': return handleApprove(req, res);
       case 'status': return handleStatus(req, res);
+      case 'shopify-b2b': return handleShopifyB2B(req, res);
       default: return res.status(400).json({ error: 'Invalid action' });
     }
   } catch (e) {

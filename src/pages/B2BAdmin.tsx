@@ -10,7 +10,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import {
   Lock, Loader2, Building2, Users, CheckCircle, XCircle, Clock,
-  FileText, Mail, Phone, MapPin, User, Eye, RefreshCw,
+  FileText, Mail, Phone, MapPin, User, Eye, RefreshCw, ShoppingBag, Globe,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -29,6 +29,18 @@ interface ApplicationSummary {
 
 interface ApplicationDetail extends Omit<ApplicationSummary, 'documentName'> {
   document: { name: string; type: string; data: string };
+}
+
+interface ShopifyB2BCustomer {
+  id: string;
+  displayName: string;
+  email: string;
+  phone: string | null;
+  tags: string[];
+  numberOfOrders: number;
+  amountSpent: { amount: string; currencyCode: string } | null;
+  defaultAddress: { address1: string; city: string; country: string; company: string } | null;
+  createdAt: string;
 }
 
 const STATUS_CONFIG = {
@@ -293,12 +305,103 @@ function DetailDialog({
   );
 }
 
+function ShopifyB2BList({ adminKey }: { adminKey: string }) {
+  const [customers, setCustomers] = useState<ShopifyB2BCustomer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+
+  const fetchCustomers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/b2b-shopify', { headers: { 'x-admin-key': adminKey } });
+      const data = await res.json();
+      setCustomers(data.customers || []);
+    } catch { toast.error('Failed to load Shopify B2B customers.'); }
+    finally { setLoading(false); }
+  }, [adminKey]);
+
+  useEffect(() => { fetchCustomers(); }, [fetchCustomers]);
+
+  const filtered = search.trim()
+    ? customers.filter(c =>
+        (c.displayName || '').toLowerCase().includes(search.toLowerCase()) ||
+        (c.email || '').toLowerCase().includes(search.toLowerCase()) ||
+        (c.defaultAddress?.company || '').toLowerCase().includes(search.toLowerCase()))
+    : customers;
+
+  const totalOrders = customers.reduce((s, c) => s + (c.numberOfOrders || 0), 0);
+  const totalSpent = customers.reduce((s, c) => s + parseFloat(c.amountSpent?.amount || '0'), 0);
+  const currency = customers.find(c => c.amountSpent)?.amountSpent?.currencyCode || 'JPY';
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <StatCard icon={Users} label="B2B Customers" value={customers.length} color="bg-blue-50 text-blue-600" />
+        <StatCard icon={ShoppingBag} label="Total Orders" value={totalOrders} color="bg-green-50 text-green-600" />
+        <StatCard icon={Globe} label="Countries" value={[...new Set(customers.map(c => c.defaultAddress?.country).filter(Boolean))].length} color="bg-purple-50 text-purple-600" />
+        <StatCard icon={Clock} label="No Orders" value={customers.filter(c => !c.numberOfOrders).length} color="bg-yellow-50 text-yellow-600" />
+      </div>
+
+      <div className="flex items-center gap-3">
+        <Input placeholder="Search by name, email, company..." value={search} onChange={e => setSearch(e.target.value)} className="max-w-sm" />
+        <Button variant="outline" size="sm" onClick={fetchCustomers} disabled={loading}>
+          <RefreshCw className={`h-4 w-4 mr-1 ${loading ? 'animate-spin' : ''}`} /> Refresh
+        </Button>
+      </div>
+
+      {loading ? (
+        <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+      ) : filtered.length === 0 ? (
+        <Card><CardContent className="py-12 text-center text-muted-foreground"><Users className="h-12 w-12 mx-auto mb-3 opacity-30" /><p>No customers found.</p></CardContent></Card>
+      ) : (
+        <div className="bg-white rounded-lg border overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b bg-gray-50/50">
+                <th className="text-left p-3 font-medium text-muted-foreground">#</th>
+                <th className="text-left p-3 font-medium text-muted-foreground">Name</th>
+                <th className="text-left p-3 font-medium text-muted-foreground">Email</th>
+                <th className="text-left p-3 font-medium text-muted-foreground">Company</th>
+                <th className="text-left p-3 font-medium text-muted-foreground">Country</th>
+                <th className="text-right p-3 font-medium text-muted-foreground">Orders</th>
+                <th className="text-right p-3 font-medium text-muted-foreground">Spent</th>
+                <th className="text-left p-3 font-medium text-muted-foreground">Joined</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((c, i) => (
+                <tr key={c.id} className={`border-b last:border-0 hover:bg-gray-50 ${!c.numberOfOrders ? 'bg-yellow-50/30' : ''}`}>
+                  <td className="p-3 text-muted-foreground">{i + 1}</td>
+                  <td className="p-3 font-medium">{c.displayName || '-'}</td>
+                  <td className="p-3 text-muted-foreground">{c.email || '-'}</td>
+                  <td className="p-3">{c.defaultAddress?.company || '-'}</td>
+                  <td className="p-3">{c.defaultAddress?.country || '-'}</td>
+                  <td className="p-3 text-right">
+                    {c.numberOfOrders ? (
+                      <span className="font-medium">{c.numberOfOrders}</span>
+                    ) : (
+                      <Badge variant="outline" className="text-yellow-600 border-yellow-200 bg-yellow-50 text-xs">0</Badge>
+                    )}
+                  </td>
+                  <td className="p-3 text-right font-medium">{c.amountSpent ? `${parseFloat(c.amountSpent.amount).toLocaleString()} ${c.amountSpent.currencyCode}` : '-'}</td>
+                  <td className="p-3 text-muted-foreground text-xs">{new Date(c.createdAt).toLocaleDateString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function B2BAdmin() {
   const [adminKey, setAdminKey] = useState(() => sessionStorage.getItem('b2b-admin-key') || '');
   const [applications, setApplications] = useState<ApplicationSummary[]>([]);
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState('all');
   const [selectedApp, setSelectedApp] = useState<ApplicationSummary | null>(null);
+  const [view, setView] = useState<'applications' | 'shopify'>('applications');
 
   const fetchApplications = useCallback(async () => {
     if (!adminKey) return;
@@ -332,66 +435,80 @@ export default function B2BAdmin() {
           <h1 className="text-lg font-bold">B2B Admin</h1>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={fetchApplications} disabled={loading}>
-            <RefreshCw className={`h-4 w-4 mr-1 ${loading ? 'animate-spin' : ''}`} /> Refresh
-          </Button>
+          <Tabs value={view} onValueChange={(v) => setView(v as 'applications' | 'shopify')}>
+            <TabsList className="h-8">
+              <TabsTrigger value="applications" className="text-xs px-3">Applications</TabsTrigger>
+              <TabsTrigger value="shopify" className="text-xs px-3">Shopify B2B</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          {view === 'applications' && (
+            <Button variant="outline" size="sm" onClick={fetchApplications} disabled={loading}>
+              <RefreshCw className={`h-4 w-4 mr-1 ${loading ? 'animate-spin' : ''}`} /> Refresh
+            </Button>
+          )}
           <Button variant="ghost" size="sm" onClick={() => { setAdminKey(''); sessionStorage.removeItem('b2b-admin-key'); }}>
             Logout
           </Button>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto p-6 space-y-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <StatCard icon={Users} label="Total" value={counts.total} color="bg-blue-50 text-blue-600" />
-          <StatCard icon={Clock} label="Pending" value={counts.pending} color="bg-yellow-50 text-yellow-600" />
-          <StatCard icon={CheckCircle} label="Approved" value={counts.approved} color="bg-green-50 text-green-600" />
-          <StatCard icon={XCircle} label="Rejected" value={counts.rejected} color="bg-red-50 text-red-600" />
-        </div>
-
-        <Tabs value={filter} onValueChange={setFilter}>
-          <TabsList>
-            <TabsTrigger value="all">All ({counts.total})</TabsTrigger>
-            <TabsTrigger value="pending">Pending ({counts.pending})</TabsTrigger>
-            <TabsTrigger value="approved">Approved ({counts.approved})</TabsTrigger>
-            <TabsTrigger value="rejected">Rejected ({counts.rejected})</TabsTrigger>
-          </TabsList>
-        </Tabs>
-
-        {loading ? (
-          <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
-        ) : filtered.length === 0 ? (
-          <Card>
-            <CardContent className="py-12 text-center text-muted-foreground">
-              <Building2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
-              <p>No applications found.</p>
-            </CardContent>
-          </Card>
+      <main className="max-w-5xl mx-auto p-6 space-y-6">
+        {view === 'shopify' ? (
+          <ShopifyB2BList adminKey={adminKey} />
         ) : (
-          <div className="space-y-3">
-            {filtered.map((app) => (
-              <Card key={app.id} className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setSelectedApp(app)}>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4 min-w-0">
-                      <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
-                        <Building2 className="h-5 w-5 text-muted-foreground" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="font-semibold text-sm truncate">{app.companyName}</p>
-                        <p className="text-xs text-muted-foreground truncate">{app.representativeName} · {app.email}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 flex-shrink-0">
-                      <Badge className={STATUS_CONFIG[app.status].color}>{STATUS_CONFIG[app.status].label}</Badge>
-                      <span className="text-xs text-muted-foreground hidden sm:block">{new Date(app.createdAt).toLocaleDateString()}</span>
-                      <Eye className="h-4 w-4 text-muted-foreground" />
-                    </div>
-                  </div>
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <StatCard icon={Users} label="Total" value={counts.total} color="bg-blue-50 text-blue-600" />
+              <StatCard icon={Clock} label="Pending" value={counts.pending} color="bg-yellow-50 text-yellow-600" />
+              <StatCard icon={CheckCircle} label="Approved" value={counts.approved} color="bg-green-50 text-green-600" />
+              <StatCard icon={XCircle} label="Rejected" value={counts.rejected} color="bg-red-50 text-red-600" />
+            </div>
+
+            <Tabs value={filter} onValueChange={setFilter}>
+              <TabsList>
+                <TabsTrigger value="all">All ({counts.total})</TabsTrigger>
+                <TabsTrigger value="pending">Pending ({counts.pending})</TabsTrigger>
+                <TabsTrigger value="approved">Approved ({counts.approved})</TabsTrigger>
+                <TabsTrigger value="rejected">Rejected ({counts.rejected})</TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            {loading ? (
+              <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+            ) : filtered.length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center text-muted-foreground">
+                  <Building2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                  <p>No applications found.</p>
                 </CardContent>
               </Card>
-            ))}
-          </div>
+            ) : (
+              <div className="space-y-3">
+                {filtered.map((app) => (
+                  <Card key={app.id} className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setSelectedApp(app)}>
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4 min-w-0">
+                          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
+                            <Building2 className="h-5 w-5 text-muted-foreground" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-semibold text-sm truncate">{app.companyName}</p>
+                            <p className="text-xs text-muted-foreground truncate">{app.representativeName} · {app.email}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                          <Badge className={STATUS_CONFIG[app.status].color}>{STATUS_CONFIG[app.status].label}</Badge>
+                          <span className="text-xs text-muted-foreground hidden sm:block">{new Date(app.createdAt).toLocaleDateString()}</span>
+                          <Eye className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </main>
 
