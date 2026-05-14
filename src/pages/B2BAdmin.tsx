@@ -375,18 +375,18 @@ export default function B2BAdmin() {
   const [editingCountry, setEditingCountry] = useState<string | null>(null);
   const [savingCountry, setSavingCountry] = useState(false);
 
-  const handleCountrySave = async (shopifyId: string, country: string) => {
+  const handleCountrySave = async (email: string, country: string) => {
     setSavingCountry(true);
     try {
       const res = await fetch('/api/b2b-update-country', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
-        body: JSON.stringify({ customerId: shopifyId, country }),
+        body: JSON.stringify({ email, country }),
       });
       if (res.ok) {
         toast.success(`Country updated to ${country}`, { position: 'top-center' });
         setShopifyCustomers(prev => prev.map(c =>
-          c.id === shopifyId ? { ...c, businessCountry: country } : c
+          c.email?.toLowerCase() === email.toLowerCase() ? { ...c, businessCountry: country } : c
         ));
         setEditingCountry(null);
       } else {
@@ -570,7 +570,7 @@ export default function B2BAdmin() {
                             defaultValue={r.country}
                             disabled={savingCountry}
                             onChange={(e) => {
-                              if (r.shopifyId && e.target.value) handleCountrySave(r.shopifyId, e.target.value);
+                              if (r.email && r.email !== '-' && e.target.value) handleCountrySave(r.email, e.target.value);
                             }}
                           >
                             <option value="">Select...</option>
@@ -586,9 +586,9 @@ export default function B2BAdmin() {
                         </div>
                       ) : (
                         <button
-                          onClick={() => r.shopifyId && setEditingCountry(r.key)}
+                          onClick={() => r.email !== '-' && setEditingCountry(r.key)}
                           className={`inline-flex items-center gap-1 hover:bg-gray-100 rounded px-1 py-0.5 transition-colors ${r.countrySource === 'address' && r.country !== '-' ? 'text-orange-500' : ''}`}
-                          title={r.countrySource === 'admin' ? 'Admin verified' : 'From shipping address (click to edit)'}
+                          title={r.countrySource === 'admin' ? 'Admin set' : 'From shipping address (click to edit)'}
                         >
                           {r.country !== '-' && <span>{COUNTRY_FLAGS[r.country] || ''}</span>}
                           {r.country}

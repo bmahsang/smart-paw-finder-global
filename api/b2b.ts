@@ -159,8 +159,6 @@ async function handleApprove(req: VercelRequest, res: VercelResponse) {
   return res.status(200).json({ success: true, status: newStatus, tagResult });
 }
 
-const SHOPIFY_CUSTOMER_FIELDS = `id displayName email phone tags numberOfOrders amountSpent{amount currencyCode} defaultAddress{address1 city country company} businessCountry:metafield(namespace:"custom",key:"business_country"){value} createdAt`;
-
 async function handleShopifyB2B(req: VercelRequest, res: VercelResponse) {
   if (!checkAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
   try {
@@ -168,25 +166,30 @@ async function handleShopifyB2B(req: VercelRequest, res: VercelResponse) {
     const shop = process.env.VITE_SHOPIFY_STORE_DOMAIN;
     const apiUrl = `https://${shop}/admin/api/2025-07/graphql.json`;
     const headers = { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': token };
+    const fields = `id displayName email phone tags numberOfOrders amountSpent{amount currencyCode} defaultAddress{address1 city country company} createdAt`;
 
     let cursor: string | null = null;
     const customers: any[] = [];
     while (true) {
       const query = cursor
-        ? `query($q:String!,$after:String){customers(first:50,query:$q,after:$after){edges{node{${SHOPIFY_CUSTOMER_FIELDS}}cursor}pageInfo{hasNextPage}}}`
-        : `query($q:String!){customers(first:50,query:$q){edges{node{${SHOPIFY_CUSTOMER_FIELDS}}cursor}pageInfo{hasNextPage}}}`;
+        ? `query($q:String!,$after:String){customers(first:50,query:$q,after:$after){edges{node{${fields}}cursor}pageInfo{hasNextPage}}}`
+        : `query($q:String!){customers(first:50,query:$q){edges{node{${fields}}cursor}pageInfo{hasNextPage}}}`;
       const variables = cursor ? { q: 'tag:B2B', after: cursor } : { q: 'tag:B2B' };
       const r = await fetch(apiUrl, { method: 'POST', headers, body: JSON.stringify({ query, variables }) });
       const data = await r.json();
       const edges = data.data?.customers?.edges || [];
-      customers.push(...edges.map((e: any) => ({
-        ...e.node,
-        businessCountry: e.node.businessCountry?.value || null,
-      })));
+      customers.push(...edges.map((e: any) => e.node));
       if (!data.data?.customers?.pageInfo?.hasNextPage || edges.length === 0) break;
       cursor = edges[edges.length - 1].cursor;
     }
-    return res.status(200).json({ customers });
+
+    const countryMap = await kv.hgetall('b2b:countries') || {};
+    const result = customers.map((c: any) => ({
+      ...c,
+      businessCountry: (countryMap as Record<string, string>)[c.email?.toLowerCase()] || null,
+    }));
+
+    return res.status(200).json({ customers: result });
   } catch (e) {
     console.error('[B2B] Shopify B2B list error:', e);
     return res.status(500).json({ error: 'Failed to fetch Shopify B2B customers' });
@@ -195,31 +198,11 @@ async function handleShopifyB2B(req: VercelRequest, res: VercelResponse) {
 
 async function handleUpdateCountry(req: VercelRequest, res: VercelResponse) {
   if (!checkAdmin(req)) return res.status(401).json({ error: 'Unauthorized' });
-  const { customerId, country } = req.body || {};
-  if (!customerId || !country) return res.status(400).json({ error: 'customerId and country are required' });
+  const { email, country } = req.body || {};
+  if (!email || !country) return res.status(400).json({ error: 'email and country are required' });
 
   try {
-    const token = await getAdminToken();
-    const shop = process.env.VITE_SHOPIFY_STORE_DOMAIN;
-    const apiUrl = `https://${shop}/admin/api/2025-07/graphql.json`;
-    const headers = { 'Content-Type': 'application/json', 'X-Shopify-Access-Token': token };
-
-    const r = await fetch(apiUrl, {
-      method: 'POST', headers,
-      body: JSON.stringify({
-        query: `mutation($input:CustomerInput!){customerUpdate(input:$input){customer{id metafield(namespace:"custom",key:"business_country"){value}}userErrors{field message}}}`,
-        variables: {
-          input: {
-            id: customerId,
-            metafields: [{ namespace: 'custom', key: 'business_country', value: country, type: 'single_line_text_field' }],
-          },
-        },
-      }),
-    });
-    const data = await r.json();
-    console.log('[B2B] Update country result:', JSON.stringify(data));
-    const errors = data.data?.customerUpdate?.userErrors;
-    if (errors?.length > 0) return res.status(400).json({ error: errors[0].message });
+    await kv.hset('b2b:countries', { [email.toLowerCase()]: country });
     return res.status(200).json({ success: true, country });
   } catch (e) {
     console.error('[B2B] Update country error:', e);
