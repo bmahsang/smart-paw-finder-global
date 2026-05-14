@@ -43,10 +43,38 @@ interface ShopifyB2BCustomer {
   createdAt: string;
 }
 
+interface MergedB2B {
+  key: string;
+  email: string;
+  name: string;
+  company: string;
+  country: string;
+  orders: number;
+  spent: string;
+  joined: string;
+  source: 'applied' | 'direct';
+  appStatus?: 'pending' | 'approved' | 'rejected';
+  application?: ApplicationSummary;
+  shopify?: ShopifyB2BCustomer;
+}
+
 const STATUS_CONFIG = {
-  pending: { label: 'Pending', variant: 'outline' as const, color: 'text-yellow-600 bg-yellow-50 border-yellow-200' },
-  approved: { label: 'Approved', variant: 'default' as const, color: 'text-green-600 bg-green-50 border-green-200' },
-  rejected: { label: 'Rejected', variant: 'destructive' as const, color: 'text-red-600 bg-red-50 border-red-200' },
+  pending: { label: 'Pending', color: 'text-yellow-600 bg-yellow-50 border-yellow-200' },
+  approved: { label: 'Approved', color: 'text-green-600 bg-green-50 border-green-200' },
+  rejected: { label: 'Rejected', color: 'text-red-600 bg-red-50 border-red-200' },
+};
+
+const SOURCE_CONFIG = {
+  applied: { label: 'Applied', color: 'text-blue-600 bg-blue-50 border-blue-200' },
+  direct: { label: 'Direct', color: 'text-gray-600 bg-gray-50 border-gray-200' },
+};
+
+const COUNTRY_FLAGS: Record<string, string> = {
+  'South Korea': '\u{1F1F0}\u{1F1F7}', 'Hong Kong': '\u{1F1ED}\u{1F1F0}', 'United States': '\u{1F1FA}\u{1F1F8}',
+  'Australia': '\u{1F1E6}\u{1F1FA}', 'Canada': '\u{1F1E8}\u{1F1E6}', 'Japan': '\u{1F1EF}\u{1F1F5}',
+  'China': '\u{1F1E8}\u{1F1F3}', 'Taiwan': '\u{1F1F9}\u{1F1FC}', 'Singapore': '\u{1F1F8}\u{1F1EC}',
+  'Thailand': '\u{1F1F9}\u{1F1ED}', 'Indonesia': '\u{1F1EE}\u{1F1E9}', 'Malaysia': '\u{1F1F2}\u{1F1FE}',
+  'Philippines': '\u{1F1F5}\u{1F1ED}', 'Vietnam': '\u{1F1FB}\u{1F1F3}', 'United Kingdom': '\u{1F1EC}\u{1F1E7}',
 };
 
 function LoginGate({ onLogin }: { onLogin: (key: string) => void }) {
@@ -162,28 +190,8 @@ function DetailDialog({
     })();
   }, [app.id, adminKey]);
 
-  const handleApprove = async () => {
-    setActing(true);
-    try {
-      const res = await fetch('/api/b2b-approve', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
-        body: JSON.stringify({ id: app.id, action: 'approve' }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        toast.success('Application approved successfully.', { position: 'top-center' });
-        onStatusChange();
-        onClose();
-      } else {
-        toast.error(data.error || 'Action failed.', { position: 'top-center' });
-      }
-    } catch { toast.error('Network error.'); }
-    finally { setActing(false); }
-  };
-
-  const handleReject = async () => {
-    if (!rejectReason.trim()) {
+  const handleAction = async (action: 'approve' | 'reject') => {
+    if (action === 'reject' && !rejectReason.trim()) {
       toast.error('Please enter a rejection reason.', { position: 'top-center' });
       return;
     }
@@ -192,11 +200,11 @@ function DetailDialog({
       const res = await fetch('/api/b2b-approve', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
-        body: JSON.stringify({ id: app.id, action: 'reject', reason: rejectReason.trim() }),
+        body: JSON.stringify({ id: app.id, action, ...(action === 'reject' ? { reason: rejectReason.trim() } : {}) }),
       });
       const data = await res.json();
       if (res.ok) {
-        toast.success('Application rejected.', { position: 'top-center' });
+        toast.success(action === 'approve' ? 'Application approved.' : 'Application rejected.', { position: 'top-center' });
         onStatusChange();
         onClose();
       } else {
@@ -259,28 +267,19 @@ function DetailDialog({
                 {showRejectForm ? (
                   <div className="space-y-3">
                     <Label className="text-sm font-semibold text-destructive">Rejection Reason</Label>
-                    <Textarea
-                      placeholder="Please explain why this application is being rejected..."
-                      value={rejectReason}
-                      onChange={(e) => setRejectReason(e.target.value)}
-                      rows={3}
-                      autoFocus
-                    />
+                    <Textarea placeholder="Please explain why this application is being rejected..."
+                      value={rejectReason} onChange={(e) => setRejectReason(e.target.value)} rows={3} autoFocus />
                     <div className="flex gap-3">
-                      <Button onClick={handleReject} disabled={acting || !rejectReason.trim()} variant="destructive" className="flex-1">
-                        {acting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <XCircle className="h-4 w-4 mr-2" />}
-                        Confirm Reject
+                      <Button onClick={() => handleAction('reject')} disabled={acting || !rejectReason.trim()} variant="destructive" className="flex-1">
+                        {acting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <XCircle className="h-4 w-4 mr-2" />} Confirm Reject
                       </Button>
-                      <Button onClick={() => { setShowRejectForm(false); setRejectReason(''); }} disabled={acting} variant="outline" className="flex-1">
-                        Cancel
-                      </Button>
+                      <Button onClick={() => { setShowRejectForm(false); setRejectReason(''); }} disabled={acting} variant="outline" className="flex-1">Cancel</Button>
                     </div>
                   </div>
                 ) : (
                   <div className="flex gap-3">
-                    <Button onClick={handleApprove} disabled={acting} className="flex-1 bg-green-600 hover:bg-green-700">
-                      {acting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle className="h-4 w-4 mr-2" />}
-                      Approve
+                    <Button onClick={() => handleAction('approve')} disabled={acting} className="flex-1 bg-green-600 hover:bg-green-700">
+                      {acting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle className="h-4 w-4 mr-2" />} Approve
                     </Button>
                     <Button onClick={() => setShowRejectForm(true)} disabled={acting} variant="destructive" className="flex-1">
                       <XCircle className="h-4 w-4 mr-2" /> Reject
@@ -305,177 +304,116 @@ function DetailDialog({
   );
 }
 
-function ShopifyB2BList({ adminKey }: { adminKey: string }) {
-  const [customers, setCustomers] = useState<ShopifyB2BCustomer[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+function mergeData(applications: ApplicationSummary[], shopifyCustomers: ShopifyB2BCustomer[]): MergedB2B[] {
+  const map = new Map<string, MergedB2B>();
 
-  const fetchCustomers = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetch('/api/b2b-shopify', { headers: { 'x-admin-key': adminKey } });
-      const data = await res.json();
-      setCustomers(data.customers || []);
-    } catch { toast.error('Failed to load Shopify B2B customers.'); }
-    finally { setLoading(false); }
-  }, [adminKey]);
+  for (const s of shopifyCustomers) {
+    const key = (s.email || s.id).toLowerCase();
+    map.set(key, {
+      key,
+      email: s.email || '-',
+      name: s.displayName || '-',
+      company: s.defaultAddress?.company || '-',
+      country: s.defaultAddress?.country || '-',
+      orders: s.numberOfOrders || 0,
+      spent: s.amountSpent ? `${parseFloat(s.amountSpent.amount).toLocaleString()} ${s.amountSpent.currencyCode}` : '-',
+      joined: s.createdAt,
+      source: 'direct',
+      shopify: s,
+    });
+  }
 
-  useEffect(() => { fetchCustomers(); }, [fetchCustomers]);
+  for (const a of applications) {
+    const key = a.email.toLowerCase();
+    const existing = map.get(key);
+    if (existing) {
+      existing.source = 'applied';
+      existing.appStatus = a.status;
+      existing.application = a;
+      if (existing.company === '-' && a.companyName) existing.company = a.companyName;
+    } else {
+      map.set(key, {
+        key,
+        email: a.email,
+        name: a.representativeName,
+        company: a.companyName,
+        country: '-',
+        orders: 0,
+        spent: '-',
+        joined: a.createdAt,
+        source: 'applied',
+        appStatus: a.status,
+        application: a,
+      });
+    }
+  }
 
-  const filtered = search.trim()
-    ? customers.filter(c =>
-        (c.displayName || '').toLowerCase().includes(search.toLowerCase()) ||
-        (c.email || '').toLowerCase().includes(search.toLowerCase()) ||
-        (c.defaultAddress?.company || '').toLowerCase().includes(search.toLowerCase()))
-    : customers;
-
-  const totalOrders = customers.reduce((s, c) => s + (c.numberOfOrders || 0), 0);
-  const totalSpent = customers.reduce((s, c) => s + parseFloat(c.amountSpent?.amount || '0'), 0);
-  const currency = customers.find(c => c.amountSpent)?.amountSpent?.currencyCode || 'JPY';
-
-  const countryStats = customers.reduce<Record<string, { count: number; orders: number; spent: number }>>((acc, c) => {
-    const country = c.defaultAddress?.country || 'Unknown';
-    if (!acc[country]) acc[country] = { count: 0, orders: 0, spent: 0 };
-    acc[country].count++;
-    acc[country].orders += c.numberOfOrders || 0;
-    acc[country].spent += parseFloat(c.amountSpent?.amount || '0');
-    return acc;
-  }, {});
-  const countrySorted = Object.entries(countryStats).sort((a, b) => b[1].count - a[1].count);
-
-  const COUNTRY_FLAGS: Record<string, string> = {
-    'South Korea': '\u{1F1F0}\u{1F1F7}', 'Hong Kong': '\u{1F1ED}\u{1F1F0}', 'United States': '\u{1F1FA}\u{1F1F8}',
-    'Australia': '\u{1F1E6}\u{1F1FA}', 'Canada': '\u{1F1E8}\u{1F1E6}', 'Japan': '\u{1F1EF}\u{1F1F5}',
-    'China': '\u{1F1E8}\u{1F1F3}', 'Taiwan': '\u{1F1F9}\u{1F1FC}', 'Singapore': '\u{1F1F8}\u{1F1EC}',
-    'Thailand': '\u{1F1F9}\u{1F1ED}', 'Indonesia': '\u{1F1EE}\u{1F1E9}', 'Malaysia': '\u{1F1F2}\u{1F1FE}',
-    'Philippines': '\u{1F1F5}\u{1F1ED}', 'Vietnam': '\u{1F1FB}\u{1F1F3}', 'United Kingdom': '\u{1F1EC}\u{1F1E7}',
-  };
-
-  return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <StatCard icon={Users} label="B2B Customers" value={customers.length} color="bg-blue-50 text-blue-600" />
-        <StatCard icon={ShoppingBag} label="Total Orders" value={totalOrders} color="bg-green-50 text-green-600" />
-        <StatCard icon={Globe} label="Countries" value={[...new Set(customers.map(c => c.defaultAddress?.country).filter(Boolean))].length} color="bg-purple-50 text-purple-600" />
-        <StatCard icon={Clock} label="No Orders" value={customers.filter(c => !c.numberOfOrders).length} color="bg-yellow-50 text-yellow-600" />
-      </div>
-
-      {!loading && countrySorted.length > 0 && (
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-semibold flex items-center gap-2">
-              <Globe className="h-4 w-4" /> Wholesalers by Country
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-              {countrySorted.map(([country, stats]) => {
-                const pct = Math.round((stats.count / customers.length) * 100);
-                return (
-                  <div key={country} className="relative bg-gray-50 rounded-lg p-3 overflow-hidden cursor-pointer hover:bg-gray-100 transition-colors"
-                    onClick={() => setSearch(country === 'Unknown' ? '' : country)}>
-                    <div className="absolute bottom-0 left-0 h-1 bg-blue-400 rounded-b-lg" style={{ width: `${pct}%` }} />
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-lg">{COUNTRY_FLAGS[country] || '\u{1F30F}'}</span>
-                      <span className="text-xs font-medium truncate">{country}</span>
-                    </div>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-xl font-bold">{stats.count}</span>
-                      <span className="text-[10px] text-muted-foreground">({pct}%)</span>
-                    </div>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">{stats.orders} orders</p>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      <div className="flex items-center gap-3">
-        <Input placeholder="Search by name, email, company..." value={search} onChange={e => setSearch(e.target.value)} className="max-w-sm" />
-        <Button variant="outline" size="sm" onClick={fetchCustomers} disabled={loading}>
-          <RefreshCw className={`h-4 w-4 mr-1 ${loading ? 'animate-spin' : ''}`} /> Refresh
-        </Button>
-      </div>
-
-      {loading ? (
-        <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
-      ) : filtered.length === 0 ? (
-        <Card><CardContent className="py-12 text-center text-muted-foreground"><Users className="h-12 w-12 mx-auto mb-3 opacity-30" /><p>No customers found.</p></CardContent></Card>
-      ) : (
-        <div className="bg-white rounded-lg border overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b bg-gray-50/50">
-                <th className="text-left p-3 font-medium text-muted-foreground">#</th>
-                <th className="text-left p-3 font-medium text-muted-foreground">Name</th>
-                <th className="text-left p-3 font-medium text-muted-foreground">Email</th>
-                <th className="text-left p-3 font-medium text-muted-foreground">Company</th>
-                <th className="text-left p-3 font-medium text-muted-foreground">Country</th>
-                <th className="text-right p-3 font-medium text-muted-foreground">Orders</th>
-                <th className="text-right p-3 font-medium text-muted-foreground">Spent</th>
-                <th className="text-left p-3 font-medium text-muted-foreground">Joined</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((c, i) => (
-                <tr key={c.id} className={`border-b last:border-0 hover:bg-gray-50 ${!c.numberOfOrders ? 'bg-yellow-50/30' : ''}`}>
-                  <td className="p-3 text-muted-foreground">{i + 1}</td>
-                  <td className="p-3 font-medium">{c.displayName || '-'}</td>
-                  <td className="p-3 text-muted-foreground">{c.email || '-'}</td>
-                  <td className="p-3">{c.defaultAddress?.company || '-'}</td>
-                  <td className="p-3">{c.defaultAddress?.country || '-'}</td>
-                  <td className="p-3 text-right">
-                    {c.numberOfOrders ? (
-                      <span className="font-medium">{c.numberOfOrders}</span>
-                    ) : (
-                      <Badge variant="outline" className="text-yellow-600 border-yellow-200 bg-yellow-50 text-xs">0</Badge>
-                    )}
-                  </td>
-                  <td className="p-3 text-right font-medium">{c.amountSpent ? `${parseFloat(c.amountSpent.amount).toLocaleString()} ${c.amountSpent.currencyCode}` : '-'}</td>
-                  <td className="p-3 text-muted-foreground text-xs">{new Date(c.createdAt).toLocaleDateString()}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
-  );
+  return [...map.values()].sort((a, b) => new Date(b.joined).getTime() - new Date(a.joined).getTime());
 }
 
 export default function B2BAdmin() {
   const [adminKey, setAdminKey] = useState(() => sessionStorage.getItem('b2b-admin-key') || '');
   const [applications, setApplications] = useState<ApplicationSummary[]>([]);
+  const [shopifyCustomers, setShopifyCustomers] = useState<ShopifyB2BCustomer[]>([]);
   const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState('all');
+  const [search, setSearch] = useState('');
   const [selectedApp, setSelectedApp] = useState<ApplicationSummary | null>(null);
-  const [view, setView] = useState<'applications' | 'shopify'>('applications');
 
-  const fetchApplications = useCallback(async () => {
+  const fetchAll = useCallback(async () => {
     if (!adminKey) return;
     setLoading(true);
     try {
-      const res = await fetch('/api/b2b-list', { headers: { 'x-admin-key': adminKey } });
-      if (res.status === 401) { setAdminKey(''); sessionStorage.removeItem('b2b-admin-key'); return; }
-      const data = await res.json();
-      setApplications(data.applications || []);
-    } catch { toast.error('Failed to load applications.'); }
+      const [appRes, shopRes] = await Promise.all([
+        fetch('/api/b2b-list', { headers: { 'x-admin-key': adminKey } }),
+        fetch('/api/b2b-shopify', { headers: { 'x-admin-key': adminKey } }),
+      ]);
+      if (appRes.status === 401) { setAdminKey(''); sessionStorage.removeItem('b2b-admin-key'); return; }
+      const [appData, shopData] = await Promise.all([appRes.json(), shopRes.json()]);
+      setApplications(appData.applications || []);
+      setShopifyCustomers(shopData.customers || []);
+    } catch { toast.error('Failed to load data.'); }
     finally { setLoading(false); }
   }, [adminKey]);
 
-  useEffect(() => { fetchApplications(); }, [fetchApplications]);
+  useEffect(() => { fetchAll(); }, [fetchAll]);
 
   if (!adminKey) return <LoginGate onLogin={setAdminKey} />;
 
-  const filtered = filter === 'all' ? applications : applications.filter((a) => a.status === filter);
-  const counts = {
-    total: applications.length,
-    pending: applications.filter((a) => a.status === 'pending').length,
-    approved: applications.filter((a) => a.status === 'approved').length,
-    rejected: applications.filter((a) => a.status === 'rejected').length,
+  const merged = mergeData(applications, shopifyCustomers);
+
+  const filterFn = (r: MergedB2B) => {
+    if (filter === 'pending') return r.appStatus === 'pending';
+    if (filter === 'approved') return r.appStatus === 'approved' || (r.source === 'direct' && !r.appStatus);
+    if (filter === 'rejected') return r.appStatus === 'rejected';
+    if (filter === 'no-orders') return r.orders === 0;
+    return true;
   };
+
+  const searchFn = (r: MergedB2B) => {
+    if (!search.trim()) return true;
+    const q = search.toLowerCase();
+    return r.name.toLowerCase().includes(q) || r.email.toLowerCase().includes(q) ||
+      r.company.toLowerCase().includes(q) || r.country.toLowerCase().includes(q);
+  };
+
+  const filtered = merged.filter(r => filterFn(r) && searchFn(r));
+
+  const counts = {
+    total: merged.length,
+    pending: merged.filter(r => r.appStatus === 'pending').length,
+    approved: merged.filter(r => r.appStatus === 'approved' || (r.source === 'direct' && !r.appStatus)).length,
+    rejected: merged.filter(r => r.appStatus === 'rejected').length,
+    noOrders: merged.filter(r => r.orders === 0).length,
+  };
+
+  const countryStats = merged.filter(r => r.country && r.country !== '-').reduce<Record<string, { count: number; orders: number }>>((acc, r) => {
+    if (!acc[r.country]) acc[r.country] = { count: 0, orders: 0 };
+    acc[r.country].count++;
+    acc[r.country].orders += r.orders;
+    return acc;
+  }, {});
+  const countrySorted = Object.entries(countryStats).sort((a, b) => b[1].count - a[1].count);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -483,88 +421,155 @@ export default function B2BAdmin() {
         <div className="flex items-center gap-3">
           <Building2 className="h-6 w-6 text-primary" />
           <h1 className="text-lg font-bold">B2B Admin</h1>
+          <Badge variant="outline" className="text-xs">{counts.total} partners</Badge>
         </div>
         <div className="flex items-center gap-2">
-          <Tabs value={view} onValueChange={(v) => setView(v as 'applications' | 'shopify')}>
-            <TabsList className="h-8">
-              <TabsTrigger value="applications" className="text-xs px-3">Applications</TabsTrigger>
-              <TabsTrigger value="shopify" className="text-xs px-3">Shopify B2B</TabsTrigger>
-            </TabsList>
-          </Tabs>
-          {view === 'applications' && (
-            <Button variant="outline" size="sm" onClick={fetchApplications} disabled={loading}>
-              <RefreshCw className={`h-4 w-4 mr-1 ${loading ? 'animate-spin' : ''}`} /> Refresh
-            </Button>
-          )}
+          <Button variant="outline" size="sm" onClick={fetchAll} disabled={loading}>
+            <RefreshCw className={`h-4 w-4 mr-1 ${loading ? 'animate-spin' : ''}`} /> Refresh
+          </Button>
           <Button variant="ghost" size="sm" onClick={() => { setAdminKey(''); sessionStorage.removeItem('b2b-admin-key'); }}>
             Logout
           </Button>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto p-6 space-y-6">
-        {view === 'shopify' ? (
-          <ShopifyB2BList adminKey={adminKey} />
-        ) : (
-          <>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <StatCard icon={Users} label="Total" value={counts.total} color="bg-blue-50 text-blue-600" />
-              <StatCard icon={Clock} label="Pending" value={counts.pending} color="bg-yellow-50 text-yellow-600" />
-              <StatCard icon={CheckCircle} label="Approved" value={counts.approved} color="bg-green-50 text-green-600" />
-              <StatCard icon={XCircle} label="Rejected" value={counts.rejected} color="bg-red-50 text-red-600" />
-            </div>
-
-            <Tabs value={filter} onValueChange={setFilter}>
-              <TabsList>
-                <TabsTrigger value="all">All ({counts.total})</TabsTrigger>
-                <TabsTrigger value="pending">Pending ({counts.pending})</TabsTrigger>
-                <TabsTrigger value="approved">Approved ({counts.approved})</TabsTrigger>
-                <TabsTrigger value="rejected">Rejected ({counts.rejected})</TabsTrigger>
-              </TabsList>
-            </Tabs>
-
-            {loading ? (
-              <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
-            ) : filtered.length === 0 ? (
-              <Card>
-                <CardContent className="py-12 text-center text-muted-foreground">
-                  <Building2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                  <p>No applications found.</p>
-                </CardContent>
-              </Card>
-            ) : (
-              <div className="space-y-3">
-                {filtered.map((app) => (
-                  <Card key={app.id} className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => setSelectedApp(app)}>
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4 min-w-0">
-                          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center flex-shrink-0">
-                            <Building2 className="h-5 w-5 text-muted-foreground" />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="font-semibold text-sm truncate">{app.companyName}</p>
-                            <p className="text-xs text-muted-foreground truncate">{app.representativeName} · {app.email}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3 flex-shrink-0">
-                          <Badge className={STATUS_CONFIG[app.status].color}>{STATUS_CONFIG[app.status].label}</Badge>
-                          <span className="text-xs text-muted-foreground hidden sm:block">{new Date(app.createdAt).toLocaleDateString()}</span>
-                          <Eye className="h-4 w-4 text-muted-foreground" />
-                        </div>
+      <main className="max-w-6xl mx-auto p-6 space-y-6">
+        {/* Country breakdown */}
+        {!loading && countrySorted.length > 0 && (
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-semibold flex items-center gap-2">
+                <Globe className="h-4 w-4" /> Wholesalers by Country
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                {countrySorted.map(([country, stats]) => {
+                  const pct = Math.round((stats.count / merged.length) * 100);
+                  return (
+                    <div key={country} className="relative bg-gray-50 rounded-lg p-3 overflow-hidden cursor-pointer hover:bg-gray-100 transition-colors"
+                      onClick={() => setSearch(search === country ? '' : country)}>
+                      <div className="absolute bottom-0 left-0 h-1 bg-blue-400 rounded-b-lg" style={{ width: `${pct}%` }} />
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-lg">{COUNTRY_FLAGS[country] || '\u{1F30F}'}</span>
+                        <span className="text-xs font-medium truncate">{country}</span>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-xl font-bold">{stats.count}</span>
+                        <span className="text-[10px] text-muted-foreground">({pct}%)</span>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground mt-0.5">{stats.orders} orders</p>
+                    </div>
+                  );
+                })}
               </div>
-            )}
-          </>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          <StatCard icon={Users} label="Total" value={counts.total} color="bg-blue-50 text-blue-600" />
+          <StatCard icon={Clock} label="Pending" value={counts.pending} color="bg-yellow-50 text-yellow-600" />
+          <StatCard icon={CheckCircle} label="Active" value={counts.approved} color="bg-green-50 text-green-600" />
+          <StatCard icon={XCircle} label="Rejected" value={counts.rejected} color="bg-red-50 text-red-600" />
+          <StatCard icon={ShoppingBag} label="No Orders" value={counts.noOrders} color="bg-orange-50 text-orange-600" />
+        </div>
+
+        {/* Filter + Search */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <Tabs value={filter} onValueChange={setFilter}>
+            <TabsList>
+              <TabsTrigger value="all">All ({counts.total})</TabsTrigger>
+              <TabsTrigger value="pending">Pending ({counts.pending})</TabsTrigger>
+              <TabsTrigger value="approved">Active ({counts.approved})</TabsTrigger>
+              <TabsTrigger value="rejected">Rejected ({counts.rejected})</TabsTrigger>
+              <TabsTrigger value="no-orders">No Orders ({counts.noOrders})</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          <Input placeholder="Search name, email, company, country..." value={search} onChange={e => setSearch(e.target.value)} className="max-w-xs" />
+        </div>
+
+        {/* Table */}
+        {loading ? (
+          <div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin text-muted-foreground" /></div>
+        ) : filtered.length === 0 ? (
+          <Card>
+            <CardContent className="py-12 text-center text-muted-foreground">
+              <Building2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
+              <p>No partners found.</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="bg-white rounded-lg border overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b bg-gray-50/50">
+                  <th className="text-left p-3 font-medium text-muted-foreground">#</th>
+                  <th className="text-left p-3 font-medium text-muted-foreground">Name</th>
+                  <th className="text-left p-3 font-medium text-muted-foreground">Email</th>
+                  <th className="text-left p-3 font-medium text-muted-foreground">Company</th>
+                  <th className="text-left p-3 font-medium text-muted-foreground">Country</th>
+                  <th className="text-right p-3 font-medium text-muted-foreground">Orders</th>
+                  <th className="text-right p-3 font-medium text-muted-foreground">Spent</th>
+                  <th className="text-center p-3 font-medium text-muted-foreground">Source</th>
+                  <th className="text-center p-3 font-medium text-muted-foreground">Status</th>
+                  <th className="text-left p-3 font-medium text-muted-foreground">Joined</th>
+                  <th className="p-3"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((r, i) => (
+                  <tr key={r.key} className={`border-b last:border-0 hover:bg-gray-50 transition-colors ${r.orders === 0 ? 'bg-yellow-50/30' : ''}`}>
+                    <td className="p-3 text-muted-foreground text-xs">{i + 1}</td>
+                    <td className="p-3 font-medium">{r.name}</td>
+                    <td className="p-3 text-muted-foreground text-xs">{r.email}</td>
+                    <td className="p-3 text-xs">{r.company}</td>
+                    <td className="p-3 text-xs whitespace-nowrap">
+                      {r.country !== '-' && <span className="mr-1">{COUNTRY_FLAGS[r.country] || ''}</span>}
+                      {r.country}
+                    </td>
+                    <td className="p-3 text-right">
+                      {r.orders > 0 ? (
+                        <span className="font-medium">{r.orders}</span>
+                      ) : (
+                        <Badge variant="outline" className="text-yellow-600 border-yellow-200 bg-yellow-50 text-xs">0</Badge>
+                      )}
+                    </td>
+                    <td className="p-3 text-right font-medium text-xs">{r.spent}</td>
+                    <td className="p-3 text-center">
+                      <Badge variant="outline" className={`text-xs ${SOURCE_CONFIG[r.source].color}`}>
+                        {SOURCE_CONFIG[r.source].label}
+                      </Badge>
+                    </td>
+                    <td className="p-3 text-center">
+                      {r.appStatus ? (
+                        <Badge variant="outline" className={`text-xs ${STATUS_CONFIG[r.appStatus].color}`}>
+                          {STATUS_CONFIG[r.appStatus].label}
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="text-xs text-green-600 bg-green-50 border-green-200">Active</Badge>
+                      )}
+                    </td>
+                    <td className="p-3 text-muted-foreground text-xs whitespace-nowrap">{new Date(r.joined).toLocaleDateString()}</td>
+                    <td className="p-3">
+                      {r.application && (
+                        <button onClick={() => setSelectedApp(r.application!)} className="text-muted-foreground hover:text-foreground transition-colors">
+                          <Eye className="h-4 w-4" />
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </main>
 
       {selectedApp && (
         <DetailDialog app={selectedApp} adminKey={adminKey}
-          onClose={() => setSelectedApp(null)} onStatusChange={fetchApplications} />
+          onClose={() => setSelectedApp(null)} onStatusChange={fetchAll} />
       )}
     </div>
   );
