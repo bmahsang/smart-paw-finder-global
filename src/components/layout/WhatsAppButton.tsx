@@ -2,15 +2,12 @@ import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 
 const WHATSAPP_NUMBER = '15559433437';
-const COUPON_CODE = 'WHATSAPP10';
-const DISCOUNT_LINK = 'https://biteme.one/discount/WHATSAPP10';
 const PREFILLED_MESSAGE = `Hi BITE ME! I'd like to get my 10% OFF coupon.`;
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(PREFILLED_MESSAGE)}`;
 const DISMISS_KEY = 'wa_bubble_dismissed';
 
 export function WhatsAppButton() {
   const [showBubble, setShowBubble] = useState(false);
-  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (sessionStorage.getItem(DISMISS_KEY) === '1') return;
@@ -23,16 +20,6 @@ export function WhatsAppButton() {
     e.stopPropagation();
     sessionStorage.setItem(DISMISS_KEY, '1');
     setShowBubble(false);
-  };
-
-  const handleCopy = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    try {
-      await navigator.clipboard.writeText(COUPON_CODE);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {}
   };
 
   return (
@@ -50,15 +37,6 @@ export function WhatsAppButton() {
               & get <span className="text-primary font-bold">10% OFF</span>
             </span>
           </a>
-          <div className="mt-2 flex items-center gap-1.5">
-            <span className="font-mono text-xs bg-gray-100 rounded px-2 py-1 tracking-wider font-semibold">{COUPON_CODE}</span>
-            <button
-              onClick={handleCopy}
-              className="text-[10px] px-2 py-1 rounded bg-primary/10 text-primary font-medium hover:bg-primary/20 transition-colors"
-            >
-              {copied ? '✓ Copied!' : 'Copy'}
-            </button>
-          </div>
           <button
             onClick={dismissBubble}
             aria-label="Dismiss"
