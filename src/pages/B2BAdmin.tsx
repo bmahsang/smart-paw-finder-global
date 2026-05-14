@@ -40,15 +40,18 @@ interface ShopifyB2BCustomer {
   numberOfOrders: number;
   amountSpent: { amount: string; currencyCode: string } | null;
   defaultAddress: { address1: string; city: string; country: string; company: string } | null;
+  businessCountry: string | null;
   createdAt: string;
 }
 
 interface MergedB2B {
   key: string;
+  shopifyId?: string;
   email: string;
   name: string;
   company: string;
   country: string;
+  countrySource: 'admin' | 'address';
   orders: number;
   spent: string;
   joined: string;
@@ -57,6 +60,12 @@ interface MergedB2B {
   application?: ApplicationSummary;
   shopify?: ShopifyB2BCustomer;
 }
+
+const B2B_COUNTRIES = [
+  'South Korea', 'Hong Kong', 'United States', 'Australia', 'Canada', 'Japan',
+  'China', 'Taiwan', 'Singapore', 'Thailand', 'Indonesia', 'Malaysia',
+  'Philippines', 'Vietnam', 'United Kingdom', 'Germany', 'France', 'New Zealand',
+];
 
 const STATUS_CONFIG = {
   pending: { label: 'Pending', color: 'text-yellow-600 bg-yellow-50 border-yellow-200' },
@@ -309,12 +318,15 @@ function mergeData(applications: ApplicationSummary[], shopifyCustomers: Shopify
 
   for (const s of shopifyCustomers) {
     const key = (s.email || s.id).toLowerCase();
+    const hasAdminCountry = !!s.businessCountry;
     map.set(key, {
       key,
+      shopifyId: s.id,
       email: s.email || '-',
       name: s.displayName || '-',
       company: s.defaultAddress?.company || '-',
-      country: s.defaultAddress?.country || '-',
+      country: s.businessCountry || s.defaultAddress?.country || '-',
+      countrySource: hasAdminCountry ? 'admin' : 'address',
       orders: s.numberOfOrders || 0,
       spent: s.amountSpent ? `${parseFloat(s.amountSpent.amount).toLocaleString()} ${s.amountSpent.currencyCode}` : '-',
       joined: s.createdAt,
@@ -338,6 +350,7 @@ function mergeData(applications: ApplicationSummary[], shopifyCustomers: Shopify
         name: a.representativeName,
         company: a.companyName,
         country: '-',
+        countrySource: 'address',
         orders: 0,
         spent: '-',
         joined: a.createdAt,
@@ -359,6 +372,30 @@ export default function B2BAdmin() {
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [selectedApp, setSelectedApp] = useState<ApplicationSummary | null>(null);
+  const [editingCountry, setEditingCountry] = useState<string | null>(null);
+  const [savingCountry, setSavingCountry] = useState(false);
+
+  const handleCountrySave = async (shopifyId: string, country: string) => {
+    setSavingCountry(true);
+    try {
+      const res = await fetch('/api/b2b-update-country', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
+        body: JSON.stringify({ customerId: shopifyId, country }),
+      });
+      if (res.ok) {
+        toast.success(`Country updated to ${country}`, { position: 'top-center' });
+        setShopifyCustomers(prev => prev.map(c =>
+          c.id === shopifyId ? { ...c, businessCountry: country } : c
+        ));
+        setEditingCountry(null);
+      } else {
+        const data = await res.json();
+        toast.error(data.error || 'Failed to update country', { position: 'top-center' });
+      }
+    } catch { toast.error('Network error.'); }
+    finally { setSavingCountry(false); }
+  };
 
   const fetchAll = useCallback(async () => {
     if (!adminKey) return;
@@ -526,8 +563,38 @@ export default function B2BAdmin() {
                     <td className="p-3 text-muted-foreground text-xs">{r.email}</td>
                     <td className="p-3 text-xs">{r.company}</td>
                     <td className="p-3 text-xs whitespace-nowrap">
-                      {r.country !== '-' && <span className="mr-1">{COUNTRY_FLAGS[r.country] || ''}</span>}
-                      {r.country}
+                      {editingCountry === r.key ? (
+                        <div className="flex items-center gap-1">
+                          <select
+                            className="border rounded px-1 py-0.5 text-xs bg-white"
+                            defaultValue={r.country}
+                            disabled={savingCountry}
+                            onChange={(e) => {
+                              if (r.shopifyId && e.target.value) handleCountrySave(r.shopifyId, e.target.value);
+                            }}
+                          >
+                            <option value="">Select...</option>
+                            {B2B_COUNTRIES.map(c => <option key={c} value={c}>{COUNTRY_FLAGS[c] || ''} {c}</option>)}
+                            {r.country && r.country !== '-' && !B2B_COUNTRIES.includes(r.country) && (
+                              <option value={r.country}>{r.country}</option>
+                            )}
+                          </select>
+                          {savingCountry && <Loader2 className="h-3 w-3 animate-spin" />}
+                          <button onClick={() => setEditingCountry(null)} className="text-muted-foreground hover:text-foreground">
+                            <XCircle className="h-3 w-3" />
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => r.shopifyId && setEditingCountry(r.key)}
+                          className={`inline-flex items-center gap-1 hover:bg-gray-100 rounded px-1 py-0.5 transition-colors ${r.countrySource === 'address' && r.country !== '-' ? 'text-orange-500' : ''}`}
+                          title={r.countrySource === 'admin' ? 'Admin verified' : 'From shipping address (click to edit)'}
+                        >
+                          {r.country !== '-' && <span>{COUNTRY_FLAGS[r.country] || ''}</span>}
+                          {r.country}
+                          {r.countrySource === 'admin' && <CheckCircle className="h-3 w-3 text-green-500 ml-0.5" />}
+                        </button>
+                      )}
                     </td>
                     <td className="p-3 text-right">
                       {r.orders > 0 ? (
