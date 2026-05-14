@@ -152,7 +152,7 @@ async function handleApprove(req: VercelRequest, res: VercelResponse) {
 
   let tagResult;
   if (action === 'approve') {
-    tagResult = await findCustomerAndTag(appMeta.email, ['B2B-approved'], ['B2B-pending']);
+    tagResult = await findCustomerAndTag(appMeta.email, ['B2B'], ['B2B-pending']);
   } else {
     tagResult = await findCustomerAndTag(appMeta.email, [], ['B2B-pending']);
   }

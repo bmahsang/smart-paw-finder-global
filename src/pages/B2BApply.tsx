@@ -134,7 +134,7 @@ export default function B2BApply() {
         const tags: string[] = tagsData.tags || [];
         const statusData = await statusRes.json();
 
-        if (tags.includes('B2B-approved') || statusData.status === 'approved') {
+        if (tags.includes('B2B') || statusData.status === 'approved') {
           setB2bStatus('approved');
         } else if (statusData.status === 'rejected') {
           setB2bStatus('rejected');
