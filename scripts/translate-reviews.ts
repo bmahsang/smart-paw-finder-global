@@ -23,7 +23,7 @@ if (!ANTHROPIC_API_KEY) {
 }
 
 const REVIEWS_DIR = join(__dirname, '..', 'data', 'reviews');
-const BATCH_SIZE = 10;
+const BATCH_SIZE = 30;
 
 let totalInputTokens = 0;
 let totalOutputTokens = 0;
