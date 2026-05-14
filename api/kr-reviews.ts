@@ -79,10 +79,12 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({ reviews: [], total: 0 });
   }
 
+  const translated = reviewData.reviews.filter(r => r.content_en);
+
   res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate');
   return res.status(200).json({
-    reviews: reviewData.reviews,
-    total: reviewData.total,
+    reviews: translated,
+    total: translated.length,
     kr_product_cd: match.kr_product_cd,
     confidence: match.confidence,
   });
