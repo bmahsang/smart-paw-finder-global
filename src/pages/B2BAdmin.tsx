@@ -333,6 +333,24 @@ function ShopifyB2BList({ adminKey }: { adminKey: string }) {
   const totalSpent = customers.reduce((s, c) => s + parseFloat(c.amountSpent?.amount || '0'), 0);
   const currency = customers.find(c => c.amountSpent)?.amountSpent?.currencyCode || 'JPY';
 
+  const countryStats = customers.reduce<Record<string, { count: number; orders: number; spent: number }>>((acc, c) => {
+    const country = c.defaultAddress?.country || 'Unknown';
+    if (!acc[country]) acc[country] = { count: 0, orders: 0, spent: 0 };
+    acc[country].count++;
+    acc[country].orders += c.numberOfOrders || 0;
+    acc[country].spent += parseFloat(c.amountSpent?.amount || '0');
+    return acc;
+  }, {});
+  const countrySorted = Object.entries(countryStats).sort((a, b) => b[1].count - a[1].count);
+
+  const COUNTRY_FLAGS: Record<string, string> = {
+    'South Korea': '\u{1F1F0}\u{1F1F7}', 'Hong Kong': '\u{1F1ED}\u{1F1F0}', 'United States': '\u{1F1FA}\u{1F1F8}',
+    'Australia': '\u{1F1E6}\u{1F1FA}', 'Canada': '\u{1F1E8}\u{1F1E6}', 'Japan': '\u{1F1EF}\u{1F1F5}',
+    'China': '\u{1F1E8}\u{1F1F3}', 'Taiwan': '\u{1F1F9}\u{1F1FC}', 'Singapore': '\u{1F1F8}\u{1F1EC}',
+    'Thailand': '\u{1F1F9}\u{1F1ED}', 'Indonesia': '\u{1F1EE}\u{1F1E9}', 'Malaysia': '\u{1F1F2}\u{1F1FE}',
+    'Philippines': '\u{1F1F5}\u{1F1ED}', 'Vietnam': '\u{1F1FB}\u{1F1F3}', 'United Kingdom': '\u{1F1EC}\u{1F1E7}',
+  };
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -341,6 +359,38 @@ function ShopifyB2BList({ adminKey }: { adminKey: string }) {
         <StatCard icon={Globe} label="Countries" value={[...new Set(customers.map(c => c.defaultAddress?.country).filter(Boolean))].length} color="bg-purple-50 text-purple-600" />
         <StatCard icon={Clock} label="No Orders" value={customers.filter(c => !c.numberOfOrders).length} color="bg-yellow-50 text-yellow-600" />
       </div>
+
+      {!loading && countrySorted.length > 0 && (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-semibold flex items-center gap-2">
+              <Globe className="h-4 w-4" /> Wholesalers by Country
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+              {countrySorted.map(([country, stats]) => {
+                const pct = Math.round((stats.count / customers.length) * 100);
+                return (
+                  <div key={country} className="relative bg-gray-50 rounded-lg p-3 overflow-hidden cursor-pointer hover:bg-gray-100 transition-colors"
+                    onClick={() => setSearch(country === 'Unknown' ? '' : country)}>
+                    <div className="absolute bottom-0 left-0 h-1 bg-blue-400 rounded-b-lg" style={{ width: `${pct}%` }} />
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-lg">{COUNTRY_FLAGS[country] || '\u{1F30F}'}</span>
+                      <span className="text-xs font-medium truncate">{country}</span>
+                    </div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-xl font-bold">{stats.count}</span>
+                      <span className="text-[10px] text-muted-foreground">({pct}%)</span>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">{stats.orders} orders</p>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="flex items-center gap-3">
         <Input placeholder="Search by name, email, company..." value={search} onChange={e => setSearch(e.target.value)} className="max-w-sm" />
