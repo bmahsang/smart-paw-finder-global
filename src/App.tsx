@@ -71,7 +71,7 @@ const App = () => (
           <Route path="/mypage/b2b-apply" element={<B2BApply />} />
           <Route path="/manage/b2b" element={<B2BAdmin />} />
           <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/popup-offline" element={<PopupOffline />} />
+          <Route path="/popup-offline-stores" element={<PopupOffline />} />
           <Route path="/discount/:code" element={<DiscountRedirect />} />
           <Route path="/products/:handle" element={<ShopifyProductRedirect />} />
           <Route path="/collections/:handle" element={<ShopifyCollectionRedirect />} />
