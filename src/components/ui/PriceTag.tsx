@@ -17,6 +17,8 @@ export function PriceTag({ amount, currencyCode, className = '', originalClassNa
 
   const discounted = (parseFloat(amount) * (1 - B2B_DISCOUNT_RATE)).toFixed(2);
 
+  const discountPercent = Math.round(B2B_DISCOUNT_RATE * 100);
+
   return (
     <span className="inline-flex flex-wrap items-baseline gap-1.5">
       <span className={`line-through text-muted-foreground ${originalClassName}`} translate="no">
@@ -24,6 +26,9 @@ export function PriceTag({ amount, currencyCode, className = '', originalClassNa
       </span>
       <span className={className} translate="no">
         {formatPrice(discounted, currencyCode)}
+      </span>
+      <span className="inline-flex items-center rounded-sm bg-red-100 px-1.5 py-0.5 text-xs font-semibold text-red-600">
+        -{discountPercent}%
       </span>
     </span>
   );
