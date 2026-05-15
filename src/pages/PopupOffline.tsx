@@ -103,7 +103,7 @@ const PopupOffline = () => {
             MAKE WAVE
           </h1>
           <p className="mt-6 text-base md:text-lg font-semibold text-foreground leading-relaxed">
-            BITE ME has operated over 30 pop-up
+            BITE ME has operated over 30 pop-up shops
             <br />
             and offline stores across the country!
           </p>
