@@ -23,6 +23,7 @@ import B2BApply from "./pages/B2BApply";
 import B2BAdmin from "./pages/B2BAdmin";
 import AdminDashboard from "./pages/AdminDashboard";
 import DiscountRedirect from "./pages/DiscountRedirect";
+import PopupOffline from "./pages/PopupOffline";
 import { WhatsAppButton } from "./components/layout/WhatsAppButton";
 
 const queryClient = new QueryClient();
@@ -70,6 +71,7 @@ const App = () => (
           <Route path="/mypage/b2b-apply" element={<B2BApply />} />
           <Route path="/manage/b2b" element={<B2BAdmin />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/popup-offline-stores" element={<PopupOffline />} />
           <Route path="/discount/:code" element={<DiscountRedirect />} />
           <Route path="/products/:handle" element={<ShopifyProductRedirect />} />
           <Route path="/collections/:handle" element={<ShopifyCollectionRedirect />} />
