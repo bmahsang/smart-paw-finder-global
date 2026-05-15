@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Menu, Phone, ChevronRight, ChevronDown, Package, User, LogOut } from "lucide-react";
+import { Menu, Phone, ChevronRight, ChevronDown, Package, User, LogOut, MapPin } from "lucide-react";
 import { useAuthStore } from "@/stores/authStore";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -264,6 +264,17 @@ export function Header({ onSearch, onCollectionSelect }: HeaderProps) {
                   ))}
                 </div>
               )}
+
+              {/* Pop-up & Offline */}
+              <div className="border-b border-border/50">
+                <button
+                  onClick={() => { navigate("/popup-offline"); setIsMenuOpen(false); }}
+                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-secondary/50 transition-colors"
+                >
+                  <MapPin className="h-4 w-4 text-muted-foreground" />
+                  <span className="font-medium text-sm">Pop-up & Offline</span>
+                </button>
+              </div>
 
               {/* Contact Us */}
               <div className="border-b border-border/50">
