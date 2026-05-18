@@ -94,26 +94,26 @@ export function ReviewWidget({ productNumericId, onCount }: { productNumericId: 
                 {(r.images.length > 0 || (r.videos && r.videos.length > 0)) && (
                   <div className="flex flex-wrap gap-2 pt-1">
                     {r.videos?.map((src, i) => (
-                      <div key={`v${i}`} className="relative h-20 w-20 rounded-lg border border-border overflow-hidden bg-black">
+                      <a
+                        key={`v${i}`}
+                        href={src}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="relative h-20 w-20 rounded-lg border border-border overflow-hidden bg-black block"
+                      >
                         <video
                           src={src}
                           className="h-full w-full object-cover"
                           muted
                           playsInline
                           preload="metadata"
-                          onMouseEnter={(e) => (e.target as HTMLVideoElement).play()}
-                          onMouseLeave={(e) => { const v = e.target as HTMLVideoElement; v.pause(); v.currentTime = 0; }}
-                          onClick={(e) => {
-                            const v = e.target as HTMLVideoElement;
-                            if (v.requestFullscreen) v.requestFullscreen();
-                          }}
                         />
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                          <div className="bg-black/50 rounded-full p-1">
-                            <Play className="h-3 w-3 text-white fill-white" />
+                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                          <div className="bg-white/90 rounded-full p-1.5 shadow-md">
+                            <Play className="h-4 w-4 text-black fill-black" />
                           </div>
                         </div>
-                      </div>
+                      </a>
                     ))}
                     {r.images.map((src, i) => (
                       <a key={i} href={src} target="_blank" rel="noopener noreferrer">
