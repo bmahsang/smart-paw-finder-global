@@ -46,7 +46,7 @@ export function InstagramReels() {
           </div>
 
           {loading ? (
-            <div className="flex gap-3 overflow-hidden">
+            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
               {Array.from({ length: 4 }).map((_, i) => (
                 <div
                   key={i}
@@ -55,12 +55,12 @@ export function InstagramReels() {
               ))}
             </div>
           ) : (
-            <div className="flex gap-3 overflow-hidden">
+            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory">
               {reels.map((reel) => (
                 <button
                   key={reel.id}
                   onClick={() => setSelectedReel(reel)}
-                  className="flex-none w-36 aspect-[9/16] relative rounded-xl overflow-hidden bg-muted group cursor-pointer"
+                  className="flex-none w-36 aspect-[9/16] relative rounded-xl overflow-hidden bg-muted group cursor-pointer snap-start"
                 >
                   <img
                     src={reel.thumbnail_url || reel.media_url}
