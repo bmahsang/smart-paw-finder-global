@@ -40,11 +40,13 @@ const Index = () => {
         onCollectionSelect={handleCollectionSelect}
       />
       {showHeroBanner && (
-        <div className="max-w-7xl mx-auto">
-          <HeroBanner />
-          <PopularProducts />
+        <>
+          <div className="max-w-7xl mx-auto">
+            <HeroBanner />
+            <PopularProducts />
+          </div>
           <InstagramReels />
-        </div>
+        </>
       )}
       <main className="max-w-7xl mx-auto pb-20">
         <ProductGrid
