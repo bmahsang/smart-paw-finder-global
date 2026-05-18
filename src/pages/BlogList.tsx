@@ -58,14 +58,14 @@ export default function BlogList() {
           ))}
         </div>
 
-        {/* Featured post — first item large */}
+        {/* Featured post — horizontal layout */}
         {filtered.length > 0 && (
           <Link
             to={`/blog/${filtered[0].slug}`}
             className="group block mb-8"
           >
-            <article className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-md transition-shadow">
-              <div className="aspect-square overflow-hidden bg-secondary">
+            <article className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-md transition-shadow sm:flex">
+              <div className="aspect-square sm:w-60 sm:flex-shrink-0 overflow-hidden bg-secondary">
                 <img
                   src={filtered[0].coverImage}
                   alt={filtered[0].title}
@@ -73,7 +73,7 @@ export default function BlogList() {
                   loading="eager"
                 />
               </div>
-              <div className="p-5 sm:p-6">
+              <div className="p-5 sm:p-6 flex flex-col justify-center">
                 <div className="flex items-center gap-2 mb-3">
                   <Badge variant="secondary" className="text-xs">
                     {filtered[0].category}
@@ -107,7 +107,7 @@ export default function BlogList() {
                 className="group block"
               >
                 <article className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col">
-                  <div className="aspect-square overflow-hidden bg-secondary">
+                  <div className="aspect-[4/3] overflow-hidden bg-secondary">
                     <img
                       src={post.coverImage}
                       alt={post.title}
