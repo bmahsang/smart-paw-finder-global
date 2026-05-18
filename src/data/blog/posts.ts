@@ -347,8 +347,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2026-07-07",
     category: "Lifestyle",
     tags: ["indoor activities", "rainy day", "enrichment", "boredom"],
-    coverImage:
-      "https://www.biteme.co.kr/asset/images/product/original/1000038128_main_074.jpg",
+    coverImage: "/blog/rainy-day-cover.jpg",
     readingTime: 6,
     relatedProducts: [
       { handle: "biteme-baking-day-nosework-playbook", title: "Biteme Baking Day Nosework Playbook" },
