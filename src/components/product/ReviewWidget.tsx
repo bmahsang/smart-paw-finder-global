@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Star } from 'lucide-react';
+import { Star, Play } from 'lucide-react';
 
 interface Review {
   id: string;
@@ -9,6 +9,7 @@ interface Review {
   content_en?: string;
   date: string;
   images: string[];
+  videos?: string[];
 }
 
 function StarRating({ rating }: { rating: number }) {
@@ -90,8 +91,30 @@ export function ReviewWidget({ productNumericId, onCount }: { productNumericId: 
                 {(r.content_en || r.content) && (
                   <p className="text-sm text-muted-foreground whitespace-pre-line">{r.content_en || r.content}</p>
                 )}
-                {r.images.length > 0 && (
+                {(r.images.length > 0 || (r.videos && r.videos.length > 0)) && (
                   <div className="flex flex-wrap gap-2 pt-1">
+                    {r.videos?.map((src, i) => (
+                      <div key={`v${i}`} className="relative h-20 w-20 rounded-lg border border-border overflow-hidden bg-black">
+                        <video
+                          src={src}
+                          className="h-full w-full object-cover"
+                          muted
+                          playsInline
+                          preload="metadata"
+                          onMouseEnter={(e) => (e.target as HTMLVideoElement).play()}
+                          onMouseLeave={(e) => { const v = e.target as HTMLVideoElement; v.pause(); v.currentTime = 0; }}
+                          onClick={(e) => {
+                            const v = e.target as HTMLVideoElement;
+                            if (v.requestFullscreen) v.requestFullscreen();
+                          }}
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                          <div className="bg-black/50 rounded-full p-1">
+                            <Play className="h-3 w-3 text-white fill-white" />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                     {r.images.map((src, i) => (
                       <a key={i} href={src} target="_blank" rel="noopener noreferrer">
                         <img

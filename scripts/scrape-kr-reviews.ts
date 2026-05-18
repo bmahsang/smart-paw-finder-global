@@ -36,6 +36,7 @@ export interface ScrapedReview {
   content: string;
   date: string;
   images: string[];
+  videos: string[];
 }
 
 export interface ProductReviewData {
@@ -137,8 +138,17 @@ function parseCremaReview(item: Record<string, unknown>): ScrapedReview | null {
     }
   }
 
+  const videos: string[] = [];
+  const vidList = item.videos as Record<string, unknown>[] | undefined;
+  if (Array.isArray(vidList)) {
+    for (const vid of vidList) {
+      const src = String(vid.url || vid.video_url || vid.source_url || '');
+      if (src) videos.push(src);
+    }
+  }
+
   if (!id) return null;
-  return { id, rating, name, content, date, images };
+  return { id, rating, name, content, date, images, videos };
 }
 
 function isRecentFile(filePath: string, hours: number): boolean {
