@@ -248,8 +248,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2026-06-16",
     category: "Safety & Care",
     tags: ["summer", "toy safety", "materials", "heat", "latex"],
-    coverImage:
-      "https://www.biteme.co.kr/asset/images/product/original/1000050451_main_074.jpg",
+    coverImage: "/blog/summer-safety-cover.jpg",
     readingTime: 6,
     relatedProducts: [
       { handle: "biteme-aqua-bear-life-vest-2colors", title: "Biteme Aqua Bear Life Vest" },
