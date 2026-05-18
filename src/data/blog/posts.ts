@@ -215,8 +215,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2026-06-09",
     category: "Toy Guide",
     tags: ["tug toys", "fetch toys", "interactive play", "exercise"],
-    coverImage:
-      "https://www.biteme.co.kr/asset/images/product/original/1000054276_main_074.jpg",
+    coverImage: "/blog/tug-vs-fetch-cover.jpg",
     readingTime: 7,
     relatedProducts: [
       { handle: "bite-me-catch-me-tug-fishing-rod-toy-2-types", title: "Biteme Catch Me Tug Fishing Rod Toy" },
