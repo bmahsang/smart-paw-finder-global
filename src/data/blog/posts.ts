@@ -276,8 +276,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2026-06-23",
     category: "Trends",
     tags: ["K-pet", "Korean design", "trends", "Instagram", "aesthetic"],
-    coverImage:
-      "https://www.biteme.co.kr/asset/images/product/original/1000051111_main_074.jpg",
+    coverImage: "/blog/k-pet-trends-cover.jpg",
     readingTime: 5,
     relatedProducts: [
       { handle: "biteme-x-munyu-pukupuku-latex-toy-3pcs", title: "Biteme X Munyu Pukupuku Latex Toy" },
