@@ -486,8 +486,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2026-07-28",
     category: "Toy Guide",
     tags: ["play style", "behavior", "toy selection", "instincts"],
-    coverImage:
-      "https://www.biteme.co.kr/asset/images/product/original/1000051111_main_074.jpg",
+    coverImage: "/blog/play-style-cover.jpg",
     readingTime: 8,
     relatedProducts: [
       { handle: "biteme-fluffy-friends-multi-pack-ball-toy-3pcs", title: "Biteme Fluffy Friends Multi-Pack Ball Toy" },
