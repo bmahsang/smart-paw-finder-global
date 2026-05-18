@@ -65,7 +65,7 @@ export default function BlogList() {
             className="group block mb-8"
           >
             <article className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-md transition-shadow">
-              <div className="aspect-[4/3] sm:aspect-[2/1] overflow-hidden bg-secondary">
+              <div className="aspect-square overflow-hidden bg-secondary">
                 <img
                   src={filtered[0].coverImage}
                   alt={filtered[0].title}
@@ -107,7 +107,7 @@ export default function BlogList() {
                 className="group block"
               >
                 <article className="bg-card rounded-xl border border-border overflow-hidden hover:shadow-md transition-shadow h-full flex flex-col">
-                  <div className="aspect-[4/3] overflow-hidden bg-secondary">
+                  <div className="aspect-square overflow-hidden bg-secondary">
                     <img
                       src={post.coverImage}
                       alt={post.title}

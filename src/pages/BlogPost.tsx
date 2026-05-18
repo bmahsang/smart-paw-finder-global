@@ -203,7 +203,7 @@ export default function BlogPost() {
         </button>
 
         {/* Cover */}
-        <div className="aspect-[4/3] sm:aspect-[3/2] rounded-xl overflow-hidden bg-secondary mb-6">
+        <div className="aspect-square rounded-xl overflow-hidden bg-secondary mb-6">
           <img
             src={post.coverImage}
             alt={post.title}

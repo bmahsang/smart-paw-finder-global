@@ -12,8 +12,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2026-06-02",
     category: "Toy Guide",
     tags: ["nosework", "puzzle toys", "mental stimulation", "enrichment"],
-    coverImage:
-      "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/58/48/89/image1/716dbeb21a6303c7.webp",
+    coverImage: "/blog/nosework-guide-cover.jpg",
     readingTime: 8,
     relatedProducts: [
       { handle: "biteme-cupcake-nosework-toy", title: "Biteme Cupcake Nosework Toy", level: "Beginner" },
