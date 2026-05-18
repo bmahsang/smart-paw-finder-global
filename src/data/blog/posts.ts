@@ -307,8 +307,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2026-06-30",
     category: "Health & Care",
     tags: ["dental health", "dental toys", "plaque", "chew toys"],
-    coverImage:
-      "https://www.biteme.co.kr/asset/images/product/original/1000040909_main_074.jpg",
+    coverImage: "/blog/dental-health-cover.jpg",
     readingTime: 7,
     relatedProducts: [
       { handle: "biteme-dentistick-soft-original-dental-chew-2types", title: "Biteme Dentistick Soft Original Dental Chew" },
