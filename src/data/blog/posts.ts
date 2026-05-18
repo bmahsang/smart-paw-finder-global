@@ -537,8 +537,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2026-08-04",
     category: "Beginner",
     tags: ["first dog", "starter kit", "new owner", "essentials"],
-    coverImage:
-      "https://www.biteme.co.kr/asset/images/product/original/1000049178_main_074.jpg",
+    coverImage: "/blog/starter-kit-cover.jpg",
     readingTime: 6,
     relatedProducts: [
       { handle: "biteme-cupcake-nosework-toy", title: "Biteme Cupcake Nosework Toy", level: "Enrichment" },
