@@ -400,8 +400,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2026-07-14",
     category: "Gear Guide",
     tags: ["harness", "sizing", "walking gear", "fit guide"],
-    coverImage:
-      "https://www.biteme.co.kr/asset/images/product/original/1000029472_main_074.jpg",
+    coverImage: "/blog/harness-guide-cover.jpg",
     readingTime: 7,
     relatedProducts: [
       { handle: "biteme-comfort-harness-v2-3-types", title: "Biteme Comfort Harness v2" },
