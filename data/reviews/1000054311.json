@@ -1,8 +1,590 @@
 {
   "product_cd": "1000054311",
-  "scraped_at": "2026-05-18T05:35:47.196Z",
-  "total": 50,
+  "scraped_at": "2026-05-18T05:42:18.194Z",
+  "total": 69,
   "reviews": [
+    {
+      "id": "609563",
+      "rating": 5,
+      "name": "네****",
+      "content": "아직 갖고놀게 하진 않았는데 내구성도 좋아보이고,\n난이도도 꽤 높아보여서 만족스러워요!\n직장인이라 아침마다 이런 노즈워크들을 해주고 가곤 하는데 만들어주는 시간 비례해서 오랫동안 갖고놀 수 있을 것 같아요!",
+      "date": "2026-05-07T21:06:12+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/95/63/image1/9983078d3d42e87c.webp"
+      ],
+      "content_ja": "まだ遊ばせていないんですが、耐久性も良さそうで、難易度もかなり高く見えるので満足です！会社員なので毎朝こういったノーズワークをさせてから出かけるんですが、作るのにかかった時間に比例して、長く遊べそうですね！",
+      "content_en": "Haven't let my pup play with it yet, but it looks really durable and seems quite challenging, so I'm really satisfied! Since I work full-time, I do these nose work puzzles with my pup every morning before leaving, and I think they'll be able to enjoy it for a long time proportional to the effort I put into setting it up!",
+      "videos": []
+    },
+    {
+      "id": "609596",
+      "rating": 5,
+      "name": "네****",
+      "content": "겁나잘하네요! 잘돌고 뱅글뱅글",
+      "date": "2026-05-07T17:15:04+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/95/96/image1/4173eae37a570413.webp"
+      ],
+      "content_ja": "すごくいいですね！よく回るし、ぐるぐる回ります😄",
+      "content_en": "This thing works amazingly! It spins really well and goes round and round 🎵",
+      "videos": []
+    },
+    {
+      "id": "609254",
+      "rating": 5,
+      "name": "김****",
+      "content": "임시보호하는 코카를 위해 구매했는데 집에 있던 쪼꼬미 식탐대마왕이 혼자 박박 긁더니 바로 적응해버렸어요… 너무 귀여워요ㅠㅜㅋㅋㅋㅋㅋ",
+      "date": "2026-05-06T22:04:25+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/92/54/image1/535ce44456344f6c.webp",
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/92/54/image2/722f3e41a52d09e1.webp",
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/92/54/image3/6f313468a145bd78.webp",
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/92/54/image4/20a79f8df7b731b0.webp"
+      ],
+      "content_ja": "一時保護しているコッカーのために買ったんですが、家にいた小さな食いしん坊の女王様が一人でがりがり引っ掻いたら、すぐに適応してしまいました…可愛すぎますㅠ_ㅠ笑笑笑笑",
+      "content_en": "I bought this for a foster Cocker Spaniel, but my little food-obsessed pup at home started scratching away at it and adapted to it right away... She's just too cute 😭😭ㅋㅋㅋㅋㅋ",
+      "videos": []
+    },
+    {
+      "id": "608888",
+      "rating": 5,
+      "name": "네****",
+      "content": "강아지가 재미있어 합니다",
+      "date": "2026-05-05T15:16:49+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/88/88/image1/d2cd850aeeb3b51e.webp"
+      ],
+      "content_ja": "愛犬が楽しく遊んでいます",
+      "content_en": "My dog has a lot of fun with it!",
+      "videos": []
+    },
+    {
+      "id": "608941",
+      "rating": 5,
+      "name": "네****",
+      "content": "너무 앙증맞고 잘가지고놀아요ㆍ바로세척했어요",
+      "date": "2026-05-05T10:35:02+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/89/41/image1/afb3ea69f10d09ab.webp"
+      ],
+      "content_ja": "とてもキュートで、よく遊んでます。すぐに洗浄しました",
+      "content_en": "It's so adorable and my pup plays with it so well ♡ Washed it right away!",
+      "videos": []
+    },
+    {
+      "id": "608968",
+      "rating": 5,
+      "name": "네****",
+      "content": "잘 가지고 놀아요~!",
+      "date": "2026-05-04T23:49:22+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/89/68/image1/39848f43a79f6033.webp"
+      ],
+      "content_ja": "よく遊んでいます～！",
+      "content_en": "My dog plays with it really well~!",
+      "videos": []
+    },
+    {
+      "id": "608978",
+      "rating": 5,
+      "name": "네****",
+      "content": "노즈워크 하라구 샀는데 강아지가 큰 관심이 없어요 ㅠ",
+      "date": "2026-05-04T22:35:58+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/89/78/image1/257cf96be30837f6.webp"
+      ],
+      "content_ja": "ノーズワーク用に買ったんですが、うちの子があまり関心を持たなくて ㅠ",
+      "content_en": "I bought it for nose work, but my dog doesn't seem very interested in it ㅠ",
+      "videos": []
+    },
+    {
+      "id": "609044",
+      "rating": 3,
+      "name": "네****",
+      "content": "원래 오리팡 하다가 이거로 새롭게 바꾸어 줬는데요. 그냥 이제는 어지간한건 교육이 필요없는지 그냥 해주자 마자 바로 하네요. 문제는 간식이 돌리면 싹 나와야 하는데 잘 나오지 않아서 털어야 나와요. 세척도 수월하고 그부분은 위생적이지만 간식이 뭔가 흔들어야 나오는 편이라 이게 좀 불편하네요.",
+      "date": "2026-05-04T12:34:28+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/90/44/image1/ffe4d2b7bb0036d1.webp"
+      ],
+      "content_ja": "もともとオリパン（オリジナルパズル）で遊ばせていたんですが、これに新しく替えました。今ではかなりのものは訓練が不要なのか、与えたらすぐにやってくれます。問題は、おやつを回すと全部出なきゃいけないんですが、あまり出てこないので振る必要があります。洗浄は簡単で衛生的な部分はいいんですが、おやつが何か振らないと出ない感じなので、この点が少し不便ですね。",
+      "content_en": "We were using the duck puzzle toy before, but switched to this one. Now my pup barely needs any training—she just does it right away! The only issue is that the treats should come out when you spin it, but they don't come out easily and I have to shake it out. Cleaning is convenient and that part is hygienic, but it's a bit inconvenient that the treats require shaking to come out.",
+      "videos": []
+    },
+    {
+      "id": "608318",
+      "rating": 1,
+      "name": "네****",
+      "content": "저희 강쥐가 토끼랑 결합부분을 이로 부셨아용 ㅠ\n내구성이 아쉽네요ㅠㅠ",
+      "date": "2026-04-30T23:56:21+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/83/18/image1/ff130014eddeed39.webp"
+      ],
+      "content_ja": "うちのワンちゃんがウサギと接続部分を歯で噛み砕いちゃいました ㅠ耐久性が残念です ㅠ_ㅠ",
+      "content_en": "My pup chewed through the connector part between the rabbit section 😭 The durability is disappointing 😭😭",
+      "videos": []
+    },
+    {
+      "id": "608333",
+      "rating": 5,
+      "name": "네****",
+      "content": "열심히 돌립니다\n귀엽습니다\n근데 난이도가 쉬워요",
+      "date": "2026-04-30T20:54:26+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/83/33/image1/ed3c9812750e54bf.webp"
+      ],
+      "content_ja": "一生懸命回します\n可愛いです\nでも難易度は簡単ですね",
+      "content_en": "She spins it really hard 💪 It's adorable 🥰 But the difficulty level is a bit too easy 😕",
+      "videos": []
+    },
+    {
+      "id": "608062",
+      "rating": 2,
+      "name": "네****",
+      "content": "강아지가 세로로 하는 건 잘하는데 가로로 하는 건 약간 무서워 하고 잘 안 나오니까 재미없어 하고 잘 안 하네요",
+      "date": "2026-04-30T11:42:52+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/80/62/image1/35862e7170a11a31.webp"
+      ],
+      "content_ja": "ワンちゃんは縦方向はよくできるんですが、横方向は少し怖がって上手く出せないみたいで、つまらなく感じているのか、あまりやらないんですよね",
+      "content_en": "My dog is good at doing it vertically, but he's a bit scared of doing it horizontally and doesn't come out well, so he doesn't find it fun and doesn't really use it.",
+      "videos": []
+    },
+    {
+      "id": "607770",
+      "rating": 5,
+      "name": "한****",
+      "content": "멀뚱 멀뚱 쳐다보다가. 어떡하지....하고 주의관찰 중이에요~~~!!배송 빠릅니다.",
+      "date": "2026-04-28T19:42:05+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/77/70/image1/bd0321bc93e600cd.webp"
+      ],
+      "content_ja": "ぼーっと見つめてから。どうしたもんか…って感じで様子を見守り中です~~~!!配送が早いです。",
+      "content_en": "He just stares blankly like 'what do I do...?' and I'm keeping an eye on him~~~!! Shipping was super fast.",
+      "videos": []
+    },
+    {
+      "id": "607991",
+      "rating": 4,
+      "name": "네****",
+      "content": "일단 너무 귀엽게 생겼습니다 ㅋㅋㅋ애기들이랑도 잘 어울리고 분리 세척가능한 점도 아주 마음에 들구요!! 다만 아쉬운건 애들이 금방 적응을 해서 금방 빼먹는다는거..? ㅋㅋㅋ 가격이 살짝 아쉽긴하지만 만족입니다 !",
+      "date": "2026-04-28T12:45:13+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/79/91/image1/446db82efadc5a43.webp"
+      ],
+      "content_ja": "まず、すごくかわいい見た目です😂😂赤ちゃんたちとも相性いいし、分離洗浄できるのもすごく気に入ってます!!ただ残念なのは、子たちがすぐに慣れちゃってすぐ取り出しちゃうってところですかね…？😂😂お値段が少し惜しい気もしますが、満足です！",
+      "content_en": "First of all, it's absolutely adorable lol 😂 It goes great with the kids and I love that it's detachable and washable!! The only downside is the kids adapt so quickly that they figure it out fast...? lol The price is a bit steep but I'm satisfied!",
+      "videos": []
+    },
+    {
+      "id": "607122",
+      "rating": 5,
+      "name": "네****",
+      "content": "강아지가 빨리 터득하면서\n재미있게 하는 노즈워크예요",
+      "date": "2026-04-25T22:00:47+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/71/22/image1/59a195585b157fed.webp"
+      ],
+      "content_ja": "ワンちゃんが素早く習得して、楽しそうにやってるノーズワークです",
+      "content_en": "My dog picks it up quickly and has fun playing with this nose work toy!",
+      "videos": []
+    },
+    {
+      "id": "606926",
+      "rating": 5,
+      "name": "네****",
+      "content": "곰돌이 너무 잘쓰고있어서 토끼도 구매! 똥강쥐 생일이라서요 ㅎㅎ 다른애들은 손으로 잘 돌리는데 우리개는 코로 머리로,,,, 토끼는 아직 어색한지 잘 못하네용 얘도 좀있음 머리로 돌리겠쥬 ㅋㅋㅋ곰돌이는 하도 많이 해서 벌써 삐걱비걱해요 세척 두번 했는데 밑판에 고무도 다 빠지구 ㅜㅜ 토끼가 내구성이 더 좋아보여서 다행이라능!!",
+      "date": "2026-04-24T22:59:46+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/69/26/image1/576dc2098bb3e373.webp"
+      ],
+      "content_ja": "くま君をすごく活用してるから、ウサギも購入しちゃった！うちの子の誕生日だからね😎他の子たちは手でよく回すんですが、うちの子は鼻で頭で…ウサギはまだ慣れていないのか上手くできてません。でもそのうち頭で回すようになるでしょう😂😂くま君はあまりにもたくさんやってるからもう軋んでますよ😭😭2回洗ったのに底板のゴムもすっかり取れちゃって😭😭ウサギの方が耐久性が良さそうで助かってます！",
+      "content_en": "We use the bear one so much that we got the rabbit one too! It's our pup's birthday hehe 😄 The other dogs spin it well with their paws, but ours uses his nose and head... The rabbit one seems unfamiliar so he's not doing it well yet, but he'll get the hang of it soon lol The bear one gets creaky already from so much use 😭 I've washed it twice and the rubber on the bottom is already coming off 😭 I'm just relieved the rabbit one seems more durable!!",
+      "videos": []
+    },
+    {
+      "id": "606929",
+      "rating": 5,
+      "name": "네****",
+      "content": "아직 무는게 더 익숙한 4개월 아기 강아지예요. 그래도 입으로 물면서 돌리다가 손으로도 돌려보고 해요! 두뇌 발달이 잘 되었으면 좋겠어요. 토끼 디자인도 색감도  예쁘고 이갈이 하느라 잘 무는 아기강아지에게도 튼튼해보이는 내구성이라 좋아요. 리뷰쓰는 지금도 한참 가지고 놀고 있어요! 강아지 놀이용으로 강추입니다!!",
+      "date": "2026-04-24T22:42:23+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/69/29/image1/1524e5a8fabc92eb.webp"
+      ],
+      "content_ja": "まだ噛むことが得意な生後4か月の赤ちゃんワンちゃんです。それでも口で噛みながら回してから手でも回してみたり！脳の発達がしっかり進むといいな。ウサギのデザインも色合いもかわいいし、歯が生える時期でよく噛む赤ちゃんワンちゃんにも丈夫そうな耐久性で良いですね。このレビューを書いてる今も、ずっと遊んでますよ！ワンちゃんのおもちゃとして、強くおすすめです！！",
+      "content_en": "He's a 4-month-old puppy who's still more used to biting. But he bites and spins it with his mouth, and also tries spinning it with his paws! I hope it helps with his brain development. The rabbit design and colors are pretty, and for a teething puppy who bites a lot, the durability looks really solid. He's still playing with it as I write this review! Highly recommend for puppy playtime!!",
+      "videos": []
+    },
+    {
+      "id": "606946",
+      "rating": 5,
+      "name": "네****",
+      "content": "이 전것도 있는데 이게 더 묵직하네요 그리고 더 잘갖고 노는것같아요 ㅋㅋㅋ 구멍도 세개라 좋아요",
+      "date": "2026-04-24T20:23:15+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/69/46/image1/11e29f98789fbaf8.webp"
+      ],
+      "content_ja": "前のやつもあるんですが、これはもっとずっしりしてますね。そして、もっと上手に遊んでる感じです😂😂穴も3つあるのが良いですね",
+      "content_en": "I have the previous version too, but this one is heavier and he seems to play with it even better lol And I like that there are three holes!",
+      "videos": []
+    },
+    {
+      "id": "605973",
+      "rating": 4,
+      "name": "네****",
+      "content": "아직사용전이라 이쁘긴하네요",
+      "date": "2026-04-22T20:46:42+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/59/73/image1/0ca23fa03582fffe.webp"
+      ],
+      "content_ja": "まだ使用前なのできれいですね",
+      "content_en": "Haven't used it yet so it looks nice.",
+      "videos": []
+    },
+    {
+      "id": "606391",
+      "rating": 5,
+      "name": "네****",
+      "content": "금방 터득해서 간식 금방 빼먹어요 ㅠ 그래서 잘 가지고 놀아서 꾸준히 사용중이네요",
+      "date": "2026-04-20T21:20:24+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/63/91/image1/c3e5fd4629826435.webp"
+      ],
+      "content_ja": "すぐに習得して、おやつをすぐに取り出しちゃいます😭だからよく遊んでくれるので、継続して使ってますね",
+      "content_en": "He figured it out quickly so he gets the treats out fast 😢 But since he plays with it a lot, we're using it consistently.",
+      "videos": []
+    },
+    {
+      "id": "606531",
+      "rating": 4,
+      "name": "네****",
+      "content": "잘 사용하고있어요~",
+      "date": "2026-04-19T00:44:05+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/65/31/image1/f24c67a5689d7640.webp"
+      ],
+      "content_ja": "よく使ってますよ〜",
+      "content_en": "Using it well~",
+      "videos": []
+    },
+    {
+      "id": "606639",
+      "rating": 5,
+      "name": "네****",
+      "content": "금방 빼먹네요~~ㅎㅎ",
+      "date": "2026-04-17T17:24:56+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/66/39/image1/5aa740ae0ba39a74.webp"
+      ],
+      "content_ja": "すぐになくなっちゃいますね~~ㅎㅎ",
+      "content_en": "She finishes it so quickly~~ㅎㅎ",
+      "videos": []
+    },
+    {
+      "id": "606643",
+      "rating": 4,
+      "name": "네****",
+      "content": "우리 강쥐는 두번째 시도만에 앞발로 돌리네요ㅋㅋ",
+      "date": "2026-04-17T17:07:22+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/66/43/image1/20474746e72b881a.webp"
+      ],
+      "content_ja": "うちの子、2回目の挑戦で前足で回しちゃいましたㅋㅋ",
+      "content_en": "Our pup figured it out on just the second try with his front paws ㅋㅋ",
+      "videos": []
+    },
+    {
+      "id": "606654",
+      "rating": 5,
+      "name": "네****",
+      "content": "좋습니당~ㅎㅎ\n예전에 세로로된 바잇미 제품 썼는데\n이거는 또 다른 버전이라 구매햇어요 ㅎㅎ\n튼튼하고요~ 꽤 크네요~~!!\n귀엽고 좋아요ㅎㅎ\n저희 댕댕이 노즈워크 만렙이라 아주 잘 갖고 놉니다~^^",
+      "date": "2026-04-17T14:05:03+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/66/54/image1/a942983146b16dac.webp"
+      ],
+      "content_ja": "良いですよ~ㅎㅎ\n前に縦型のバイトミ製品を使ってたんですが、\nこれは別バージョンなので買ってみましたㅎㅎ\n丈夫で、結構大きいですね~~!!\n可愛くて良いですㅎㅎ\nうちのわんこはノーズワークマスターなので、すごく上手に遊んでます~^^",
+      "content_en": "Love it~ㅎㅎ\nI used the vertical BITE ME product before, but this is a different version so I got this one ㅎㅎ\nIt's sturdy~ and pretty big~~!!\nIt's cute and great ㅎㅎ\nMy doggy is a nose work pro so he's playing with it really well~^^",
+      "videos": []
+    },
+    {
+      "id": "605311",
+      "rating": 3,
+      "name": "최****",
+      "content": "생각보다 완전분해 세척이 되는건 아니어서 아쉬워요. 나사나 베어링 있는 부분은 물티슈로만 닦아야 하나봐요.",
+      "date": "2026-04-07T19:58:05+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/53/11/image1/03a5a30e5c259002.webp",
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/53/11/image2/e647645181dece96.webp"
+      ],
+      "content_ja": "思ったより完全分解して洗えないのが残念です。ネジやベアリングがある部分は除菌シートで拭くだけになっちゃうみたいですね。",
+      "content_en": "Unfortunately it's not completely disassembled for cleaning like I thought. It looks like I can only wipe the parts with screws and bearings with a wet wipe.",
+      "videos": []
+    },
+    {
+      "id": "604973",
+      "rating": 5,
+      "name": "최****",
+      "content": "우리 강아지가 너무 패버서 토끼가 너무 불쌍할 지경이에요ㅠㅠ",
+      "date": "2026-03-30T00:26:06+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/49/73/image1/93d2da9557d876c3.webp"
+      ],
+      "content_ja": "うちの子がすごくハマっちゃって、ウサギがかわいそうなぐらいですㅠㅠ",
+      "content_en": "My pup is so rough with toys that I feel bad for the bunny toy ㅠㅠ",
+      "videos": []
+    },
+    {
+      "id": "604195",
+      "rating": 5,
+      "name": "네****",
+      "content": "오자마자 바로 터득해서 잘 가지고놀아요.\n대부분 장난감이 바잇미인데 하나같이 귀엽고 이뻐요",
+      "date": "2026-03-15T21:53:41+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/41/95/image1/7e33d3f88cc771a5.webp"
+      ],
+      "content_ja": "すぐにコツをつかんで上手に遊んでます。\nほとんどのおもちゃがバイトミなんですが、どれもかわいくて素敵ですよ",
+      "content_en": "She picked it up right away and plays with it really well.\nMost of our toys are BITE ME and they're all so cute and pretty",
+      "videos": []
+    },
+    {
+      "id": "604229",
+      "rating": 5,
+      "name": "네****",
+      "content": "재밌게 잘가지고 놀아서 만족해요",
+      "date": "2026-03-15T17:40:34+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/42/29/image1/9f48455f46c6a246.webp"
+      ],
+      "content_ja": "楽しく遊んでくれるので満足です",
+      "content_en": "She plays with it so fun and I'm satisfied with it",
+      "videos": []
+    },
+    {
+      "id": "604254",
+      "rating": 5,
+      "name": "네****",
+      "content": "다람쥐가 두뇌 장난감 처음이였는데 그때는 소심 겁쟁이라 장난감 적응에 며칠 걸리더라구요. 근데 이제 다람쥐 마스터해서 터끼주니 바로 잘 돌립니다. 역시 계속 자극주고 해봐야 늘죠! 토끼가 훨씬 안정감있고 집중을 더 잘하네요👍",
+      "date": "2026-03-15T12:32:35+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/42/54/image1/a3961081f443a20e.webp"
+      ],
+      "content_ja": "リスが知育玩具を初めて使う時は、臆病で怖がりだったから、おもちゃに慣れるのに数日かかったんですが。今はリスがマスターしちゃったからウサギをあげると、すぐ上手に回します。やっぱり継続して刺激を与えることが大事ですね！ウサギの方がずっと安定感があって、集中力も高いですね👍",
+      "content_en": "This was squirrel's first brain toy, and back then he was shy and timid so it took a few days to get used to it. But now that squirrel has mastered it, when I give him the bunny one he spins it right away. You really do improve with continuous stimulation! The bunny is much more stable and helps with concentration better 👍",
+      "videos": []
+    },
+    {
+      "id": "604303",
+      "rating": 5,
+      "name": "네****",
+      "content": "어떤 원리로 간식이 내려오는건지는\n모르겠으나 어찌저찌 먹네요",
+      "date": "2026-03-14T19:40:21+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/43/03/image1/0dbb86b38e7d8828.webp"
+      ],
+      "content_ja": "どういう仕組みでおやつが落ちてくるのか\nよくわかりませんが、なんとか食べてますね",
+      "content_en": "I don't really understand how the treats come out,\nbut somehow he gets them",
+      "videos": []
+    },
+    {
+      "id": "604314",
+      "rating": 5,
+      "name": "네****",
+      "content": "울 호두가 넘 잘가지고 놀아요\n사료 잘 안먹는데 간식이랑 사료랑 같이 넣어두면\n사료도 먹네요 \n하루에 한번 내어주고 돌려돌려 타임~~ \n역시 바잇미는 믿고 구매!!!!",
+      "date": "2026-03-14T16:46:17+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/43/14/image1/7e3a8ae378cb9413.webp"
+      ],
+      "content_ja": "うちのクルミが本当に上手に遊んでます\nドッグフードをあまり食べないんですが、おやつとフードを一緒に入れておくと\nフードも食べるんですよ\n1日1回出して、くるくるタイム~~\nやっぱりバイトミは信頼して購入!!!!",
+      "content_en": "My Hodu plays with it so well\nHe doesn't eat his kibble well, but when I put treats and kibble together in it,\nhe eats the kibble too\nI give it to him once a day - round and round we go~~\nBITE ME is definitely trustworthy!!!!",
+      "videos": []
+    },
+    {
+      "id": "603799",
+      "rating": 4,
+      "name": "네****",
+      "content": "세척이 간편해서 좋아요. 오랫동안 먹길 바랬는데 금방 먹어 치우네요 ㅎ",
+      "date": "2026-03-13T09:42:47+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/37/99/image1/e64eca13ec1f9759.webp"
+      ],
+      "content_ja": "洗浄が簡単で良いですね。長く食べてくれることを望んでいたのですが、すぐに食べ終わってしまいます ㅎ",
+      "content_en": "It's great because it's easy to clean. I was hoping he'd enjoy it for a long time, but he finished it so quickly 😄",
+      "videos": []
+    },
+    {
+      "id": "603833",
+      "rating": 5,
+      "name": "네****",
+      "content": "강이지가 환장하는 바잇미 브레이닝 토이 토끼🐰\n노즈워크 좋아하는 강아지로써 간식이 없음에도 간식 나올때까지 계속 돌려요..진짜..강아지가 수시로 돌려서 숨겨놓을지경;; 동영상보면 이해가실듯,,",
+      "date": "2026-03-12T21:48:06+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/38/33/image1/ccc818c86c8b4430.webp"
+      ],
+      "content_ja": "カンイジがハマっているバイトミ ブレイニング トイ ウサギ🐰\nノーズワークが好きなワンちゃんなので、おやつがなくてもおやつが出るまでずっと回し続けます..本当に..ワンちゃんが何度も回して隠してしまうほど;; 動画を見れば分かると思いますが,,",
+      "content_en": "Gangyi absolutely goes crazy for the BITE ME Braining Toy Rabbit 🐰 As a dog who loves nosework, even without treats he keeps spinning it until treats come out... seriously... my dog spins it constantly and hides it away 😅 You'll understand if you watch the video!",
+      "videos": []
+    },
+    {
+      "id": "603840",
+      "rating": 4,
+      "name": "네****",
+      "content": "곰돌이 노즈워크 엄청 잘 쓰다가\n이번에 새로 나온다해서 바로 구매했습니다!\n귀여워서 구매한 것도 있는데\n노즈워크로 너무 잘하고 있어요",
+      "date": "2026-03-12T20:03:14+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/38/40/image1/c2851fc47a5f109e.webp"
+      ],
+      "content_ja": "クマのノーズワークをかなり愛用していたので、今回新しく出るということで即座に購入しました！\nかわいいので購入したというのもありますが\nノーズワークとしても本当に良く使っています。",
+      "content_en": "Gomdoli was doing so well with the nosework toy, so when they released a new one I bought it right away! I got it partly because it's cute, but he's doing really well with the nosework 😊",
+      "videos": []
+    },
+    {
+      "id": "603852",
+      "rating": 5,
+      "name": "네****",
+      "content": "묵지해서 흔들리멊고 안정감있어\n좋습니다\n부드럽게 잘 돌아가서 간식도 잘 나와요~\n새로운 장난감에 흥미있어 합니다~",
+      "date": "2026-03-12T17:33:22+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/38/52/image1/a9a6d76d725ba94e.webp"
+      ],
+      "content_ja": "しっかりしていて揺れにくく安定感があって\n良いです\n滑らかによく回るので、おやつもよく出ます～\n新しいおもちゃに興味を示しています～",
+      "content_en": "It's sturdy and doesn't wobble when chewed, giving a solid feel - it's great! It rotates smoothly and treats come out nicely~ He's showing interest in this new toy~",
+      "videos": []
+    },
+    {
+      "id": "603692",
+      "rating": 5,
+      "name": "정****",
+      "content": "임보 중인 강아지를 위해 준비했어요! 출근할 동안 잘 가지고 놀고 어려워서 시간도 오래 걸려요👍",
+      "date": "2026-03-12T15:13:34+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/36/92/image1/bbf6f85ce84362b6.webp"
+      ],
+      "content_ja": "保護犬のために用意しました！出勤中もよく遊んでくれて、難しいので時間もかかります👍",
+      "content_en": "I got it for a foster dog I'm caring for! He plays with it well while I'm at work, and since it's challenging it keeps him entertained for a long time 👍",
+      "videos": []
+    },
+    {
+      "id": "603689",
+      "rating": 5,
+      "name": "오****",
+      "content": "첨엔 먼가 허고 열심히 들여다 보다가 방법을 알려주니. .잘 가지고 놀아요. .근데. .간식이 갑자기 확 나왔다가 잘 안나왔다가 하는거같아요. .\n이거이 정상인건지 불량인건지 당최 알수가없네영. .ㅋ",
+      "date": "2026-03-12T12:51:26+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/36/89/image1/1060d449244ca60d.webp",
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/36/89/image2/0e304327974ee669.webp",
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/36/89/image3/e5f8ee515e45e5bf.webp"
+      ],
+      "content_ja": "最初は何か物足りなく見えて、一生懸命見つめていたのですが、使い方を教えたら..よく遊んでくれます..ですが..おやつが急に出たり、出なくなったりするみたいです..\nこれが正常なのか不良なのか全く分かりません..ㅋ",
+      "content_en": "At first he was confused and just stared at it intensely, but once I showed him how it works he plays with it well. But... the treats seem to come out all at once sometimes and then not at all other times? I honestly can't tell if this is normal or defective lol",
+      "videos": []
+    },
+    {
+      "id": "603916",
+      "rating": 5,
+      "name": "네****",
+      "content": "다람쥐보다는 좀 어려워해서 낑낑대요 ㅋㅋㅋ 엄마가 돌려주면 옆에서 얻어먹습니다 ,,",
+      "date": "2026-03-12T01:25:21+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/39/16/image1/3545ea8be0603141.webp"
+      ],
+      "content_ja": "リスの方が少し難しいみたいで唸ったりしています ㅋㅋㅋ ママが回してあげると横で分けてもらいます,,",
+      "content_en": "It's a bit harder than the squirrel toy so he whines at it 😅 But when mom spins it, he eats the treats that fall out on the side",
+      "videos": []
+    },
+    {
+      "id": "603944",
+      "rating": 5,
+      "name": "네****",
+      "content": "기존에 다람쥐 쓰고 있었는데 토끼도 나왔길래 구매했어요 바잇미 장난감들은 튼튼해서 좋아요",
+      "date": "2026-03-11T20:29:06+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/39/44/image1/e9cfdba5ec8e252c.webp"
+      ],
+      "content_ja": "それまでリスを使っていたのですが、ウサギも出たので購入しました。バイトミのおもちゃは丈夫で良いですね。",
+      "content_en": "I was already using the squirrel toy, so when they came out with the rabbit I bought it too. BITE ME toys are great because they're durable",
+      "videos": []
+    },
+    {
+      "id": "603945",
+      "rating": 5,
+      "name": "네****",
+      "content": "저희 아기가 노즈워크를 너무 좋아해서 신상나오면 사는 편인데 다른것보다 까까가 막 나오지않고 시간을 좀 끌어줘서 저한테도 만족이예요ㅋㅋ 재미나게 잘갖고 널아요~ 또 강쥐들이 즐길수 있는 장난감 마니 만들어주세요",
+      "date": "2026-03-11T20:28:21+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/39/45/image1/1252a0b58577331f.webp"
+      ],
+      "content_ja": "うちの子がノーズワークが本当に好きなので、新作が出たら買う派なのですが、他のものより餌がなかなか出ず、時間をかけてくれるので私にとっても満足です ㅋㅋ 楽しく上手に遊んでいます～ また犬たちが楽しめるおもちゃをたくさん作ってください。",
+      "content_en": "My baby loves nosework so much that I buy new ones whenever they come out, but this one doesn't dispense treats too easily and makes the game last longer, which I love too haha He's playing with it happily~ Please make more fun toys for our pups!",
+      "videos": []
+    },
+    {
+      "id": "603984",
+      "rating": 5,
+      "name": "네****",
+      "content": "감사히 잘 받있어요~~",
+      "date": "2026-03-11T15:18:55+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/39/84/image1/49386f7ee90cfc62.webp"
+      ],
+      "content_ja": "ありがとうございます。よく受け取りました~~",
+      "content_en": "Thank you, we're really enjoying it~~",
+      "videos": []
+    },
+    {
+      "id": "603997",
+      "rating": 5,
+      "name": "네****",
+      "content": "간식이 너무 쉽게 잘나와요\n근데 너무 귀여워요",
+      "date": "2026-03-11T11:03:05+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/39/97/image1/78027871fb277a70.webp"
+      ],
+      "content_ja": "おやつが本当に出しやすいですね\nでもめちゃくちゃ可愛いです",
+      "content_en": "The treats come out so easily! But it's so cute 🥰",
+      "videos": []
+    },
+    {
+      "id": "603998",
+      "rating": 5,
+      "name": "네****",
+      "content": "아이가 잘가지고 놀아요",
+      "date": "2026-03-11T11:00:22+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/39/98/image1/6d39f8fc0e3a93ad.webp"
+      ],
+      "content_ja": "子どもがよく遊んでくれます",
+      "content_en": "My pup loves playing with it!",
+      "videos": []
+    },
+    {
+      "id": "603645",
+      "rating": 5,
+      "name": "박****",
+      "content": "가지고 놀던 노즈워크 장남감이 망가져서 새 장난감을 찾던 중 발견한 스핀토이를 그동안 관찰하고 이거 괜찮겠다 싶어서 구입했어요. 주말에 주문하고 기다리고 기다리다 받은 스핀토이를 루나가 너무 좋아해요. 한번 빙글빙글 돌리는거 보더니 바로 알아서 돌리길래 간식 몇 개 넣어주었더니 더 신나게 돌리네요. 다 먹고도 몇 번 더 반복해서 간식을 넣어주고 돌리며 먹다가 빈 장난감을 계속 돌리고 놀았어요.  내일 또 하자고 치우는데 계속 반짝이는 눈을 하고 따라오네요. 짧은 시간 얼마나 잘 놀았는지 침대에 눕더니 잠꼬대까지 하고 자더라구요. 꿈에서도 돌리나 했네요. ㅎㅎ",
+      "date": "2026-03-11T10:37:23+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/36/45/image1/dab10e5b3ee4a1f3.webp",
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/36/45/image2/e37264d02108cfbd.webp",
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/36/45/image3/43f7b22b7f7b6723.webp"
+      ],
+      "content_ja": "今まで使っていたノーズワークおもちゃが壊れてしまったので、新しいおもちゃを探していた時にスピントイを見つけました。ずっと様子を見ていて、これなら良さそうだと思って購入しました。週末に注文してから待って待ってようやく手に入ったスピントイを、ルナがめちゃくちゃ気に入ってくれています。一度クルクル回すのを見たら、すぐに仕組みを理解して自分で回し始めたので、おやつを数個入れてあげたら、もっと楽しそうに回すようになりました。食べ終わった後も何度もおやつを入れて回して食べたり、空のおもちゃを遊び続けていました。明日もしようね、としまう時も、キラキラした瞳でついてくるんです。短い時間でこんなに遊んだからか、ベッドに寝っ転がったら寝言まで言って寝てしまったんですよ。夢でも回していたのかな。ㅎㅎ",
+      "content_en": "My nose work toy broke, so I was looking for a new one and discovered this spin toy. I watched it for a while and thought it looked good, so I bought it. I ordered it over the weekend and waited and waited, and when Luna finally got the spin toy, she absolutely loved it! I spun it once and she immediately caught on and started spinning it herself. I put in a few treats and she spun it even more excitedly. After finishing all the treats, we refilled it a few more times and she kept playing with the empty toy too. When I went to put it away the next day, she kept following me with those sparkling eyes 😄 She played with it so hard in such a short time that when she went to bed, she even sleep-talked and dreamed about it. I bet she was spinning it in her dreams too 😆",
+      "videos": [
+        "https://d2q2zwuq6juvrx.cloudfront.net/biteme.co.kr/00/00/01/43/58/82c984578512f6f42b93393e5be7e048_hd_encoded.mp4"
+      ]
+    },
+    {
+      "id": "604037",
+      "rating": 5,
+      "name": "네****",
+      "content": "열심히 돌리는데 튼튼하고 좋아요",
+      "date": "2026-03-10T21:39:42+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/40/37/image1/84484f9bae69eb41.webp"
+      ],
+      "content_ja": "一生懸命回してますが丈夫で良いですね",
+      "content_en": "She spins it so hard and it's really durable and great!",
+      "videos": []
+    },
     {
       "id": "603394",
       "rating": 5,
@@ -14,9 +596,84 @@
         "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/33/94/image2/cbdd146ea4907720.webp",
         "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/33/94/image3/e75b9b265934465c.webp"
       ],
+      "content_ja": "バイトミ ノーズワークおもちゃはデザインがとっても可愛いので\n飼い主さんのお気に入りです😍😍😍\n前に出たバージョンと一緒に並べるととっても可愛いです🥰\nクマとウサギのお友達たち😄😄😄 シリーズで作ってください\n\nバイトミ ノーズワークおもちゃはそこまで頭を使う必要がないタイプなんですが\nおやつがなかなか出づらくて😄😄😄レオくんは回してたのに座って私をじっと見て「ママ、お前がやってよ」という眼差しを送ってきて😄😄😄それでも躊躇せず一回で回すのに成功しました😄😄😄😄😄\n可愛いバイトミ ノーズワークおもちゃをまた作ってください！！！",
+      "content_en": "BITE ME nose work toys are so adorable that I'm obsessed with them too 😭😍 When I put it next to the previous version, they're so cute together 🥰 The bear and bunny friends hehe... please make them as a series! The BITE ME nose work toy doesn't require too much thinking, but the treats don't come out easily hehe, so Léon will spin it and then just sit there staring at me with that look like 'Mom, you do it' 😂 But she still managed to succeed at spinning it on the first try 😄 Please make more cute BITE ME nose work toys!!!",
       "videos": [
         "https://d2q2zwuq6juvrx.cloudfront.net/biteme.co.kr/00/00/01/43/55/2feb466dd271ef67f8cf8f1608aa6341_hd_encoded.mp4"
       ]
+    },
+    {
+      "id": "603423",
+      "rating": 5,
+      "name": "네****",
+      "content": "빠른 배송 감사합니다!!",
+      "date": "2026-03-09T18:24:28+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/34/23/image1/31ee8a28babf87ac.webp"
+      ],
+      "content_ja": "迅速な配送ありがとうございます!!",
+      "content_en": "Thank you for the fast shipping!!",
+      "videos": []
+    },
+    {
+      "id": "603390",
+      "rating": 3,
+      "name": "나****",
+      "content": "바잇미\r\n바잇미 브레이닝 토이. \r\n스핀액스낵 토끼. 노즈워크\r\n\r\n잔뜩.기대했던거와,달리?.  전에나온. 다람쥐와\r\n비슷하다\r\n그래도,귀엽고,아이들,노즈워크로는,최고다!\r\n역시,장난감.노즈워크도,.바잇미가,최고!",
+      "date": "2026-03-09T16:44:15+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/33/90/image1/f2d55636746c3673.webp",
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/33/90/image2/f25ca308facffa15.webp",
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/33/90/image3/5e31f90d9b093731.webp"
+      ],
+      "content_ja": "バイトミ\nバイトミ ブレーニングトイ。\nスピンアンドスナックウサギ。ノーズワーク\n\n期待していた通りではなく、びっくりしました。前に出た\nリスに似ています\nそれでも可愛いし、子どもたちのノーズワークとしては最高です！\nやっぱり、おもちゃもノーズワークも、バイトミが最高！",
+      "content_en": "BITE ME BITE ME Braining Toy. Spin & Snack Bunny. Nose work. I was expecting a lot but it's similar to the squirrel that came out before. Still, it's cute and it's the best for nose work! BITE ME toys and nose work are definitely the best!",
+      "videos": [
+        "https://d2q2zwuq6juvrx.cloudfront.net/biteme.co.kr/00/00/01/43/54/d186be762a3112808c5e0ea301330a29_hd_encoded.mp4"
+      ]
+    },
+    {
+      "id": "603389",
+      "rating": 2,
+      "name": "나****",
+      "content": "바잇미\r\n바잇미 브레이닝 토이\r\n스핀앤스낵 토끼 노즈워크\r\n정말,기대했었는데\r\n기대했던만큼,그,이상이다.\r\n아이들이,너무,좋아하네요\r\n바앗미께,여쭤봐요,\r\n전,0원.래플,매일,ㅇ애일,매일\r\n열심히인데\r\n왜?  단,한번도,당첨.이,안되죠?\r\n가만햐.있는,적립금.만,,매번,까이고\r\n이번만큼.은,.네이비,가방,당첨되고,싶네요,ㅠㅠ",
+      "date": "2026-03-09T16:37:35+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/33/89/image1/73465dcaedcb983e.webp",
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/33/89/image2/d00fc0599abbe144.webp",
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/33/89/image3/915c462bca5c240a.webp"
+      ],
+      "content_ja": "バイトミ\nバイトミ ブレーニングトイ\nスピンアンドスナックウサギ ノーズワーク\n本当に期待していたのに\n期待していた以上です。\n子どもたちが本当に大好きです\nバイトミさんに質問なのですが、\n毎日0円ラッフル、毎日毎日\n一生懸命参加しているのに\nどうして一度も当たらないんですか？\n普通に貯まった積立金だけが毎回引かれて\n今回こそはネイビーバッグが当選したいです😭😭",
+      "content_en": "BITE ME BITE ME Braining Toy Spin & Snack Bunny Nose Work I was really looking forward to this and it exceeded my expectations. My pups love it so much. I keep asking BITE ME about it. I enter the 0 won raffle every single day working hard but why haven't I won even once? Every time I just lose my accumulated points, and this time I really want to win that navy bag 😭",
+      "videos": [
+        "https://d2q2zwuq6juvrx.cloudfront.net/biteme.co.kr/00/00/01/43/53/3c54c2302547c3a9659999f48731b26d_hd_encoded.mp4"
+      ]
+    },
+    {
+      "id": "603432",
+      "rating": 5,
+      "name": "네****",
+      "content": "다람쥐와 점핑부기에 이어 토끼까지,, 모두 섭렵중이 몽몽이 입니다ㅎ\n가끔 주둥이로 밀쳐서 그렇지,, 알려주지 않아도 혼자 잘해요ㅋㅋㅋ\n다음은 더 난이도 있는 노즈워크 원해요~!!🫶🏻\n펫밀크랑 덴타링 챙겨주셔서 잘 먹었습니다~",
+      "date": "2026-03-09T16:30:35+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/34/32/image1/2f8dd791f7c0e345.webp"
+      ],
+      "content_ja": "リスとジャンピングブギに続いてウサギまで、全て試している我が家のモンモンです。時々口で押すだけですが、教えなくても自分で上手にできちゃいます😄😄😄\n次はもっと難易度の高いノーズワークが欲しいです～!!🫶🏻\nペットミルクとデンタルリング、ありがとうございました。よく食べています～",
+      "content_en": "Following the squirrel and jumping boogie, now the bunny too, Mongmongi is trying them all 😄 She sometimes pushes it with her snout, but otherwise she figures it out on her own without any instruction 😋 Next I'd love a nose work toy with more difficulty!! 🫶🏻 Thanks for also giving us the pet milk and dental ring—she enjoyed them~",
+      "videos": []
+    },
+    {
+      "id": "603485",
+      "rating": 5,
+      "name": "네****",
+      "content": "출근시간 변경으로 아이가 혼자있는 시간이 많아져서 구매했는데 처음엔 어떻게 사용할 줄 몰라 짖더니 곧 알아차리고 한참을 갖고 노네요:)\n\n들어가는 간식을 바꿔주면 오래 잘 사용할거같아요!",
+      "date": "2026-03-09T07:26:33+09:00",
+      "images": [
+        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/34/85/image1/02ccf6473097eb61.webp"
+      ],
+      "content_ja": "仕事の出勤時間が変わって子どもが一人で過ごす時間が増えたので購入しました。最初は使い方がわからず吠えていたのですが、すぐに気づいて長時間遊んでくれています:)\n\n中に入れるおやつを変えてあげれば、長く使えそうです！",
+      "content_en": "My pup has been alone more often due to my work schedule change, so I got this. At first she didn't know how to use it and barked, but soon she figured it out and has been playing with it for a while :) If I swap out the treats inside, I think she'll use it well for a long time!",
+      "videos": []
     },
     {
       "id": "602992",
@@ -44,17 +701,6 @@
       ]
     },
     {
-      "id": "603557",
-      "rating": 5,
-      "name": "네****",
-      "content": "애기가 좋아해요! 아주 신나게 찾아먹습니다ㅎㅎ\n이런 신박하고 에너지 많이 사용할 수 있는 장난감 많이 만들어주세요!",
-      "date": "2026-03-08T14:25:22+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/35/57/image1/fb263f9b80611ca3.webp"
-      ],
-      "videos": []
-    },
-    {
       "id": "603138",
       "rating": 5,
       "name": "김****",
@@ -70,17 +716,6 @@
       ]
     },
     {
-      "id": "604254",
-      "rating": 5,
-      "name": "네****",
-      "content": "다람쥐가 두뇌 장난감 처음이였는데 그때는 소심 겁쟁이라 장난감 적응에 며칠 걸리더라구요. 근데 이제 다람쥐 마스터해서 터끼주니 바로 잘 돌립니다. 역시 계속 자극주고 해봐야 늘죠! 토끼가 훨씬 안정감있고 집중을 더 잘하네요👍",
-      "date": "2026-03-15T12:32:35+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/42/54/image1/a3961081f443a20e.webp"
-      ],
-      "videos": []
-    },
-    {
       "id": "603388",
       "rating": 5,
       "name": "김****",
@@ -92,17 +727,6 @@
       ]
     },
     {
-      "id": "603002",
-      "rating": 5,
-      "name": "네****",
-      "content": "디자인이 너무 귀엽고 내구성도 좋아요 :)\n때리는 걸 좋아하는 우리 아이에게 딱 맞는 노즈워크 장난감이에요. 토끼를 사정없이 툭툭 치다 보면 간식이 나와서 신나게 놀면서 잘 먹네요. 간식 냄새가 나는지 간식이 남아 있을 때만 열심히 때리는 모습이 너무 귀여워요 ^^",
-      "date": "2026-03-05T21:55:15+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/30/02/image1/2bec6c1dbcbf4915.webp"
-      ],
-      "videos": []
-    },
-    {
       "id": "604882",
       "rating": 5,
       "name": "임****",
@@ -112,50 +736,6 @@
       "videos": [
         "https://d2q2zwuq6juvrx.cloudfront.net/biteme.co.kr/00/00/01/44/33/f4935e18c6dc364b4bbbf5b147e1b637_hd_encoded.mp4"
       ]
-    },
-    {
-      "id": "602834",
-      "rating": 5,
-      "name": "네****",
-      "content": "저희 강아지는 장난감에 거부감이 거의 없어서 사주면 바로 잘 사용 해줘요.제품 꺼내자마자 냄새 맡더니 간식 넣어 주지 않았는데 요즘 발 쓰는 장난감을 몇개 사줬더니 발로 막 돌리더라구요^^장난감도 무척 귀엽습니다.",
-      "date": "2026-03-04T22:39:09+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/28/34/image1/c62904e785db14fd.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "603432",
-      "rating": 5,
-      "name": "네****",
-      "content": "다람쥐와 점핑부기에 이어 토끼까지,, 모두 섭렵중이 몽몽이 입니다ㅎ\n가끔 주둥이로 밀쳐서 그렇지,, 알려주지 않아도 혼자 잘해요ㅋㅋㅋ\n다음은 더 난이도 있는 노즈워크 원해요~!!🫶🏻\n펫밀크랑 덴타링 챙겨주셔서 잘 먹었습니다~",
-      "date": "2026-03-09T16:30:35+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/34/32/image1/2f8dd791f7c0e345.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "602858",
-      "rating": 5,
-      "name": "네****",
-      "content": "간식 다 끝났는데도 잘 가지고 놀아요ㅎㅎ",
-      "date": "2026-03-04T20:48:59+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/28/58/image1/3767adc6d81221d3.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "603040",
-      "rating": 5,
-      "name": "네****",
-      "content": "너무 잘해서 서울대보내려구요^^",
-      "date": "2026-03-05T17:11:07+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/30/40/image1/fe67d327b0bfaa9d.webp"
-      ],
-      "videos": []
     },
     {
       "id": "601638",
@@ -171,17 +751,6 @@
         "https://d2q2zwuq6juvrx.cloudfront.net/biteme.co.kr/00/00/01/43/03/913f7320765de98fc6ec39054067e3b6_hd_encoded.mp4",
         "https://d2q2zwuq6juvrx.cloudfront.net/biteme.co.kr/00/00/01/43/04/bb528b9f4b671b8c863cc46a026a64ba_hd_encoded.mp4"
       ]
-    },
-    {
-      "id": "603507",
-      "rating": 5,
-      "name": "네****",
-      "content": "너무 좋아해요 ㅋㅋㅋ 하루 종일 간식 넣어 달라고 해서 미치겟지만 ,,, 좋아해줘서 고마워요",
-      "date": "2026-03-08T20:26:30+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/35/07/image1/b781789431d847de.webp"
-      ],
-      "videos": []
     },
     {
       "id": "601508",
@@ -271,19 +840,6 @@
       ]
     },
     {
-      "id": "602546",
-      "rating": 5,
-      "name": "박****",
-      "content": "너무 너무 귀여운 노즈워크 토이입니다!!\n저희 강아지가 노즈워크 장난감을 엄청 좋아해서 좋은 기회로 바잇미 토이를 저희 집으로 모시게 되었어요..!\n분리된다는 점이 너무 좋고 세척도 정말 간단하게 할 수 있어서 마음에 너무 듭니다ㅠㅠ 난이도도 너무 어렵지 않으면서 코나 다리로 돌릴 수 있어서 슬개골과 허리에 나쁜 영향 없을 것 같아요! 정말 귀여운데 재밌는 장난감이라 저희 강아지에기 최고의 장난감입니다!\n바잇미 사랑해요💓",
-      "date": "2026-03-03T13:33:57+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/25/46/image1/2165b66b39e011c2.webp",
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/25/46/image2/82bc431e8d363cb0.webp",
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/25/46/image3/5f21456c12e4e9a7.webp"
-      ],
-      "videos": []
-    },
-    {
       "id": "601502",
       "rating": 5,
       "name": "한****",
@@ -313,54 +869,6 @@
       ]
     },
     {
-      "id": "602725",
-      "rating": 5,
-      "name": "네****",
-      "content": "여태 많은 노즈워크 토이를 사용해봤지만 이렇게 귀여운 노즈워크는 처음이에요!\n토끼를 발로 돌리거나 차면 본체 구멍에서 간식이 나오는 노즈워크 장난감인데 저희 애는 처음에 적응하면서 코랑 입으로 먼저 시도하더라구요. 은근 보기와 다르게 낭낭한 사이즈라 양도 꽤 들어가고 무게감도 있고 바닥에 미끄럼 방지 처리가 되어 있어서 26.8kg인 저희 애가 물고 씹고 발로 쳐도 어디 굴러가지 않고 안정적으로 사용 완전 가능했습니당!\n 워낙 노즈워크를 자주 사용했어서 출근하거나 외출, 날씨로 인해 산책이 충분하지 않을때 집에 혼자 있는 동안 조금이라도 더 재미있는 시간을 보내기 바라는 마음에 다양한 노즈워크를 사용중인데 이렇게 바닥에 고정되서 토끼만 돌아가다니 너무 신기해요! 저희 애는 실제로 분리불안 증상이 있었고 교육을 통해 이제는 집에서 혼자 편히 쉴 수 있게됐지만\n편히 쉬는 시간동안 조금 더 재밌게 보내길 바라며\n노즈워크를 사용하게 되었고 장난감과 놀며 맛있는 사료도 먹으니 더 흥미를 느끼는것 같아요! \n저희 애는 맛있는게 있으면 정말 급하고 빠르게 먹으려고 하는데 성격이 급한 친구들에게 재미있는 급체방지식기로도 유용하게 사용 가능할것 같습니다.\n제일 좋은 포인트는 손쉽게 분리가 가능해서 세척이 쉽다는 점🥹💞\n아이가 발도 쓰고 입도 쓰고 침도 닿는 거라 세척이 필수인데 번접한 스타일은 세척이 어려워서 안쓰게 되는것도 많았는데 브레이닝 토이 토끼는 분리가 가능해서 속 시원히 모두 세척 가능!!\n어떻게 이렇게 한국인 맞춤 디자인과 청결에 맞게 디자인 하셨는지 추천 추천 대왕추천 토깽이🐰💞",
-      "date": "2026-03-02T16:17:56+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/27/25/image1/9fb9ee424711519e.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "602128",
-      "rating": 5,
-      "name": "네****",
-      "content": "꺄아아아 🐶💛\n우리 시루가 장난감 체험단에 당첨됐다구요~?! (박수 짝짝👏)\n7개월 퍼피 시루 누나가 직접 써보고 느낀 '바잇미 브레이닝 토끼 후기'🐾\n\n🐰✨ 토끼를 발로 차면 간식이 톡!\n토끼를 발로 톡 차면 본체 구멍에서 간식이 나오는 노즈워크 장난감이에요!\n시루는 퍼피라 노즈워크를 많이 해보지 못했어요! 그래사 처음엔 “어라?” 하다가 앞발로 툭툭 건드리더니…\n🍪 똑! 간식 등장!\n그 순간 눈이 동그래지면서 집중 모드 ON 🔥\n너무 귀여워서 누나는 심장 붙잡고 봤어요…🥹💕 시루같은 퍼피도 겁내지않고 할 수 있는 장난감☺️\n\n🧠💪 스스로 터득하는 재미!\n몇 번 해보더니 시루가 스스로 “아! 이렇게 하면 나오는구나?” 하고 방법을 터득했어요!\n간식이 나오는 원리를 이해하고 나니까\n성취감 뿜뿜✨ 자신감도 한 단계 업업!\n“나 이런 강아지야 😎” 하는 표정으로 저를 보는데\n괜히 더 칭찬해주고 싶어지더라구요 💛\n\n🕰️ 집중 타임 \n혼자 있는 시간에도 이 장난감에 집중하니까\n집중하는 시간이 자연스럽게 생겨서 분리불안 완화에도 도움을 줄 걱 같아요!\n간식 찾느라 코 킁킁 👃 집중력 MAX\n에너지 발산도 되고, 외출 전 사료 가득 넣어주면 재밌게 놀면서 한끼 해결!\n\n🍽️ 급한 친구들 모여라!\n시루도 가끔 급하게 먹는 편인데요 😂\n이 장난감은 간식을 쉽게 와르르 먹을 수 없어서\n재미있는 급체방지 식기 역할도 톡톡히 해줘요!\n먹는 속도가 자연스럽게 조절되니까\n놀이도 되고 건강 관리도 되고 👍 일석이조예요!\n\n🐕 중대형견도 OK!\n사이즈가 넉넉하고 무게감도 안정적이라\n중대형견 친구들도 충분히 갖고 놀 수 있어요!\n발로 차도 쉽게 밀리거나 뒤집히지 않아서\n활동량 많은 친구들에게도 딱이에요 💪✨\n\n🧼 분리 쉬워서 세척도 간편!\n그리고 보호자 입장에서 제일 중요한 거…\n분리가 손쉽게 가능해서 세척이 정말 쉬워요!\n간식 장난감은 위생이 중요한데\n깨끗하게 관리할 수 있어서 너무 만족이에요 🫧💕\n\n총평 🐶🌸\n놀면서 두뇌 자극 ✔\n성취감 상승 ✔\n분리불안 완화 도움 ✔\n급체방지 효과 ✔\n중대형견도 가능 ✔\n세척 편리 ✔\n\n시루는 요즘 토끼 보이면 자동으로 발부터 나가요 ㅋㅋㅋ 🐾💕\n아이도 즐겁고 보호자도 흐뭇해지는 장난감이라\n정말 기분 좋은 체험이었어요!\n너무 좋은 장난감이라 제 글이 도움이 되면 좋겠어요💛\n오늘도 우리 강아지들 행복하개 🐾✨",
-      "date": "2026-02-25T23:24:29+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/21/28/image1/494be45f5f06ed71.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "603645",
-      "rating": 5,
-      "name": "박****",
-      "content": "가지고 놀던 노즈워크 장남감이 망가져서 새 장난감을 찾던 중 발견한 스핀토이를 그동안 관찰하고 이거 괜찮겠다 싶어서 구입했어요. 주말에 주문하고 기다리고 기다리다 받은 스핀토이를 루나가 너무 좋아해요. 한번 빙글빙글 돌리는거 보더니 바로 알아서 돌리길래 간식 몇 개 넣어주었더니 더 신나게 돌리네요. 다 먹고도 몇 번 더 반복해서 간식을 넣어주고 돌리며 먹다가 빈 장난감을 계속 돌리고 놀았어요.  내일 또 하자고 치우는데 계속 반짝이는 눈을 하고 따라오네요. 짧은 시간 얼마나 잘 놀았는지 침대에 눕더니 잠꼬대까지 하고 자더라구요. 꿈에서도 돌리나 했네요. ㅎㅎ",
-      "date": "2026-03-11T10:37:23+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/36/45/image1/dab10e5b3ee4a1f3.webp",
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/36/45/image2/e37264d02108cfbd.webp",
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/36/45/image3/43f7b22b7f7b6723.webp"
-      ],
-      "videos": [
-        "https://d2q2zwuq6juvrx.cloudfront.net/biteme.co.kr/00/00/01/43/58/82c984578512f6f42b93393e5be7e048_hd_encoded.mp4"
-      ]
-    },
-    {
-      "id": "601961",
-      "rating": 5,
-      "name": "네****",
-      "content": "토끼를 요리조리 돌리면 본체 구멍에서 간식이 나와요🐰\n처음엔 어리둥절하다가 몇 번 해보더니 \n스스로 간식이 나오는 방법을 터득하더라구요✨\n\n✔ 성취감 & 자신감 상승 💡\n방법을 알아내고 나서 더 집중해서 놀아요!\n성취감 느끼는 게 눈에 보이니 더 뿌듯해요😊\n\n✔ 분리불안 완화 도움 🐶\n간식을 먹으려고 집중하는 시간이 생기니까 지루해할 틈 없이 몰입! \n\n✔ 급체 방지 효과 🍽\n성격 급한 친구들에겐 재미있는 급체방지식기 역할까지\n\n✔ 중대형견 친구들도 OK 🐕\n넉넉한 사이즈에 안정적인 무게감이라 잘 가지고 놀 것 같아요. \n\n✔ 세척도 간편 🫧\n손쉽게 분리 가능해서 세척이 쉬운 점도 대만족\n\n놀이 + 노즈워크 + 집중력까지 챙길 수 있는 똑똑한 장난감!\n\n#광고 #제품제공 #브레이닝토이 #강아지장난감 #노즈워크장난감\n본 게시물은 바잇미 체험단을 통해 제품을 제공받아 작성한 후기입니다.",
-      "date": "2026-02-22T15:10:33+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/19/61/image1/264ed4c824ff6a63.webp"
-      ],
-      "videos": []
-    },
-    {
       "id": "603106",
       "rating": 5,
       "name": "이****",
@@ -376,39 +884,6 @@
       ]
     },
     {
-      "id": "602449",
-      "rating": 5,
-      "name": "네****",
-      "content": "입춘이가 바잇미 신상 장난감\n🐰브레이닝 토이 토끼장난감🐰을 체험해봤습니당ㅎㅎ\n\n집에 혼자있는 시간이 솔찬히 긴 입추니는 다양한 노즈워크를 해봤는데\n천으로 된건 금방금방 해버리고\n통통 움직이는 장난감은 넘 무서워하더라구요\n바잇미의 토끼장난감은 고정되어있지만 돌리는 재미가 있어\n입춘이가 아주 신나하면서 가지고 놀았습니다!\n\n토끼배에 간식을 넣고 토끼를 돌리면 랜덤으로 간식이 나와요!\n돌려서 나오니까 넘넘 재밌는지 나오는게 사료여도 엄청 잘먹더라구요🤤🤤\n크기도 작지않아서 중대형견들도 가지고 놀수있고 \n야무지게 미끄럼방지 패드도 장착!\n젤 맘에 드는건 다 분리해서 세척가능하다는 사실ㅎㅎ\n천으로 된 노즈워크 매번 세탁하기도 힘들고 찝찝했는데 토끼장난감은 잘 닦아줄 수 있을거 같네용\n\n다들 바잇미로 구경한번 가보세용🐰🍀🍀",
-      "date": "2026-03-01T19:56:17+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/24/49/image1/6befd4bb5a001591.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "601966",
-      "rating": 5,
-      "name": "네****",
-      "content": "너무 재밌어해요 😚 평소에 간식을 주면 너무 빨리 먹어버려서 고민이었는데 (3초컷) 요 토끼에 넣어주니까 한알씩 천천히 먹게 되더라구요:) 성질 고약해서 뒤집어 버리면 어떡하나했는데 무게감도 있고 내구성이 짱짱해서 끄떡없어요! 손으로 돌리는 거라는데 울집 강지는 코로 밀고 다닙니다 ㅎㅎ 천천히 돌려도 트릿이 뿅하고 세군데로 나오니까 질려하지 않아요 💕 \n그리구 장난감인데 넘 귀여워요!! 컬러는 보호자 취향 😍",
-      "date": "2026-02-22T09:11:57+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/19/66/image1/905101efe3f49dd5.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "601962",
-      "rating": 5,
-      "name": "네****",
-      "content": "평소 일때문에 강아지릉혼자 두고 외출할때가 많은데\n그래서 하나씩 노즈워크 장난감을 사주기 시작했어요 \n\n하지만 너무 쉬워서 금방 흥미를 잃거나 쉽게 망가지고 뜯어지덩라고요..😂 그러던 중 만난 스핀앤스낵ㅌ끼를 만났어요!\n\n일단 생각보다 무게감이 조금 있고 튼튼해서 저희 강아지는 소형견이지만 중형견 친구들까지는 무리 없이 놀 수 있을거 같았어요! \n\n토끼몸통 구멍에 간식이나 사료를 넣고 아이들이 돌리면 밑으로 빠져나오는 구조인데 평소 저희 강아지는 손을 잘 쓰는편이여서 무리 없이 돌렸답니다👍🐶 난이도 조절도 가능하니 흥미를 쉽게 잃을 일이 없겠어요 ! \n\n저희는 화식을 섞어먹어서 무리가 있지만 건사료만 먹는 친구들 중에 급하게 먹는 친구들이 사용해도 좋을거 같아요👍 밥 먹으면서 성취감도 느낄 수 있을듯 합니다 ! \n\n일단 무엇보다 분리 세척이 가능하니 위생적으로 쓸 수 있어서 좋을거 같아요!",
-      "date": "2026-02-22T15:03:29+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/19/62/image1/387c351c7d4e65d7.webp"
-      ],
-      "videos": []
-    },
-    {
       "id": "601832",
       "rating": 5,
       "name": "김****",
@@ -420,54 +895,6 @@
       ],
       "videos": [
         "https://d2q2zwuq6juvrx.cloudfront.net/biteme.co.kr/00/00/01/43/08/8d71184eb9ad23e6f32b0c21ec1c6762_hd_encoded.mp4"
-      ]
-    },
-    {
-      "id": "602772",
-      "rating": 5,
-      "name": "네****",
-      "content": "모리의 첫 장난감들도 다 바잇미 였는데 장난감 맛집 바잇미!!\n\n처음에는 멍충해서 아무것도 못했는데 그냥 계속 두고 나가봤더니 어느순간 터득해서 지금은,,아주 패는중이에요  불쌍한 토끼,,어제는 토끼를 뒤집어놔가지고ㅋㅋㅋ 구석으로 몰아서 패는데 어휴,, 아주 일찐강아지가 따로없어요\n\n스핀앤스낵 브레이닝토이 토끼 장점은\n\n1. 토끼 배에는 간식을 쉽게 넣을수있는 저장공간이 있어서 아주 편리해요 바쁜시간에 쓱 넣고 툭 놓고가면 끝!!\n2. 돌리면 간식이 나온다는 성취감 +10 자신감 +10 얻을수있는 스킬 !! 똑똑 강쥐가 되,,\n3. 어디서 나올지 모르는 긴장감에 더욱더 재미를 느껴 집중하는 시간이 늘어서 언니오빠가 나가든 말든 신경을 안쓰기 때문에 분리불안에도 좋은것 같아요! \n4. 분리세척이 가능해서 청결관리도 아주 좋습니다\n\n단점은,, 음음,,음,,,뭐가있지,,?아 초반에 스킬 터득이 어려워서\n바보강아지가 됩니다 ㅋㅋ 그치만 케바케 ㅎㅎ 유독 모리가 바보,,\n\n지금은 나갈때 매일 간식 넣고 외출중입니다!! 막 가지고 놀다가도 졸리면 자로 들어갔다가 갑자기 생각나는지 나와서 또 패고,, 엄청난 장난감을 얻어버렸어요!! 바잇미 최고 '◡'",
-      "date": "2026-03-02T10:31:07+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/27/72/image1/ca3d30784d101116.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "602671",
-      "rating": 5,
-      "name": "네****",
-      "content": "혼자 있는 시간이 긴 시루는 노즈워크 장난감을 정말 조아하는데용 ! \n\n덩치만 크고 겁이 많아서 늘 천으로 된 노즈워크 장난감만 사줬는데 한바탕 하고나면 침범벅에 세척 해도 늘 찝찝함 가득 ..🥹 \n\n시루가 애정하는 #바잇미 에서 쌩쌩 돌아가는 #노즈워크장난감 < 바잇미 브레이닝 토이 토끼 🐰 > 를 새로 출시 했다는 소식 ~!! \n\n세척도 편리하고, 8kg 가까이 나가는 빅푸들 시루가 힘껏 쳐도 꿈쩍않고 제 할일을 묵묵히 해주는 우리 토끼 진짜 최고..💓 \n\n다들 귀여운 토깽이 하나씩 들이셔요 ~!! 겁쟁이 시루도 성공한 (?) #브레이닝토이 ! 시루가 강추합니다 🩵\n\n#강아지장난감 #BITEME\n•본 게시물은 바잇미 체험단을 통해 제품을 제공받아 작성한 후기입니다.",
-      "date": "2026-03-02T22:42:08+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/26/71/image1/ed5d31fe50ef42af.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "602672",
-      "rating": 5,
-      "name": "네****",
-      "content": "19키로인 저희 아이가 손으로 때리고 밀고 코로 들어도 안정적인 무게감으로 잘 있는 점이 아주 마음에 쏙 들어요 \n\n디자인까지 귀여워버리니...🐰✨😭\n\n또 돌아가는 다른 노즈워크 장난감은 돌아가는 즉시 장난감 그자체를 막 물어버리고 앙앙 했는데 토끼는 처음에 돌려서 때려야 간식이 나온다 ! 를 배우니 스스로 돌리는 모습이 너무 기특했어요 🥹\n\n그렇게 간식 양에 따라서 시간조절 하고 또 밑에 슬라이드 조절해서 시간조절하고 한번 할때 두 판정도를 즐기니까 딱 즐거워 하더라구요 !\n\n하고나면 침범벅 되어있는데 부품이 전부 분리가 되니까 세척도 넘 간편하고 맘에들어요 !",
-      "date": "2026-03-02T22:41:01+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/26/72/image1/3d7bd557728ad12c.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "603390",
-      "rating": 3,
-      "name": "나****",
-      "content": "바잇미\r\n바잇미 브레이닝 토이. \r\n스핀액스낵 토끼. 노즈워크\r\n\r\n잔뜩.기대했던거와,달리?.  전에나온. 다람쥐와\r\n비슷하다\r\n그래도,귀엽고,아이들,노즈워크로는,최고다!\r\n역시,장난감.노즈워크도,.바잇미가,최고!",
-      "date": "2026-03-09T16:44:15+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/33/90/image1/f2d55636746c3673.webp",
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/33/90/image2/f25ca308facffa15.webp",
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/33/90/image3/5e31f90d9b093731.webp"
-      ],
-      "videos": [
-        "https://d2q2zwuq6juvrx.cloudfront.net/biteme.co.kr/00/00/01/43/54/d186be762a3112808c5e0ea301330a29_hd_encoded.mp4"
       ]
     },
     {
@@ -496,17 +923,6 @@
       ]
     },
     {
-      "id": "601951",
-      "rating": 5,
-      "name": "네****",
-      "content": "< 바잇미 체험단 >\n아이가 넘모 조아하고 튼튼해서 조아요 ! 세척하기도 편해서 위생관리에도 너무 좋습니다 :—) \n이 제품 덕분에 아이 분리불안도 없어져서  너무 좋네요 ㅎㅎ\n디자인도 너무 이뻐서 외관적으로 보기 좋아요 !! 발로 톡 쳐서 한두개씩 떨어지니 급하게 먹어서 체할일도 없고 집중력도 향상 돼서 심심해 할 일이 없어서 마음이 좋네요 ~!",
-      "date": "2026-02-24T11:37:46+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/19/51/image1/7e8a4dd8e5cf166e.webp"
-      ],
-      "videos": []
-    },
-    {
       "id": "602533",
       "rating": 5,
       "name": "곽****",
@@ -518,111 +934,6 @@
         "https://d2q2zwuq6juvrx.cloudfront.net/biteme.co.kr/00/00/01/43/19/767ffae68e973510bb5bd2db34eb8734_hd_encoded.mp4",
         "https://d2q2zwuq6juvrx.cloudfront.net/biteme.co.kr/00/00/01/43/20/7817857ae8366bfee93d79f164b1b5d0_hd_encoded.mp4"
       ]
-    },
-    {
-      "id": "603389",
-      "rating": 2,
-      "name": "나****",
-      "content": "바잇미\r\n바잇미 브레이닝 토이\r\n스핀앤스낵 토끼 노즈워크\r\n정말,기대했었는데\r\n기대했던만큼,그,이상이다.\r\n아이들이,너무,좋아하네요\r\n바앗미께,여쭤봐요,\r\n전,0원.래플,매일,ㅇ애일,매일\r\n열심히인데\r\n왜?  단,한번도,당첨.이,안되죠?\r\n가만햐.있는,적립금.만,,매번,까이고\r\n이번만큼.은,.네이비,가방,당첨되고,싶네요,ㅠㅠ",
-      "date": "2026-03-09T16:37:35+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/33/89/image1/73465dcaedcb983e.webp",
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/33/89/image2/d00fc0599abbe144.webp",
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/33/89/image3/915c462bca5c240a.webp"
-      ],
-      "videos": [
-        "https://d2q2zwuq6juvrx.cloudfront.net/biteme.co.kr/00/00/01/43/53/3c54c2302547c3a9659999f48731b26d_hd_encoded.mp4"
-      ]
-    },
-    {
-      "id": "602100",
-      "rating": 5,
-      "name": "네****",
-      "content": "평소 장난감 관심 전혀 없는 저희집 아이가\n몇 날 며칠 관심을 보이는 노즈워크 장난감🐰\n난이도도 어렵지 않아서 금방 터득해서\n혼자 돌리고 발로 치고 깨물어보기도 하고(?)\n\n간식이 들어있지 않아도 혼자 툭툭 쳐보기도 하는\n귀여운 상황도 볼 수 있었어요 :)\n\n적당한 무게감과 적당한 크기로 쉽게 뒤집어지지 않는 안정감!\n토끼 배에 간식을 넣고 닫아주면 끝나는 초간단 노즈워크라 귀찮은 것도 없고 세척도 쉬워서 너무너무 만족하며 사용중에 있답니다!",
-      "date": "2026-02-26T10:02:03+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/21/00/image1/3390502d415d8f33.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "602531",
-      "rating": 5,
-      "name": "백****",
-      "content": "사람애기 장난감처럼 디자인된 느낌! 너무 예쁘고 곡선 디자인으로 좋아요 너무 어렵지 않게 조작할 수 있고 아주 맘에듭니다 이리저리 툭툭치기도 하고 뱅글뱅글 돌리기도 하면서 노즈워크하기 좋습니다",
-      "date": "2026-03-02T14:08:30+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/25/31/image1/4bbf32d19015fc7f.webp",
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/25/31/image2/220b806eb95c9756.webp",
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/25/31/image3/4b0ac4ea577f15ea.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "601836",
-      "rating": 5,
-      "name": "네****",
-      "content": "🐰브레이닝 토이 스핀앤스낵 토끼🐰\n\n혼자 있는 시간도 심심하지 않게 \n요즘 노즈워크 레벨 UP 시켜주는 스핀앤스낵 토끼✨\n\n간식 쏙 넣어주면 코 킁킁 시작!\n돌리고, 굴리고, 톡톡 치면서\n집중 모드 ON 🔥\n돌리고 있는 모습 보면… 귀여워서 심장 아픔주의🥹💛\n\n✔️완전 분리 세척 가능 → 위생 걱정 NO\n✔️튼튼한 내구성 → 오래 써도 끄떡없어요\n✔️난이도 조절 가능 → 지루할 틈 없는 노즈워크\n✔️급하게 먹는 아이들 식사 시간 연장 효과까지 🫶\n\n간식 준비는 빠르게,\n놀이는 더 오래 ✨\n우리 아이 혼자 있는 시간도 즐겁게 만들어줘요 🐶💛\n\n☆ 본 게시물은 바잇미 체험단을 통해 제품을 제공받아 작성한 후기입니다.\n\n#브레이닝토이 #강아지장난감 #노즈워크장난감",
-      "date": "2026-02-25T23:16:51+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/18/36/image1/a20b1bcc02afcac5.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "602652",
-      "rating": 5,
-      "name": "네****",
-      "content": "봉구는 이미 베프동생에게서 선물받은 브레이닝 토이 다람쥐 ver.1으로 실력을 다져온 베테랑 노즈워커예요!\n코도 잘 쓰고, 발도 야무지게 쓰는 편이라 이런 장난감은 금방 파악해버리는 타입이죠 🕶️\n\n🎯 첫인상 & 플레이 반응\n처음 보여주자마자 토끼 귀부터 킁킁 탐색!\n그리고는 망설임 없이 앞발로 밀기 시작하더니,\n“아 이거 돌리는 거네?” 하는 표정으로 바로 공략 모드 돌입 🤭\n\n바잇미 브레이닝 토이는 발로 밀어서 간식을 찾는 구조라\n코 + 발 협업 플레이가 중요한데요,\n길봉구야는 굳이 알려주지 않아도 몸으로 금방 익히는 스타일이라\n몇 번 만에 구조 파악 완료 ✔️\n\n🔥 난이도 조절 기능, 이게 핵심\n기본 난이도로는 금방 클리어해버려서\n배출구를 조절해 난이도를 한 단계 업!\n\n이렇게 조절이 가능하니까\n✔️ 쉽게 시작해서\n✔️ 점점 어렵게\n✔️ 오래 집중하며 놀 수 있다는 점이 정말 만족스러웠어요.\n\n난이도를 올려주니 훨씬 신중하게 코를 박고,\n앞발로 밀었다가 다시 방향 바꿔보고…\n진지한 두뇌 풀가동 타임 🧠✨\n\n💭 놀고 난 후 변화\n한참을 뺑글뺑글 돌리며 놀더니\n간식 미션 완료 후엔 헥헥 웃는 얼굴로 옆에 와서 털썩 💨\n\n단순히 간식 먹는 장난감이 아니라\n집중력 + 에너지 소비 + 성취감까지 챙겨주는 느낌이라\n낮잠 퀄리티가 다르더라구요 😂\n\n✔️ 총평\n🩵발 잘 쓰는 아이들에게 특히 추천\n🩵입문용 단계로도 아주 좋음\n🩵난이도 조절 가능해서 금방 질리지 않음\n🩵혼자서도 집중 플레이 가능\n🩵에너지 소모 확실\n\n이미 다람쥐 ver.1로 검증된 재미에\n토끼 버전까지 추가되니 선택지가 더 다양해졌어요 🐿️🐰\n길봉구야처럼 노즈워크 좀 한다 하는 아이들이라면 난이도 조절해서 오래오래 즐겨보시길 추천드려요 💛",
-      "date": "2026-03-03T05:39:39+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/26/52/image1/ebcf300aed2aa253.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "601965",
-      "rating": 5,
-      "name": "네****",
-      "content": "평소 간식을 주면 껌도 순식간에 먹어버리는 아이라 항상 노즈워크로 숨겨서 주는 편인데, \n이번 장난감은 정말 만족스러웠어요 🐰🤍\n\n위쪽 구멍에 간식을 넣고 토끼를 돌리면\n아래에서 간식이 나오는 구조라 집중력도 높여주고\n혼자서도 한참을 재미있게 놀더라구요!\n\n저희 집에 있는 간식 기준으로는\n돌리자마자 바로 나오진 않았고\n살짝 흔들어서 자리 잡아준 뒤 돌리면 나왔어요 :)\n\n오히려 바로 나오지 않아서\n아이 입장에서는 난이도가 살짝 있어서 \n더 재밌어하는 느낌이었어요!\n냄새 맡으면서 환장 모드 발동 😂\n\n간식을 순삭하는 아이들이나,\n노즈워크 자주 해주시는 분들께 추천 합니다!",
-      "date": "2026-02-22T13:20:22+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/19/65/image1/5b49d60f966cc225.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "606929",
-      "rating": 5,
-      "name": "네****",
-      "content": "아직 무는게 더 익숙한 4개월 아기 강아지예요. 그래도 입으로 물면서 돌리다가 손으로도 돌려보고 해요! 두뇌 발달이 잘 되었으면 좋겠어요. 토끼 디자인도 색감도  예쁘고 이갈이 하느라 잘 무는 아기강아지에게도 튼튼해보이는 내구성이라 좋아요. 리뷰쓰는 지금도 한참 가지고 놀고 있어요! 강아지 놀이용으로 강추입니다!!",
-      "date": "2026-04-24T22:42:23+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/69/29/image1/1524e5a8fabc92eb.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "602696",
-      "rating": 5,
-      "name": "네****",
-      "content": "ㅇ ㅣ렇게 귀엽고 깜찍한 노즈워크 본 사람 손 👋\n노즈워크를 엄청 좋아하는 콩지는 웬만한 노즈워크 다 경험해봤는데요 브레이닝 토이 토끼 노즈워크 쵝오로 좋아해요 ..\n처음엔 조금 무서워하는듯 하더니 금방 적응해서 돌려돌려해욬\n세척도 너무 편해서 위생적으로 오래 사용가능한 점 최고\n\n저녁은 토끼에 사료 넣어주는데 먹고 기절합니다 ..! 우리 오래오래 함께하자 토끼야 🐰",
-      "date": "2026-03-02T19:32:21+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/26/96/image1/188378bdb102866b.webp"
-      ],
-      "videos": []
-    },
-    {
-      "id": "603143",
-      "rating": 5,
-      "name": "네****",
-      "content": "너무 귀여워요!! 기존에 다람쥐를 너무 잘 쓰고 있어서 토끼도 잘 하겠지 하고 샀는데 옆으로 돌리는거라 이건 좀 어려워해요ㅋㅋ다람쥐에 비해 난이도가 올라간 느낌!! 몇 번 하고서 간식구멍이 어디인지는 파악했는데 옆으로 돌리는게 어려운건지 토끼얼굴만 냅다 팹니다~~ 평소에는 너무 어려우면 흥미를 잃고 안하는데 그래도 이건 계속 하긴 하더라구요~~ 바잇미 노즈워크템들이 너무 좋아요 \n 다람쥐랑 토끼 둘 다 해주면 애기가 열심히 때려서 간식 꺼내먹어욥!!",
-      "date": "2026-03-06T22:44:30+09:00",
-      "images": [
-        "https://assets6.cre.ma/p/biteme-co-kr/reviews/00/00/60/31/43/image1/95e78c1af1f5bf74.webp"
-      ],
-      "videos": []
     }
   ]
 }
