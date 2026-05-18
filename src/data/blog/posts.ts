@@ -442,8 +442,7 @@ export const blogPosts: BlogPost[] = [
     publishedAt: "2026-07-21",
     category: "Lifestyle",
     tags: ["travel", "packing list", "car ride", "essentials"],
-    coverImage:
-      "https://www.biteme.co.kr/asset/images/product/original/1000040223_main_074.jpg",
+    coverImage: "/blog/travel-checklist-cover.jpg",
     readingTime: 6,
     relatedProducts: [
       { handle: "biteme-new-foldable-travel-bowl-pastel-4types", title: "Biteme New Foldable Travel Bowl" },
