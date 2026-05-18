@@ -26,6 +26,7 @@ interface ScrapedReview {
   content_en?: string;
   date: string;
   images: string[];
+  videos?: string[];
 }
 
 function getCorsOrigin(req: VercelRequest): string {

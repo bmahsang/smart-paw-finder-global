@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Star } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Star, Play, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Review {
   id: string;
@@ -9,6 +9,7 @@ interface Review {
   content_en?: string;
   date: string;
   images: string[];
+  videos?: string[];
 }
 
 function StarRating({ rating }: { rating: number }) {
@@ -31,12 +32,73 @@ function formatDate(dateStr: string): string {
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
+interface MediaItem {
+  type: 'image' | 'video';
+  src: string;
+}
+
+function MediaLightbox({ items, initialIndex, onClose }: { items: MediaItem[]; initialIndex: number; onClose: () => void }) {
+  const [index, setIndex] = useState(initialIndex);
+  const item = items[index];
+
+  const prev = useCallback(() => setIndex(i => (i > 0 ? i - 1 : items.length - 1)), [items.length]);
+  const next = useCallback(() => setIndex(i => (i < items.length - 1 ? i + 1 : 0)), [items.length]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose, prev, next]);
+
+  return (
+    <div className="fixed inset-0 z-[70] bg-black/80 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="relative max-w-lg w-full max-h-[80vh] flex items-center justify-center" onClick={e => e.stopPropagation()}>
+        {item.type === 'video' ? (
+          <video
+            key={item.src}
+            src={item.src}
+            className="max-w-full max-h-[75vh] rounded-xl"
+            controls
+            autoPlay
+            playsInline
+          />
+        ) : (
+          <img src={item.src} alt="" className="max-w-full max-h-[75vh] rounded-xl object-contain" />
+        )}
+
+        <button onClick={onClose} className="absolute -top-2 -right-2 bg-black/60 rounded-full p-1.5 text-white hover:bg-black/80 transition-colors">
+          <X className="h-5 w-5" />
+        </button>
+
+        {items.length > 1 && (
+          <>
+            <button onClick={prev} className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 rounded-full p-1.5 text-white hover:bg-black/80 transition-colors">
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button onClick={next} className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 rounded-full p-1.5 text-white hover:bg-black/80 transition-colors">
+              <ChevronRight className="h-5 w-5" />
+            </button>
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 bg-black/60 text-white text-xs px-2 py-0.5 rounded-full">
+              {index + 1} / {items.length}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 const PER_PAGE = 5;
 
 export function ReviewWidget({ productNumericId, onCount }: { productNumericId: string; onCount?: (n: number) => void }) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [lightbox, setLightbox] = useState<{ items: MediaItem[]; index: number } | null>(null);
 
   useEffect(() => {
     if (!productNumericId) return;
@@ -90,19 +152,36 @@ export function ReviewWidget({ productNumericId, onCount }: { productNumericId: 
                 {(r.content_en || r.content) && (
                   <p className="text-sm text-muted-foreground whitespace-pre-line">{r.content_en || r.content}</p>
                 )}
-                {r.images.length > 0 && (
-                  <div className="flex flex-wrap gap-2 pt-1">
-                    {r.images.map((src, i) => (
-                      <a key={i} href={src} target="_blank" rel="noopener noreferrer">
-                        <img
-                          src={src}
-                          alt={`Review image ${i + 1}`}
-                          className="h-20 w-20 object-cover rounded-lg border border-border"
-                        />
-                      </a>
-                    ))}
-                  </div>
-                )}
+                {(r.images.length > 0 || (r.videos && r.videos.length > 0)) && (() => {
+                  const media: MediaItem[] = [
+                    ...(r.videos || []).map(src => ({ type: 'video' as const, src })),
+                    ...r.images.map(src => ({ type: 'image' as const, src })),
+                  ];
+                  return (
+                    <div className="flex flex-wrap gap-2 pt-1">
+                      {media.map((m, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setLightbox({ items: media, index: i })}
+                          className="relative h-20 w-20 rounded-lg border border-border overflow-hidden bg-black"
+                        >
+                          {m.type === 'video' ? (
+                            <>
+                              <video src={m.src} className="h-full w-full object-cover" muted playsInline preload="metadata" />
+                              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                <div className="bg-white/90 rounded-full p-1.5 shadow-md">
+                                  <Play className="h-4 w-4 text-black fill-black" />
+                                </div>
+                              </div>
+                            </>
+                          ) : (
+                            <img src={m.src} alt="" className="h-full w-full object-cover" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  );
+                })()}
               </div>
             ))}
           </div>
@@ -157,6 +236,14 @@ export function ReviewWidget({ productNumericId, onCount }: { productNumericId: 
             </div>
           )}
         </>
+      )}
+
+      {lightbox && (
+        <MediaLightbox
+          items={lightbox.items}
+          initialIndex={lightbox.index}
+          onClose={() => setLightbox(null)}
+        />
       )}
     </div>
   );
