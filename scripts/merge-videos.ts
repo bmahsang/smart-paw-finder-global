@@ -5,7 +5,7 @@
  */
 
 import { chromium } from '@playwright/test';
-import { writeFileSync, readFileSync, existsSync } from 'fs';
+import { writeFileSync, readFileSync, existsSync, readdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -90,9 +90,9 @@ async function fetchVideoMap(token: string, productCd: string): Promise<Map<stri
 }
 
 // --- Main ---
-const mappingPath = join(DATA_DIR, 'review-product-mapping.json');
-const mapping: { product_cd: string | null }[] = JSON.parse(readFileSync(mappingPath, 'utf-8'));
-const targetCodes = [...new Set(mapping.filter(m => m.product_cd).map(m => m.product_cd!))];
+const targetCodes = readdirSync(REVIEWS_DIR)
+  .filter(f => f.endsWith('.json'))
+  .map(f => f.replace('.json', ''));
 
 console.log(`Merging videos for ${targetCodes.length} products...\n`);
 
