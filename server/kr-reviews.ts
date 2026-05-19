@@ -23,8 +23,9 @@ export function krReviewsMiddleware(): Connect.NextHandleFunction {
     const mapping: { global_numeric_id: string; kr_product_cd: string | null; confidence: string }[] =
       JSON.parse(readFileSync(mappingPath, 'utf-8'));
 
+    const TRUSTED_CONFIDENCE = new Set(['sheet_exact', 'confirmed']);
     const match = mapping.find(m => m.global_numeric_id === numericId);
-    if (!match?.kr_product_cd) {
+    if (!match?.kr_product_cd || !TRUSTED_CONFIDENCE.has(match.confidence)) {
       res.end(JSON.stringify({ reviews: [], total: 0 }));
       return;
     }

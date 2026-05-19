@@ -67,8 +67,9 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({ reviews: [], total: 0 });
   }
 
+  const TRUSTED_CONFIDENCE = new Set(['sheet_exact', 'confirmed']);
   const match = mapping.find(m => m.global_numeric_id === numericId);
-  if (!match?.kr_product_cd) {
+  if (!match?.kr_product_cd || !TRUSTED_CONFIDENCE.has(match.confidence)) {
     return res.status(200).json({ reviews: [], total: 0 });
   }
 
